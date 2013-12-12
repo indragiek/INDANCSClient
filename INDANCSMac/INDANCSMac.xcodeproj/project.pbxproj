@@ -18,6 +18,7 @@
 		0397D8631859755E005561AD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8421859755E005561AD /* Cocoa.framework */; };
 		0397D86B1859755E005561AD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0397D8691859755E005561AD /* InfoPlist.strings */; };
 		0397D86D1859755E005561AD /* INDANCSMacTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D86C1859755E005561AD /* INDANCSMacTests.m */; };
+		0397D8BA1859759A005561AD /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8B91859759A005561AD /* IOBluetooth.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		0397D8681859755E005561AD /* INDANCSMacTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "INDANCSMacTests-Info.plist"; sourceTree = "<group>"; };
 		0397D86A1859755E005561AD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0397D86C1859755E005561AD /* INDANCSMacTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = INDANCSMacTests.m; sourceTree = "<group>"; };
+		0397D8B91859759A005561AD /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0397D8BA1859759A005561AD /* IOBluetooth.framework in Frameworks */,
 				0397D8431859755E005561AD /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -95,6 +98,7 @@
 		0397D8411859755E005561AD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0397D8B91859759A005561AD /* IOBluetooth.framework */,
 				0397D8421859755E005561AD /* Cocoa.framework */,
 				0397D8611859755E005561AD /* XCTest.framework */,
 				0397D8441859755E005561AD /* Other Frameworks */,

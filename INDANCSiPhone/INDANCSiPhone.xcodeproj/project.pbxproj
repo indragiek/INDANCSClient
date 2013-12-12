@@ -21,6 +21,7 @@
 		0397D8A418597588005561AD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D88618597588005561AD /* UIKit.framework */; };
 		0397D8AC18597588005561AD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0397D8AA18597588005561AD /* InfoPlist.strings */; };
 		0397D8AE18597588005561AD /* INDANCSiPhoneTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D8AD18597588005561AD /* INDANCSiPhoneTests.m */; };
+		0397D8B81859758F005561AD /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8B71859758F005561AD /* CoreBluetooth.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		0397D8A918597588005561AD /* INDANCSiPhoneTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "INDANCSiPhoneTests-Info.plist"; sourceTree = "<group>"; };
 		0397D8AB18597588005561AD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0397D8AD18597588005561AD /* INDANCSiPhoneTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = INDANCSiPhoneTests.m; sourceTree = "<group>"; };
+		0397D8B71859758F005561AD /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0397D8B81859758F005561AD /* CoreBluetooth.framework in Frameworks */,
 				0397D88518597588005561AD /* CoreGraphics.framework in Frameworks */,
 				0397D88718597588005561AD /* UIKit.framework in Frameworks */,
 				0397D88318597588005561AD /* Foundation.framework in Frameworks */,
@@ -101,6 +104,7 @@
 		0397D88118597588005561AD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0397D8B71859758F005561AD /* CoreBluetooth.framework */,
 				0397D88218597588005561AD /* Foundation.framework */,
 				0397D88418597588005561AD /* CoreGraphics.framework */,
 				0397D88618597588005561AD /* UIKit.framework */,
