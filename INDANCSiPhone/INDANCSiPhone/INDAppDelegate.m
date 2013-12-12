@@ -7,12 +7,18 @@
 //
 
 #import "INDAppDelegate.h"
+#import "INDANCSServer.h"
+
+@interface INDAppDelegate ()
+@property (nonatomic, strong) INDANCSServer *server;
+@end
 
 @implementation INDAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    self.server = [INDANCSServer new];
+	[self.server startAdvertising];
     return YES;
 }
 							

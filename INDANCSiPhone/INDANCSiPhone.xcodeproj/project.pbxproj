@@ -22,6 +22,7 @@
 		0397D8AC18597588005561AD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0397D8AA18597588005561AD /* InfoPlist.strings */; };
 		0397D8AE18597588005561AD /* INDANCSiPhoneTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D8AD18597588005561AD /* INDANCSiPhoneTests.m */; };
 		0397D8B81859758F005561AD /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8B71859758F005561AD /* CoreBluetooth.framework */; };
+		0397D8BE18597631005561AD /* INDANCSServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D8BD18597631005561AD /* INDANCSServer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,9 @@
 		0397D8AB18597588005561AD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0397D8AD18597588005561AD /* INDANCSiPhoneTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = INDANCSiPhoneTests.m; sourceTree = "<group>"; };
 		0397D8B71859758F005561AD /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		0397D8BC18597631005561AD /* INDANCSServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSServer.h; sourceTree = "<group>"; };
+		0397D8BD18597631005561AD /* INDANCSServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSServer.m; sourceTree = "<group>"; };
+		0397D8C1185977C2005561AD /* INDANCSDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDefines.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +120,8 @@
 		0397D88818597588005561AD /* INDANCSiPhone */ = {
 			isa = PBXGroup;
 			children = (
+				0397D8C0185977C2005561AD /* Common */,
+				0397D8BB18597631005561AD /* Server */,
 				0397D89118597588005561AD /* INDAppDelegate.h */,
 				0397D89218597588005561AD /* INDAppDelegate.m */,
 				0397D89418597588005561AD /* Main.storyboard */,
@@ -154,6 +160,25 @@
 				0397D8AA18597588005561AD /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0397D8BB18597631005561AD /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				0397D8BC18597631005561AD /* INDANCSServer.h */,
+				0397D8BD18597631005561AD /* INDANCSServer.m */,
+			);
+			name = Server;
+			path = ../../Classes/Server;
+			sourceTree = "<group>";
+		};
+		0397D8C0185977C2005561AD /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				0397D8C1185977C2005561AD /* INDANCSDefines.h */,
+			);
+			name = Common;
+			path = ../../Classes/Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -255,6 +280,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0397D89318597588005561AD /* INDAppDelegate.m in Sources */,
+				0397D8BE18597631005561AD /* INDANCSServer.m in Sources */,
 				0397D88F18597588005561AD /* main.m in Sources */,
 				0397D89918597588005561AD /* INDViewController.m in Sources */,
 			);
