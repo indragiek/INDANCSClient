@@ -7,6 +7,7 @@
 //
 
 #import "INDANCSClient.h"
+#import "INDANCSDefines.h"
 
 @interface INDANCSClient () <CBCentralManagerDelegate>
 @property (nonatomic, strong, readonly) CBCentralManager *manager;
@@ -37,8 +38,7 @@
 	__weak __typeof(self) weakSelf = self;
 	[self schedulePowerOnBlock:^{
 		__typeof(self) strongSelf = weakSelf;
-		NSLog(@"SCANNING");
-		[strongSelf.manager scanForPeripheralsWithServices:nil options:nil];
+		[strongSelf.manager scanForPeripheralsWithServices:@[IND_ANCS_SV_UUID] options:nil];
 	}];
 }
 
@@ -51,9 +51,7 @@
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
 {
-	NSLog(@"%@", peripheral);
-	NSLog(@"%@", advertisementData);
-	NSLog(@"%@", RSSI);
+	
 }
 
 #pragma mark - Accessors

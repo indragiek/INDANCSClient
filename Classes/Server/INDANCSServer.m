@@ -39,8 +39,7 @@
 {
 	self.shouldAdvertise = YES;
 	if (self.manager.state == CBCentralManagerStatePoweredOn && self.manager.isAdvertising == NO) {
-		NSDictionary *advertisementData = @{CBAdvertisementDataLocalNameKey : UIDevice.currentDevice.name,
-											CBAdvertisementDataServiceUUIDsKey : @[IND_ANCS_SV_UUID]};
+		NSDictionary *advertisementData = @{CBAdvertisementDataServiceUUIDsKey : @[IND_ANCS_SV_UUID], CBAdvertisementDataLocalNameKey : UIDevice.currentDevice.name};
 		[self.manager startAdvertising:advertisementData];
 	}
 }

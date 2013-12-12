@@ -19,6 +19,7 @@
 		0397D86B1859755E005561AD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0397D8691859755E005561AD /* InfoPlist.strings */; };
 		0397D86D1859755E005561AD /* INDANCSMacTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D86C1859755E005561AD /* INDANCSMacTests.m */; };
 		0397D8BA1859759A005561AD /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8B91859759A005561AD /* IOBluetooth.framework */; };
+		0397D8C518597BCF005561AD /* INDANCSClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D8C418597BCF005561AD /* INDANCSClient.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,9 @@
 		0397D86A1859755E005561AD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0397D86C1859755E005561AD /* INDANCSMacTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = INDANCSMacTests.m; sourceTree = "<group>"; };
 		0397D8B91859759A005561AD /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+		0397D8C318597BCF005561AD /* INDANCSClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSClient.h; sourceTree = "<group>"; };
+		0397D8C418597BCF005561AD /* INDANCSClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSClient.m; sourceTree = "<group>"; };
+		0397D8C718597BD4005561AD /* INDANCSDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDefines.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +123,8 @@
 		0397D8481859755E005561AD /* INDANCSMac */ = {
 			isa = PBXGroup;
 			children = (
+				0397D8C618597BD4005561AD /* Common */,
+				0397D8C218597BCF005561AD /* Client */,
 				0397D8541859755E005561AD /* INDAppDelegate.h */,
 				0397D8551859755E005561AD /* INDAppDelegate.m */,
 				0397D8571859755E005561AD /* MainMenu.xib */,
@@ -156,6 +162,25 @@
 				0397D8691859755E005561AD /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0397D8C218597BCF005561AD /* Client */ = {
+			isa = PBXGroup;
+			children = (
+				0397D8C318597BCF005561AD /* INDANCSClient.h */,
+				0397D8C418597BCF005561AD /* INDANCSClient.m */,
+			);
+			name = Client;
+			path = ../../Classes/Client;
+			sourceTree = "<group>";
+		};
+		0397D8C618597BD4005561AD /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				0397D8C718597BD4005561AD /* INDANCSDefines.h */,
+			);
+			name = Common;
+			path = ../../Classes/Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,6 +283,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0397D8561859755E005561AD /* INDAppDelegate.m in Sources */,
+				0397D8C518597BCF005561AD /* INDANCSClient.m in Sources */,
 				0397D84F1859755E005561AD /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -469,6 +495,7 @@
 				0397D8721859755E005561AD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0397D8731859755E005561AD /* Build configuration list for PBXNativeTarget "INDANCSMacTests" */ = {
 			isa = XCConfigurationList;
@@ -477,6 +504,7 @@
 				0397D8751859755E005561AD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -7,12 +7,18 @@
 //
 
 #import "INDAppDelegate.h"
+#import "INDANCSClient.h"
+
+@interface INDAppDelegate ()
+@property (nonatomic, strong) INDANCSClient *client;
+@end
 
 @implementation INDAppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-	// Insert code here to initialize your application
+	self.client = [INDANCSClient new];
+	[self.client scanForDevices];
 }
 
 @end
