@@ -7,6 +7,7 @@
 //
 
 #import "INDANCSApplication.h"
+#import "INDANCSApplication_Private.h"
 
 @implementation INDANCSApplication
 

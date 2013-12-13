@@ -9,6 +9,7 @@
 #import "INDANCSClient.h"
 #import "INDANCSDevice_Private.h"
 #import "INDANCSNotification_Private.h"
+#import "INDANCSApplication_Private.h"
 #import "NSData+INDANCSAdditions.h"
 
 typedef NS_ENUM(uint8_t, INDANCSEventFlags) {
@@ -34,6 +35,9 @@ typedef NS_ENUM(uint8_t, INDANCSAppAttributeID) {
 	INDANCSAppAttributeIDDisplayName = 0
 };
 
+static NSUInteger const INDANCSGetNotificationAttributeCount = 5;
+static NSUInteger const INDANCSGetAppAttributeCount = 1;
+
 @interface INDANCSClient () <CBCentralManagerDelegate, CBPeripheralDelegate>
 @property (nonatomic, strong, readonly) CBCentralManager *manager;
 @property (nonatomic, assign, readwrite) CBCentralManagerState state;
@@ -44,6 +48,7 @@ typedef NS_ENUM(uint8_t, INDANCSAppAttributeID) {
 @property (nonatomic, strong, readwrite) NSMutableArray *powerOnBlocks;
 @property (nonatomic, strong, readonly) NSMutableDictionary *devices;
 @property (nonatomic, strong, readonly) NSMutableDictionary *notifications;
+@property (nonatomic, strong, readonly) NSMutableData *DSBuffer;
 @property (nonatomic, assign) BOOL ready;
 @end
 
@@ -63,6 +68,7 @@ typedef NS_ENUM(uint8_t, INDANCSAppAttributeID) {
 	if ((self = [super init])) {
 		_devices = [NSMutableDictionary dictionary];
 		_notifications = [NSMutableDictionary dictionary];
+		_DSBuffer = [NSMutableData data];
 		_powerOnBlocks = [NSMutableArray array];
 		_delegateQueue = dispatch_queue_create("com.indragie.INDANCSClient.DelegateQueue", DISPATCH_QUEUE_SERIAL);
 		_stateQueue = dispatch_queue_create("com.indragie.INDANCSClient.StateQueue", DISPATCH_QUEUE_CONCURRENT);
@@ -210,6 +216,29 @@ typedef NS_ENUM(uint8_t, INDANCSAppAttributeID) {
 	} else if (characteristic == device.NSCharacteristic) {
 		uint32_t UID = [self readNotificationWithData:characteristic.value];
 		[self requestNotificationAttributesForUID:UID peripheral:peripheral];
+	} else if (characteristic == device.DSCharacteristic) {
+		[self.DSBuffer appendData:characteristic.value];
+		if ([self requestResponseIsComplete:self.DSBuffer] == YES) {
+			INDANCSNotification *notification = nil;
+			NSUInteger len = [self readRequestResponseData:self.DSBuffer notification:&notification];
+			[_DSBuffer replaceBytesInRange:NSMakeRange(0, len) withBytes:NULL length:0];
+			NSLog(@"%@", notification);
+		}
+	}
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+{
+	if (error == nil) return;
+	
+	// TODO: Better error handling. Right now it doesn't look at the error code
+	// and just tosses notifications for which errors were received.
+	NSData *data = characteristic.value;
+	NSUInteger offset = 0;
+	uint8_t header = [data ind_readUInt8At:&offset];
+	if (header == INDANCSCommandIDGetNotificationAttributes) {
+		uint32_t UID = [data ind_readUInt32At:&offset];
+		[self removeNotificationForUID:UID];
 	}
 }
 
@@ -234,7 +263,7 @@ typedef NS_ENUM(uint8_t, INDANCSAppAttributeID) {
 - (void)requestNotificationAttributesForUID:(uint32_t)UID peripheral:(CBPeripheral *)peripheral
 {
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
-	NSMutableData *data = [NSMutableData dataWithBytes:"\x00" length:1];
+	NSMutableData *data = [NSMutableData dataWithBytes:"\x00" length:1]; // INDANCSCommandIDGetNotificationAttributes
 	[data appendBytes:&UID length:sizeof(UID)];
 	const uint8_t attributeIDs[] = {INDANCSNotificationAttributeIDAppIdentifier,
 		INDANCSNotificationAttributeIDTitle,
@@ -253,19 +282,106 @@ typedef NS_ENUM(uint8_t, INDANCSAppAttributeID) {
 	[peripheral writeValue:data forCharacteristic:device.CPCharacteristic type:CBCharacteristicWriteWithResponse];
 }
 
-- (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+- (BOOL)requestResponseIsComplete:(NSData *)responseData
 {
-	if (error == nil) return;
-	
-	// TODO: Better error handling. Right now it doesn't look at the error code
-	// and just tosses notifications for which errors were received.
-	NSData *data = characteristic.value;
+	if (responseData.length == 0) return NO;
 	NSUInteger offset = 0;
-	uint8_t header = [data ind_readUInt8At:&offset];
-	if (header == INDANCSCommandIDGetNotificationAttributes) {
-		uint32_t UID = [data ind_readUInt32At:&offset];
-		[self removeNotificationForUID:UID];
+	uint8_t command = [responseData ind_readUInt8At:&offset];
+	
+	NSUInteger attrCount = NSNotFound;
+	if (command == INDANCSCommandIDGetNotificationAttributes) {
+		offset += sizeof(uint32_t);
+		attrCount = INDANCSGetNotificationAttributeCount;
+	} else if (command == INDANCSCommandIDGetAppAttributes) {
+		NSData *nullByte = [NSData dataWithBytes:"\0" length:1];
+		NSRange range = [responseData rangeOfData:nullByte options:0 range:NSMakeRange(offset, responseData.length - offset)];
+		if (range.location == NSNotFound) return NO;
+		offset += range.location;
+		attrCount = INDANCSGetAppAttributeCount;
 	}
+	
+	// Header consists of one byte containing the Attribute ID and 2 bytes
+	// containing the Attribute Length.
+	const NSUInteger headerByteCount = sizeof(uint8_t) + sizeof(uint16_t);
+	NSUInteger len = responseData.length;
+	while ((offset + headerByteCount) <= len && attrCount > 0) {
+		uint8_t attr __attribute__((unused)) = [responseData ind_readUInt8At:&offset];
+		offset += [responseData ind_readUInt16At:&offset]; // Attribute length
+		if (offset >= len) break;
+		attrCount--;
+	}
+	return (attrCount == 0);
+}
+
+- (NSUInteger)readRequestResponseData:(NSData *)responseData notification:(INDANCSNotification **)notification
+{
+	NSUInteger offset = 0;
+	uint8_t command = [responseData ind_readUInt8At:&offset];
+	if (command == INDANCSCommandIDGetNotificationAttributes) {
+		uint32_t UID = [responseData ind_readUInt32At:&offset];
+		INDANCSNotification *note = [self notificationForUID:UID];
+		if (notification) *notification = note;
+		NSInteger attrCount = INDANCSGetNotificationAttributeCount;
+		while (attrCount > 0) {
+			uint8_t attr = [responseData ind_readUInt8At:&offset];
+			uint16_t attrLen = [responseData ind_readUInt16At:&offset];
+			NSData *stringData = [responseData subdataWithRange:NSMakeRange(offset, attrLen)];
+			offset += attrLen;
+
+			NSString *value = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+			id transformedValue = [self transformedValueForAttributeValue:value attributeID:attr];
+			NSString *keypath = [self notificationKeypathForAttributeID:attr];
+			[note setValue:transformedValue forKey:keypath];
+			attrCount--;
+		}
+		return offset;
+	} else {
+		return 0;
+	}
+}
+
+- (NSString *)notificationKeypathForAttributeID:(INDANCSNotificationAttributeID)attributeID
+{
+	switch (attributeID) {
+		case INDANCSNotificationAttributeIDAppIdentifier:
+			return @"application";
+		case INDANCSNotificationAttributeIDMessage:
+			return @"message";
+		case INDANCSNotificationAttributeIDDate:
+			return @"date";
+		case INDANCSNotificationAttributeIDTitle:
+			return @"title";
+		case INDANCSNotificationAttributeIDSubtitle:
+			return @"subtitle";
+		default:
+			return nil;
+	}
+}
+
+- (id)transformedValueForAttributeValue:(NSString *)value attributeID:(INDANCSNotificationAttributeID)attributeID
+{
+	switch (attributeID) {
+		case INDANCSNotificationAttributeIDDate:
+			return [self.notificationDateFormatter dateFromString:value];
+		case INDANCSNotificationAttributeIDAppIdentifier: {
+			INDANCSApplication *application = [INDANCSApplication new];
+			application.bundleIdentifier = value;
+			return application;
+		}
+		default:
+			return value;
+	}
+}
+
+- (NSDateFormatter *)notificationDateFormatter
+{
+	static NSDateFormatter *formatter = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		formatter = [NSDateFormatter new];
+		formatter.dateFormat = @"yyyyMMdd'T'HHmmSS";
+	});
+	return formatter;
 }
 
 #pragma mark - Accessors
