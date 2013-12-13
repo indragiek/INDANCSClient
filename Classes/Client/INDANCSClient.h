@@ -37,6 +37,14 @@ typedef void (^INDANCSDiscoveryBlock)(INDANCSClient *, INDANCSDevice *);
 @property (nonatomic, assign) id<INDANCSClientDelegate> delegate;
 
 /**
+ *  Timeout to allow for registration before a discovered iOS device
+ *  is disconnected from. Default value is 5.0 seconds.
+ *
+ *  @seealso -scanForDevices:
+ */
+@property (nonatomic, assign) NSTimeInterval registrationTimeout;
+
+/**
  *  Scans for iOS devices to connect to. For each iOS device found,
  *  the specified discovery block is called.
  *

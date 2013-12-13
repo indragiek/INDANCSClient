@@ -40,6 +40,7 @@ typedef NS_ENUM(uint8_t, INDANCSAppAttributeID) {
 
 static NSUInteger const INDANCSGetNotificationAttributeCount = 5;
 static NSUInteger const INDANCSGetAppAttributeCount = 1;
+static NSString * const INDANCSDeviceUserInfoKey = @"device";
 
 @interface INDANCSClient () <CBCentralManagerDelegate, CBPeripheralDelegate>
 @property (nonatomic, strong, readonly) CBCentralManager *manager;
@@ -76,6 +77,7 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 		_delegateQueue = dispatch_queue_create("com.indragie.INDANCSClient.DelegateQueue", DISPATCH_QUEUE_SERIAL);
 		_stateQueue = dispatch_queue_create("com.indragie.INDANCSClient.StateQueue", DISPATCH_QUEUE_CONCURRENT);
 		_manager = [[CBCentralManager alloc] initWithDelegate:self queue:_delegateQueue options:@{CBCentralManagerOptionShowPowerAlertKey : @YES}];
+		_registrationTimeout = 5.0;
 	}
 	return self;
 }
@@ -248,6 +250,7 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 		
 		if (self.discoveryBlock) {
 			self.discoveryBlock(self, device);
+			device.registrationTimer = [NSTimer scheduledTimerWithTimeInterval:self.registrationTimeout target:self selector:@selector(registrationTimerFired:) userInfo:@{INDANCSDeviceUserInfoKey : device} repeats:NO];
 		}
 	} else if (characteristic == device.NSCharacteristic) {
 		INDANCSEventID eventID;
@@ -287,6 +290,14 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 		uint32_t UID = [data ind_readUInt32At:&offset];
 		[self removeNotificationForUID:UID];
 	}
+}
+
+#pragma mark - Timers
+
+- (void)registrationTimerFired:(NSTimer *)timer
+{
+	INDANCSDevice *device = timer.userInfo[INDANCSDeviceUserInfoKey];
+	[self.manager cancelPeripheralConnection:device.peripheral];
 }
 
 #pragma mark - R/W

@@ -18,4 +18,5 @@
 @property (nonatomic, strong) CBCharacteristic *NSCharacteristic;
 @property (nonatomic, strong) CBCharacteristic *CPCharacteristic;
 @property (nonatomic, strong) CBCharacteristic *DSCharacteristic;
+@property (nonatomic, strong) NSTimer *registrationTimer;
 @end
