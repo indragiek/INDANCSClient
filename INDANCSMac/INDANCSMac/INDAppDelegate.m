@@ -19,15 +19,12 @@
 {
 	self.client = [INDANCSClient new];
 	self.client.delegate = self;
-	[self.client scanForDevices];
+	[self.client scanForDevices:^(INDANCSClient *client, INDANCSDevice *device) {
+		NSLog(@"Found %@", device.name);
+	}];
 }
 
 #pragma mark - INDANCSClientDelegate
-
-- (void)ANCSClient:(INDANCSClient *)client didFindDevice:(INDANCSDevice *)device
-{
-	NSLog(@"Found %@", device.name);
-}
 
 - (void)ANCSClient:(INDANCSClient *)client device:(INDANCSDevice *)device disconnectedWithError:(NSError *)error
 {

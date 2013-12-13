@@ -17,7 +17,10 @@ typedef NS_ENUM(uint8_t, INDANCSEventID) {
 	INDANCSEventIDNotificationRemoved = 2
 };
 
+@class INDANCSClient;
 @protocol INDANCSClientDelegate;
+
+typedef void (^INDANCSDiscoveryBlock)(INDANCSClient *, INDANCSDevice *);
 
 /**
  *  Objective-C client for the Apple Notification Center Service.
@@ -34,28 +37,32 @@ typedef NS_ENUM(uint8_t, INDANCSEventID) {
 @property (nonatomic, assign) id<INDANCSClientDelegate> delegate;
 
 /**
- *  Start scanning for iOS devices. Calls the `ANCSClient:didFindDevice`
- *  delegate method when a device is found.
+ *  Scans for iOS devices to connect to. For each iOS device found,
+ *  the specified discovery block is called.
+ *
+ *  @discussion Each discovered iOS device is connected to automatically
+ *  to retrieve identifying information like the device name. After this
+ *  initial connection, the device stays connected for a small period of
+ *  time to allow you to register for notifications from that device. If
+ *  no registration is received within the time out, the connection is
+ *  dropped.
+ *
+ *  If you call this method multiple times, only the newest discovery
+ *  block will be called.
+ *
+ *  @param discoveryBlock Discovery block to call when a new iOS device
+ *  is discovered.
  */
-- (void)scanForDevices;
+- (void)scanForDevices:(INDANCSDiscoveryBlock)discoveryBlock;
 
 /**
- *  Stops a scan previously started using `-scanForDevices`.
+ *  Stops a scan previously started using `-scanForDevices:`.
  */
 - (void)stopScanning;
 @end
 
 @protocol INDANCSClientDelegate <NSObject>
 @optional
-
-/**
- *  Called when an iOS device is found during a scan. The device is automatically
- *  connected to in order to find out the device name and other characteristics.
- *
- *  @param client The `INDANCSClient` instance that found the device.
- *  @param device The device that was found.
- */
-- (void)ANCSClient:(INDANCSClient *)client didFindDevice:(INDANCSDevice *)device;
 
 /**
  *  Called when an `INDANCSDevice` disconnects.

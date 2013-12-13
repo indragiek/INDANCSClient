@@ -44,6 +44,7 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 @interface INDANCSClient () <CBCentralManagerDelegate, CBPeripheralDelegate>
 @property (nonatomic, strong, readonly) CBCentralManager *manager;
 @property (nonatomic, assign, readwrite) CBCentralManagerState state;
+@property (nonatomic, copy) INDANCSDiscoveryBlock discoveryBlock;
 
 @property (nonatomic) dispatch_queue_t delegateQueue;
 @property (nonatomic) dispatch_queue_t stateQueue;
@@ -53,12 +54,10 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 @property (nonatomic, strong, readonly) NSMutableDictionary *notifications;
 @property (nonatomic, strong, readonly) NSMutableData *DSBuffer;
 @property (nonatomic, assign) BOOL ready;
-@property (nonatomic, assign) BOOL shouldScan;
 @end
 
 @implementation INDANCSClient {
 	struct {
-		unsigned int didFindDevice:1;
 		unsigned int deviceDisconnectedWithError:1;
 		unsigned int serviceDiscoveryFailedForDeviceWithError:1;
 		unsigned int deviceFailedToConnectWithError:1;
@@ -83,9 +82,10 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 
 #pragma mark - Devices
 
-- (void)scanForDevices
+- (void)scanForDevices:(INDANCSDiscoveryBlock)discoveryBlock
 {
-	self.shouldScan = YES;
+	NSParameterAssert(discoveryBlock);
+	self.discoveryBlock = discoveryBlock;
 	__weak __typeof(self) weakSelf = self;
 	[self schedulePowerOnBlock:^{
 		__typeof(self) strongSelf = weakSelf;
@@ -95,7 +95,7 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 
 - (void)stopScanning
 {
-	self.shouldScan = NO;
+	self.discoveryBlock = nil;
 	[self.manager stopScan];
 }
 
@@ -131,7 +131,7 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 	NSLog(@"[CBCentralManager] Did connect to peripheral: %@", peripheral);
 #endif
 	[peripheral discoverServices:@[IND_ANCS_SV_UUID, IND_NAME_SV_UUID]];
-	if (self.shouldScan) {
+	if (self.discoveryBlock) {
 		[self.manager scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey : @YES}];
 	}
 }
@@ -245,10 +245,9 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 	if (characteristic == device.NAMECharacteristic) {
 		NSString *name = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
 		if (name.length) device.name = name;
-		if (_delegateFlags.didFindDevice) {
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[self.delegate ANCSClient:self didFindDevice:device];
-			});
+		
+		if (self.discoveryBlock) {
+			self.discoveryBlock(self, device);
 		}
 	} else if (characteristic == device.NSCharacteristic) {
 		INDANCSEventID eventID;
@@ -441,7 +440,6 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 {
 	if (_delegate != delegate) {
 		_delegate = delegate;
-		_delegateFlags.didFindDevice = [delegate respondsToSelector:@selector(ANCSClient:didFindDevice:)];
 		_delegateFlags.deviceDisconnectedWithError = [delegate respondsToSelector:@selector(ANCSClient:device:disconnectedWithError:)];
 		_delegateFlags.serviceDiscoveryFailedForDeviceWithError = [delegate respondsToSelector:@selector(ANCSClient:serviceDiscoveryFailedForDevice:withError:)];
 		_delegateFlags.deviceFailedToConnectWithError = [delegate respondsToSelector:@selector(ANCSClient:device:failedToConnectWithError:)];
