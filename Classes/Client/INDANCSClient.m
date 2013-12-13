@@ -385,7 +385,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 		INDANCSNotificationAttributeIDMessage,
 		INDANCSNotificationAttributeIDDate};
 	
-	const uint16_t maxLen = INT16_MAX;
+	const uint16_t maxLen = UINT16_MAX;
 	for (int i = 0; i < sizeof(attributeIDs); i++) {
 		uint8_t attr = attributeIDs[i];
 		[data appendBytes:&attr length:sizeof(attr)];
