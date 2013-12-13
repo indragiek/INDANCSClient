@@ -16,6 +16,13 @@ typedef NS_ENUM(NSInteger, INDANCSEventFlags) {
 
 @implementation INDANCSNotification
 
+#pragma mark - NSObject
+
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"<%@:%p\neventID: %d\nsilent: %d\nimportant: %d\ncategoryID: %d\ncategoryCount: %d\nnotificationUID: %d\napplication: %@\ntitle: %@\nsubtitle: %@\nmessage: %@\ndate: %@>", NSStringFromClass(self.class), self, self.eventID, self.silent, self.important, self.categoryID, self.categoryCount, self.notificationUID, self.application, self.title, self.subtitle, self.message, self.date];
+}
+
 #pragma mark - NSCoder
 
 - (id)initWithCoder:(NSCoder *)aDecoder

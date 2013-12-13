@@ -10,6 +10,13 @@
 
 @implementation INDANCSApplication
 
+#pragma mark - NSObject
+
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"<%@:%p bundleIdentifier:%@ name:%@>", NSStringFromClass(self.class), self, self.bundleIdentifier, self.name];
+}
+
 #pragma mark - NSCoder
 
 - (id)initWithCoder:(NSCoder *)aDecoder
