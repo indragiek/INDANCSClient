@@ -8,12 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(uint8_t, INDANCSEventID) {
-	INDANCSEventIDNotificationAdded = 0,
-	INDANCSEventIDNotificationModified = 1,
-	INDANCSEventIDNotificationRemoved = 2
-};
-
 typedef NS_ENUM(uint8_t, INDANCSCategoryID) {
 	INDANCSCategoryIDOther = 0,
 	INDANCSCategoryIDIncomingCall = 1,
@@ -36,12 +30,6 @@ typedef NS_ENUM(uint8_t, INDANCSCategoryID) {
  *  Model object representing a push notification received from an iOS device.
  */
 @interface INDANCSNotification : NSObject <NSCoding>
-/**
- *  The notification type (whether the given iOS notification was added, 
- *  modified, or removed)
- */
-@property (nonatomic, assign, readonly) INDANCSEventID eventID;
-
 /**
  *  Whether the notification was silent.
  */

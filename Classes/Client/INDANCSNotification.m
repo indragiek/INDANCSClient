@@ -15,7 +15,7 @@
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"<%@:%p\neventID: %d\nsilent: %d\nimportant: %d\ncategoryID: %d\ncategoryCount: %d\nnotificationUID: %d\napplication: %@\ntitle: %@\nsubtitle: %@\nmessage: %@\ndate: %@>", NSStringFromClass(self.class), self, self.eventID, self.silent, self.important, self.categoryID, self.categoryCount, self.notificationUID, self.application, self.title, self.subtitle, self.message, self.date];
+	return [NSString stringWithFormat:@"<%@:%p\nsilent: %d\nimportant: %d\ncategoryID: %d\ncategoryCount: %d\nnotificationUID: %d\napplication: %@\ntitle: %@\nsubtitle: %@\nmessage: %@\ndate: %@>", NSStringFromClass(self.class), self, self.silent, self.important, self.categoryID, self.categoryCount, self.notificationUID, self.application, self.title, self.subtitle, self.message, self.date];
 }
 
 #pragma mark - NSCoder
@@ -23,7 +23,6 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
 	if ((self = [super init])) {
-		_eventID = [[aDecoder decodeObjectForKey:@"eventID"] unsignedCharValue];
 		_silent = [aDecoder decodeBoolForKey:@"silent"];
 		_important = [aDecoder decodeBoolForKey:@"important"];
 		_categoryID = [[aDecoder decodeObjectForKey:@"categoryID"] unsignedCharValue];
@@ -40,7 +39,6 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder
 {
-	[aCoder encodeObject:@(self.eventID) forKey:@"eventID"];
 	[aCoder encodeBool:self.silent forKey:@"silent"];
 	[aCoder encodeBool:self.important forKey:@"important"];
 	[aCoder encodeObject:@(self.categoryID) forKey:@"categoryID"];

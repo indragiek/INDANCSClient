@@ -11,6 +11,12 @@
 #import "INDANCSNotification.h"
 #import "INDANCSApplication.h"
 
+typedef NS_ENUM(uint8_t, INDANCSEventID) {
+	INDANCSEventIDNotificationAdded = 0,
+	INDANCSEventIDNotificationModified = 1,
+	INDANCSEventIDNotificationRemoved = 2
+};
+
 @protocol INDANCSClientDelegate;
 
 /**

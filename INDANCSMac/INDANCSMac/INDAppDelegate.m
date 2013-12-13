@@ -26,7 +26,22 @@
 
 - (void)ANCSClient:(INDANCSClient *)client didFindDevice:(INDANCSDevice *)device
 {
-	NSLog(@"%@", device);
+	NSLog(@"Found %@", device.name);
+}
+
+- (void)ANCSClient:(INDANCSClient *)client device:(INDANCSDevice *)device disconnectedWithError:(NSError *)error
+{
+	NSLog(@"%@ disconnected with error: %@", device.name, error);
+}
+
+- (void)ANCSClient:(INDANCSClient *)client device:(INDANCSDevice *)device failedToConnectWithError:(NSError *)error
+{
+	NSLog(@"%@ failed to connect with error: %@", device.name, error);
+}
+
+- (void)ANCSClient:(INDANCSClient *)client serviceDiscoveryFailedForDevice:(INDANCSDevice *)device withError:(NSError *)error
+{
+	NSLog(@"Service discovery failed for %@ with error %@", device.name, error);
 }
 
 @end

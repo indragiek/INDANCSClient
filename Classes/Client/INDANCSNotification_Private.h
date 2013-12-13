@@ -9,7 +9,6 @@
 #import "INDANCSNotification.h"
 
 @interface INDANCSNotification ()
-@property (nonatomic, assign, readwrite) INDANCSEventID eventID;
 @property (nonatomic, assign, readwrite) BOOL silent;
 @property (nonatomic, assign, readwrite) BOOL important;
 @property (nonatomic, assign, readwrite) INDANCSCategoryID categoryID;
