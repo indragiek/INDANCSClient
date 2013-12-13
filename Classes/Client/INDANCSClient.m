@@ -182,7 +182,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	NSLog(@"[CBCentralManager] Did disconnect peripheral: %@\nError: %@", peripheral, error);
 #endif
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
-	if (_delegateFlags.deviceDisconnectedWithError) {
+	if (device.name.length && _delegateFlags.deviceDisconnectedWithError) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[self.delegate ANCSClient:self device:device disconnectedWithError:error];
 		});
