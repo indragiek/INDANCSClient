@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface INDViewController : UIViewController
-
+- (IBAction)postNotification:(id)sender;
 @end
