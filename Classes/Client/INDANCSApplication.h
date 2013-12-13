@@ -11,6 +11,16 @@
 /**
  *  Model object representing an iOS application that posted a notification.
  */
-@interface INDANCSApplication : NSObject
+@interface INDANCSApplication : NSObject <NSCoding>
+
+/**
+ *  The bundle identifier of the application.
+ */
+@property (nonatomic, strong, readonly) NSString *bundleIdentifier;
+
+/**
+ *  The display name of the application.
+ */
+@property (nonatomic, strong, readonly) NSString *name;
 
 @end

@@ -10,4 +10,21 @@
 
 @implementation INDANCSApplication
 
+#pragma mark - NSCoder
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+	if ((self = [super init])) {
+		_bundleIdentifier = [aDecoder decodeObjectForKey:@"bundleIdentifier"];
+		_name = [aDecoder decodeObjectForKey:@"name"];
+	}
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+	[aCoder encodeObject:self.bundleIdentifier forKey:@"bundleIdentifier"];
+	[aCoder encodeObject:self.name forKey:@"name"];
+}
+
 @end
