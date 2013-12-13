@@ -8,6 +8,8 @@
 
 #import "INDANCSDefines.h"
 #import "INDANCSDevice.h"
+#import "INDANCSNotification.h"
+#import "INDANCSApplication.h"
 
 @protocol INDANCSClientDelegate;
 

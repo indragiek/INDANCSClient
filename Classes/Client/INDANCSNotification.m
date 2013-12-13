@@ -9,11 +9,6 @@
 #import "INDANCSNotification.h"
 #import "INDANCSNotification_Private.h"
 
-typedef NS_ENUM(NSInteger, INDANCSEventFlags) {
-	INDANCSEventFlagSilent = (1 << 0),
-	INDANCSEventFlagImportant = (1 << 1)
-};
-
 @implementation INDANCSNotification
 
 #pragma mark - NSObject

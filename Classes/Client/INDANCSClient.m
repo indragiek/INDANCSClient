@@ -8,14 +8,42 @@
 
 #import "INDANCSClient.h"
 #import "INDANCSDevice_Private.h"
+#import "INDANCSNotification_Private.h"
+#import "NSData+INDANCSAdditions.h"
+
+typedef NS_ENUM(uint8_t, INDANCSEventFlags) {
+	INDANCSEventFlagSilent = (1 << 0),
+	INDANCSEventFlagImportant = (1 << 1)
+};
+
+typedef NS_ENUM(uint8_t, INDANCSCommandID) {
+	INDANCSCommandIDGetNotificationAttributes = 0,
+	INDANCSCommandIDGetAppAttributes = 1
+};
+
+typedef NS_ENUM(uint8_t, INDANCSNotificationAttributeID) {
+	INDANCSNotificationAttributeIDAppIdentifier = 0,
+	INDANCSNotificationAttributeIDTitle = 1,
+	INDANCSNotificationAttributeIDSubtitle = 2,
+	INDANCSNotificationAttributeIDMessage = 3,
+	INDANCSNotificationAttributeIDMessageSize = 4,
+	INDANCSNotificationAttributeIDDate = 5
+};
+
+typedef NS_ENUM(uint8_t, INDANCSAppAttributeID) {
+	INDANCSAppAttributeIDDisplayName = 0
+};
 
 @interface INDANCSClient () <CBCentralManagerDelegate, CBPeripheralDelegate>
 @property (nonatomic, strong, readonly) CBCentralManager *manager;
+@property (nonatomic, assign, readwrite) CBCentralManagerState state;
 
 @property (nonatomic) dispatch_queue_t delegateQueue;
+@property (nonatomic) dispatch_queue_t stateQueue;
+
 @property (nonatomic, strong, readwrite) NSMutableArray *powerOnBlocks;
-@property (nonatomic, assign, readwrite) CBCentralManagerState state;
 @property (nonatomic, strong, readonly) NSMutableDictionary *devices;
+@property (nonatomic, strong, readonly) NSMutableDictionary *notifications;
 @property (nonatomic, assign) BOOL ready;
 @end
 
@@ -34,8 +62,10 @@
 {
 	if ((self = [super init])) {
 		_devices = [NSMutableDictionary dictionary];
+		_notifications = [NSMutableDictionary dictionary];
 		_powerOnBlocks = [NSMutableArray array];
 		_delegateQueue = dispatch_queue_create("com.indragie.INDANCSClient.DelegateQueue", DISPATCH_QUEUE_SERIAL);
+		_stateQueue = dispatch_queue_create("com.indragie.INDANCSClient.StateQueue", DISPATCH_QUEUE_CONCURRENT);
 		_manager = [[CBCentralManager alloc] initWithDelegate:self queue:_delegateQueue options:@{CBCentralManagerOptionShowPowerAlertKey : @YES}];
 	}
 	return self;
@@ -178,6 +208,63 @@
 			});
 		}
 	} else if (characteristic == device.NSCharacteristic) {
+		uint32_t UID = [self readNotificationWithData:characteristic.value];
+		[self requestNotificationAttributesForUID:UID peripheral:peripheral];
+	}
+}
+
+#pragma mark - R/W
+
+- (uint32_t)readNotificationWithData:(NSData *)notificationData
+{
+	INDANCSNotification *notification = [INDANCSNotification new];
+	NSUInteger offset = 0;
+	notification.eventID = [notificationData ind_readUInt8At:&offset];
+	uint8_t flags = [notificationData ind_readUInt8At:&offset];
+	notification.silent = (flags & INDANCSEventFlagSilent) == INDANCSEventFlagSilent;
+	notification.important = (flags & INDANCSEventFlagImportant) == INDANCSEventFlagImportant;
+	notification.categoryID = [notificationData ind_readUInt8At:&offset];
+	notification.categoryCount = [notificationData ind_readUInt8At:&offset];
+	uint32_t UID = [notificationData ind_readUInt32At:&offset];
+	notification.notificationUID = UID;
+	[self setNotification:notification forUID:UID];
+	return UID;
+}
+
+- (void)requestNotificationAttributesForUID:(uint32_t)UID peripheral:(CBPeripheral *)peripheral
+{
+	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
+	NSMutableData *data = [NSMutableData dataWithBytes:"\x00" length:1];
+	[data appendBytes:&UID length:sizeof(UID)];
+	const uint8_t attributeIDs[] = {INDANCSNotificationAttributeIDAppIdentifier,
+		INDANCSNotificationAttributeIDTitle,
+		INDANCSNotificationAttributeIDSubtitle,
+		INDANCSNotificationAttributeIDMessage,
+		INDANCSNotificationAttributeIDDate};
+	
+	const uint16_t maxLen = UINT16_MAX;
+	for (int i = 0; i < sizeof(attributeIDs); i++) {
+		uint8_t attr = attributeIDs[i];
+		[data appendBytes:&attr length:sizeof(attr)];
+		if (attr != INDANCSNotificationAttributeIDAppIdentifier && attr != INDANCSNotificationAttributeIDDate) {
+			[data appendBytes:&maxLen length:sizeof(maxLen)];
+		}
+	}
+	[peripheral writeValue:data forCharacteristic:device.CPCharacteristic type:CBCharacteristicWriteWithResponse];
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+{
+	if (error == nil) return;
+	
+	// TODO: Better error handling. Right now it doesn't look at the error code
+	// and just tosses notifications for which errors were received.
+	NSData *data = characteristic.value;
+	NSUInteger offset = 0;
+	uint8_t header = [data ind_readUInt8At:&offset];
+	if (header == INDANCSCommandIDGetNotificationAttributes) {
+		uint32_t UID = [data ind_readUInt32At:&offset];
+		[self removeNotificationForUID:UID];
 	}
 }
 
@@ -204,10 +291,12 @@
 {
 	_ready = ready;
 	if (ready && self.powerOnBlocks.count) {
-		for (void(^block)() in self.powerOnBlocks) {
-			block();
-		}
-		[self.powerOnBlocks removeAllObjects];
+		dispatch_sync(self.stateQueue, ^{
+			for (void(^block)() in self.powerOnBlocks) {
+				block();
+			}
+			[self.powerOnBlocks removeAllObjects];
+		});
 	}
 }
 
@@ -219,30 +308,61 @@
 	if (self.ready) {
 		block();
 	} else {
-		[self.powerOnBlocks addObject:[block copy]];
+		dispatch_barrier_async(self.stateQueue, ^{
+			[self.powerOnBlocks addObject:[block copy]];
+		});
 	}
 }
 
 - (void)setDevice:(INDANCSDevice *)device forPeripheral:(CBPeripheral *)peripheral
 {
 	NSParameterAssert(peripheral);
-	@synchronized(self) {
+	NSParameterAssert(device);
+	dispatch_barrier_async(self.stateQueue, ^{
 		self.devices[peripheral.identifier] = device;
-	}
+	});
 }
 
 - (INDANCSDevice *)deviceForPeripheral:(CBPeripheral *)peripheral
 {
 	NSParameterAssert(peripheral);
-	return self.devices[peripheral.identifier];
+	__block INDANCSDevice *device = nil;
+	dispatch_sync(self.stateQueue, ^{
+		device = self.devices[peripheral.identifier];
+	});
+	return device;
 }
 
 - (void)removeDeviceForPeripheral:(CBPeripheral *)peripheral
 {
 	NSParameterAssert(peripheral);
-	@synchronized(self) {
+	dispatch_barrier_async(self.stateQueue, ^{
 		[self.devices removeObjectForKey:peripheral.identifier];
-	}
+	});
+}
+
+- (void)setNotification:(INDANCSNotification *)notification forUID:(uint32_t)UID
+{
+	NSParameterAssert(notification);
+	dispatch_barrier_async(self.stateQueue, ^{
+		self.notifications[@(UID)] = notification;
+	});
+}
+
+- (INDANCSNotification *)notificationForUID:(uint32_t)UID
+{
+	__block INDANCSNotification *notification = nil;
+	dispatch_sync(self.stateQueue, ^{
+		notification = self.notifications[@(UID)];
+	});
+	return notification;
+}
+
+- (void)removeNotificationForUID:(uint32_t)UID
+{
+	dispatch_barrier_async(self.stateQueue, ^{
+		[self.notifications removeObjectForKey:@(UID)];
+	});
 }
 
 - (void)delegateServiceDiscoveryFailedForPeripheral:(CBPeripheral *)peripheral withError:(NSError *)error
