@@ -38,6 +38,7 @@
 @end
 
 @protocol INDANCSClientDelegate <NSObject>
+@optional
 
 /**
  *  Called when an iOS device is found during a scan. The device is automatically
@@ -55,5 +56,15 @@
  *  @param error  An error describing the cause of the disconnection.
  */
 - (void)ANCSClient:(INDANCSClient *)client device:(INDANCSDevice *)device disconnectedWithError:(NSError *)error;
+
+/**
+ *  Called when service discovery fails for a device (ie. the ANCS service couldn't
+ *  be found).
+ *
+ *  @param client The `INDANCSClient` instance.
+ *  @param device The `INDANCSDevice` for which service discovery failed.
+ *  @param error  An error describing the cause of the service discovery failure.
+ */
+- (void)ANCSClient:(INDANCSClient *)client serviceDiscoveryFailedForDevice:(INDANCSDevice *)device withError:(NSError *)error;
 
 @end

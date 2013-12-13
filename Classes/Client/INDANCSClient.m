@@ -23,6 +23,7 @@
 	struct {
 		unsigned int didFindDevice:1;
 		unsigned int deviceDisconnectedWithError:1;
+		unsigned int serviceDiscoveryFailedForDeviceWithError:1;
 	} _delegateFlags;
 }
 
@@ -82,7 +83,9 @@
 	[self removeDeviceForPeripheral:peripheral];
 	
 	if (_delegateFlags.deviceDisconnectedWithError) {
-		[self.delegate ANCSClient:self device:device disconnectedWithError:error];
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self.delegate ANCSClient:self device:device disconnectedWithError:error];
+		});
 	}
 }
 
@@ -90,7 +93,10 @@
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
 {
-	// TODO: Add delegate error callback
+	if (error) {
+		[self delegateServiceDiscoveryFailedForPeripheral:peripheral withError:error];
+		return;
+	}
 	NSArray *services = peripheral.services;
 	static NSInteger const serviceCount = 2;
 	NSMutableArray *foundServices = [NSMutableArray arrayWithCapacity:serviceCount];
@@ -110,13 +116,16 @@
 		}
 	}
 	if (foundServices.count < serviceCount) {
-		[self.manager cancelPeripheralConnection:peripheral];
+		[self delegateServiceDiscoveryFailedForPeripheral:peripheral withError:nil];
 	}
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
 {
-	// TODO: Add delegate error callback
+	if (error) {
+		[self delegateServiceDiscoveryFailedForPeripheral:peripheral withError:error];
+		return;
+	}
 	NSArray *characteristics = service.characteristics;
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
 	CBUUID *serviceUUID = service.UUID;
@@ -166,6 +175,7 @@
 		_delegate = delegate;
 		_delegateFlags.didFindDevice = [delegate respondsToSelector:@selector(ANCSClient:didFindDevice:)];
 		_delegateFlags.deviceDisconnectedWithError = [delegate respondsToSelector:@selector(ANCSClient:device:disconnectedWithError:)];
+		_delegateFlags.serviceDiscoveryFailedForDeviceWithError = [delegate respondsToSelector:@selector(ANCSClient:serviceDiscoveryFailedForDevice:withError:)];
 	}
 }
 
@@ -218,6 +228,17 @@
 	@synchronized(self) {
 		[self.devices removeObjectForKey:peripheral.identifier];
 	}
+}
+
+- (void)delegateServiceDiscoveryFailedForPeripheral:(CBPeripheral *)peripheral withError:(NSError *)error
+{
+	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
+	if (_delegateFlags.serviceDiscoveryFailedForDeviceWithError) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self.delegate ANCSClient:self serviceDiscoveryFailedForDevice:device withError:error];
+		});
+	}
+	[self.manager cancelPeripheralConnection:peripheral];
 }
 
 @end
