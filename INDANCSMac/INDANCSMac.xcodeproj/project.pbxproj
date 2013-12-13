@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0383AE92185AC0EB00549378 /* INDANCSNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 0383AE91185AC0EB00549378 /* INDANCSNotification.m */; };
+		0383AE95185AC64A00549378 /* INDANCSApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 0383AE94185AC64A00549378 /* INDANCSApplication.m */; };
 		0397D8431859755E005561AD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8421859755E005561AD /* Cocoa.framework */; };
 		0397D84D1859755E005561AD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0397D84B1859755E005561AD /* InfoPlist.strings */; };
 		0397D84F1859755E005561AD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D84E1859755E005561AD /* main.m */; };
@@ -34,6 +36,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0383AE90185AC0EB00549378 /* INDANCSNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSNotification.h; sourceTree = "<group>"; };
+		0383AE91185AC0EB00549378 /* INDANCSNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSNotification.m; sourceTree = "<group>"; };
+		0383AE93185AC64A00549378 /* INDANCSApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSApplication.h; sourceTree = "<group>"; };
+		0383AE94185AC64A00549378 /* INDANCSApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSApplication.m; sourceTree = "<group>"; };
+		0383AE97185AC9FA00549378 /* INDANCSNotification_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSNotification_Private.h; sourceTree = "<group>"; };
 		0397D83F1859755E005561AD /* INDANCSMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = INDANCSMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0397D8421859755E005561AD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		0397D8451859755E005561AD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -176,6 +183,11 @@
 				0397D8C818597F9E005561AD /* INDANCSDevice.h */,
 				0397D8C918597F9E005561AD /* INDANCSDevice.m */,
 				0397D8CB18598043005561AD /* INDANCSDevice_Private.h */,
+				0383AE90185AC0EB00549378 /* INDANCSNotification.h */,
+				0383AE91185AC0EB00549378 /* INDANCSNotification.m */,
+				0383AE93185AC64A00549378 /* INDANCSApplication.h */,
+				0383AE94185AC64A00549378 /* INDANCSApplication.m */,
+				0383AE97185AC9FA00549378 /* INDANCSNotification_Private.h */,
 			);
 			name = Client;
 			path = ../../Classes/Client;
@@ -290,7 +302,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0397D8561859755E005561AD /* INDAppDelegate.m in Sources */,
+				0383AE95185AC64A00549378 /* INDANCSApplication.m in Sources */,
 				0397D8C518597BCF005561AD /* INDANCSClient.m in Sources */,
+				0383AE92185AC0EB00549378 /* INDANCSNotification.m in Sources */,
 				0397D8CA18597F9E005561AD /* INDANCSDevice.m in Sources */,
 				0397D84F1859755E005561AD /* main.m in Sources */,
 			);

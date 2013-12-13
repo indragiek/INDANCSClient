@@ -70,7 +70,7 @@
 	INDANCSDevice *device = [[INDANCSDevice alloc] initWithCBPeripheral:peripheral];
 	[self setDevice:device forPeripheral:peripheral];
 	
-	[central connectPeripheral:peripheral options:@{CBConnectPeripheralOptionNotifyOnDisconnectionKey : @YES}];
+	[central connectPeripheral:peripheral options:nil];
 }
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
@@ -177,6 +177,7 @@
 				[self.delegate ANCSClient:self didFindDevice:device];
 			});
 		}
+	} else if (characteristic == device.NSCharacteristic) {
 	}
 }
 
