@@ -81,7 +81,7 @@ typedef void (^INDANCSNotificationBlock)(INDANCSClient *, INDANCSDevice *, INDAN
  *  @param device The iOS device to unregister from.
  *
  *  @discussion The device is automatically disconnected after
- 
+ *  `registrationTimeout`.
  */
 - (void)unregisterForNotificationsFromDevice:(INDANCSDevice *)device;
 
