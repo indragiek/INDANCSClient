@@ -9,8 +9,11 @@
 #import "INDANCSServer.h"
 #import "INDANCSDefines.h"
 
+static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
+
 @interface INDANCSServer () <CBPeripheralManagerDelegate>
 @property (nonatomic, strong) CBPeripheralManager *manager;
+@property (nonatomic, strong) CBMutableService *NAMEService;
 @property (nonatomic) dispatch_queue_t delegateQueue;
 @property (nonatomic, assign, readwrite) CBPeripheralManagerState state;
 @property (nonatomic, assign) BOOL shouldAdvertise;
@@ -24,11 +27,15 @@
 
 #pragma mark - Initialization
 
-- (id)init
+- (id)initWithUID:(NSString *)UID
 {
 	if ((self = [super init])) {
 		_delegateQueue = dispatch_queue_create("com.indragie.INDANCSServer.DelegateQueue", DISPATCH_QUEUE_SERIAL);
-		_manager = [[CBPeripheralManager alloc] initWithDelegate:self queue:_delegateQueue options:@{CBPeripheralManagerOptionShowPowerAlertKey : @YES}];
+		NSMutableDictionary *options = [@{CBPeripheralManagerOptionShowPowerAlertKey : @YES} mutableCopy];
+		if (UID.length) {
+			options[CBPeripheralManagerOptionRestoreIdentifierKey] = UID;
+		}
+		_manager = [[CBPeripheralManager alloc] initWithDelegate:self queue:_delegateQueue options:options];
 	}
 	return self;
 }
@@ -39,7 +46,7 @@
 {
 	self.shouldAdvertise = YES;
 	if (self.manager.state == CBCentralManagerStatePoweredOn && self.manager.isAdvertising == NO) {
-		NSDictionary *advertisementData = @{CBAdvertisementDataServiceUUIDsKey : @[IND_ANCS_SV_UUID], CBAdvertisementDataLocalNameKey : UIDevice.currentDevice.name};
+		NSDictionary *advertisementData = @{CBAdvertisementDataServiceUUIDsKey : @[IND_ANCS_SV_UUID, IND_NAME_SV_UUID], CBAdvertisementDataLocalNameKey : UIDevice.currentDevice.name};
 		[self.manager startAdvertising:advertisementData];
 	}
 }
@@ -77,11 +84,26 @@
 - (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheral
 {
 	self.state = peripheral.state;
-	if (self.state == CBPeripheralManagerStatePoweredOn && self.shouldAdvertise) {
-		[self startAdvertising];
+	if (self.state == CBPeripheralManagerStatePoweredOn) {
+		if (self.NAMEService == nil) {
+			self.NAMEService = [self newNAMEService];
+			[_manager addService:self.NAMEService];
+		}
+		if (self.shouldAdvertise) {
+			[self startAdvertising];
+		}
 	} else {
 		[self stopAdvertising];
 	}
+}
+
+- (CBMutableService *)newNAMEService
+{
+	CBMutableService *service = [[CBMutableService alloc] initWithType:IND_NAME_SV_UUID primary:YES];
+	NSData *nameData = [UIDevice.currentDevice.name dataUsingEncoding:NSUTF8StringEncoding];
+	CBMutableCharacteristic *nameCharacteristic = [[CBMutableCharacteristic alloc] initWithType:IND_NAME_CH_UUID properties:CBCharacteristicPropertyRead value:nameData permissions:CBAttributePermissionsReadable];
+	service.characteristics = @[nameCharacteristic];
+	return service;
 }
 
 - (void)peripheralManagerDidStartAdvertising:(CBPeripheralManager *)peripheral error:(NSError *)error
@@ -91,6 +113,11 @@
 			[self.delegate ANCSServer:self didStartAdvertisingWithError:error];
 		});
 	}
+}
+
+- (void)peripheralManager:(CBPeripheralManager *)peripheral willRestoreState:(NSDictionary *)dict
+{
+	NSLog(@"%@", dict);
 }
 
 @end

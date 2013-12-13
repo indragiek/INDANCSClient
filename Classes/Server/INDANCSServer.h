@@ -28,6 +28,16 @@
 @property (nonatomic, assign) id<INDANCSServerDelegate> delegate;
 
 /**
+ *  Creates and initializes a new `INDANCSServer` instance.
+ *
+ *  @param UID A unique identifier used to restore the peripheral manager
+ *  between launches.
+ *
+ *  @return A new instance of `INDANCSServer`
+ */
+- (id)initWithUID:(NSString *)UID;
+
+/**
  *  Start advertising as a Bluetooth peripheral.
  *
  *  The advertisement will only begin when the underlying `CBPeripheralManager`

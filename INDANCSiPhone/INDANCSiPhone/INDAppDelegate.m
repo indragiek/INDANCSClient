@@ -17,7 +17,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.server = [INDANCSServer new];
+    self.server = [[INDANCSServer alloc] initWithUID:@"INDANCSServer"];
 	[self.server startAdvertising];
     return YES;
 }
