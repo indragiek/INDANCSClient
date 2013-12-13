@@ -21,6 +21,9 @@
 	self.client.delegate = self;
 	[self.client scanForDevices:^(INDANCSClient *client, INDANCSDevice *device) {
 		NSLog(@"Found %@", device.name);
+		[client registerForNotificationsFromDevice:device withBlock:^(INDANCSClient *c, INDANCSDevice *d, INDANCSEventID e, INDANCSNotification *n) {
+			NSLog(@"Received notification: %@", n);
+		}];
 	}];
 }
 

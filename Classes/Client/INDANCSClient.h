@@ -11,16 +11,11 @@
 #import "INDANCSNotification.h"
 #import "INDANCSApplication.h"
 
-typedef NS_ENUM(uint8_t, INDANCSEventID) {
-	INDANCSEventIDNotificationAdded = 0,
-	INDANCSEventIDNotificationModified = 1,
-	INDANCSEventIDNotificationRemoved = 2
-};
-
 @class INDANCSClient;
 @protocol INDANCSClientDelegate;
 
 typedef void (^INDANCSDiscoveryBlock)(INDANCSClient *, INDANCSDevice *);
+typedef void (^INDANCSNotificationBlock)(INDANCSClient *, INDANCSDevice *, INDANCSEventID, INDANCSNotification *);
 
 /**
  *  Objective-C client for the Apple Notification Center Service.
@@ -50,8 +45,8 @@ typedef void (^INDANCSDiscoveryBlock)(INDANCSClient *, INDANCSDevice *);
  *
  *  @discussion Each discovered iOS device is connected to automatically
  *  to retrieve identifying information like the device name. After this
- *  initial connection, the device stays connected for a small period of
- *  time to allow you to register for notifications from that device. If
+ *  initial connection, the device stays connected for a `registrationTimeout`
+ *  seconds to allow you to register for notifications from that device. If
  *  no registration is received within the time out, the connection is
  *  dropped.
  *
@@ -67,6 +62,29 @@ typedef void (^INDANCSDiscoveryBlock)(INDANCSClient *, INDANCSDevice *);
  *  Stops a scan previously started using `-scanForDevices:`.
  */
 - (void)stopScanning;
+
+/**
+ *  Registers to receive notifications from a specified iOS device.
+ *
+ *  @param device            The iOS device to receive notifications from.
+ *  @param notificationBlock Block to be called when a notification is received.
+ *
+ *  @discussion Each device can only have a single notification block. Calling
+ *  this method multiple times with different blocks will result in only the
+ *  newest block being called.
+ */
+- (void)registerForNotificationsFromDevice:(INDANCSDevice *)device withBlock:(INDANCSNotificationBlock)notificationBlock;
+
+/**
+ *  Unregisters for notifications from a specified iOS device.
+ *
+ *  @param device The iOS device to unregister from.
+ *
+ *  @discussion The device is automatically disconnected after
+ 
+ */
+- (void)unregisterForNotificationsFromDevice:(INDANCSDevice *)device;
+
 @end
 
 @protocol INDANCSClientDelegate <NSObject>

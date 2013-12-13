@@ -23,6 +23,11 @@ typedef NS_ENUM(uint8_t, INDANCSCategoryID) {
 	INDANCSCategoryIDEntertainment = 11
 };
 
+typedef NS_ENUM(uint8_t, INDANCSEventID) {
+	INDANCSEventIDNotificationAdded = 0,
+	INDANCSEventIDNotificationModified = 1,
+	INDANCSEventIDNotificationRemoved = 2
+};
 
 @class INDANCSApplication;
 
@@ -30,6 +35,10 @@ typedef NS_ENUM(uint8_t, INDANCSCategoryID) {
  *  Model object representing a push notification received from an iOS device.
  */
 @interface INDANCSNotification : NSObject <NSCoding>
+/**
+ *  The event ID of the latest event received for the notification.
+ */
+@property (nonatomic, assign, readonly) INDANCSEventID latestEventID;
 /**
  *  Whether the notification was silent.
  */

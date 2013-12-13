@@ -101,6 +101,36 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	[self.manager stopScan];
 }
 
+#pragma mark - Registration
+
+- (void)registerForNotificationsFromDevice:(INDANCSDevice *)device withBlock:(INDANCSNotificationBlock)notificationBlock
+{
+	device.notificationBlock = notificationBlock;
+	if (device.peripheral.state == CBPeripheralStateDisconnected) {
+		[self.manager connectPeripheral:device.peripheral options:nil];
+	} else {
+		[self setNotificationSettingsForDevice:device];
+	}
+}
+
+- (void)unregisterForNotificationsFromDevice:(INDANCSDevice *)device
+{
+	device.notificationBlock = nil;
+	[self setNotificationSettingsForDevice:device];
+}
+
+- (void)setNotificationSettingsForDevice:(INDANCSDevice *)device
+{
+	[self invalidateRegistrationTimerForDevice:device];
+	BOOL notify = (device.notificationBlock != nil);
+	CBPeripheral *peripheral = device.peripheral;
+	[peripheral setNotifyValue:notify forCharacteristic:device.DSCharacteristic];
+	[peripheral setNotifyValue:notify forCharacteristic:device.NSCharacteristic];
+	if (notify == NO) {
+		[self startRegistrationTimerForDevice:device];
+	}
+}
+
 #pragma mark - CBCentralManagerDelegate
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
@@ -120,9 +150,11 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	if (peripheral.state != CBPeripheralStateDisconnected) return;
 	
 	peripheral.delegate = self;
-	INDANCSDevice *device = [[INDANCSDevice alloc] initWithCBPeripheral:peripheral];
-	[self setDevice:device forPeripheral:peripheral];
-	
+	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
+	if (device == nil) {
+		device = [[INDANCSDevice alloc] initWithCBPeripheral:peripheral];
+		[self setDevice:device forPeripheral:peripheral];
+	}
 	[self.manager stopScan];
 	[central connectPeripheral:peripheral options:nil];
 }
@@ -227,14 +259,13 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 			CBUUID *charUUID = characteristic.UUID;
 			if ([charUUID isEqual:IND_ANCS_DS_UUID]) {
 				device.DSCharacteristic = characteristic;
-				[peripheral setNotifyValue:YES forCharacteristic:characteristic];
 			} else if ([charUUID isEqual:IND_ANCS_NS_UUID]) {
 				device.NSCharacteristic = characteristic;
-				[peripheral setNotifyValue:YES forCharacteristic:characteristic];
 			} else if ([charUUID isEqual:IND_ANCS_CP_UUID]) {
 				device.CPCharacteristic = characteristic;
 			}
 		}
+		[self setNotificationSettingsForDevice:device];
 	}
 }
 
@@ -250,12 +281,13 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 		
 		if (self.discoveryBlock) {
 			self.discoveryBlock(self, device);
-			device.registrationTimer = [NSTimer scheduledTimerWithTimeInterval:self.registrationTimeout target:self selector:@selector(registrationTimerFired:) userInfo:@{INDANCSDeviceUserInfoKey : device} repeats:NO];
+			[self startRegistrationTimerForDevice:device];
 		}
 	} else if (characteristic == device.NSCharacteristic) {
-		INDANCSEventID eventID;
-		INDANCSNotification *notification = [self readNotificationWithData:characteristic.value eventID:&eventID];
-		if (eventID != INDANCSEventIDNotificationRemoved) {
+		INDANCSNotification *notification = [self readNotificationWithData:characteristic.value];
+		if (notification.latestEventID == INDANCSEventIDNotificationRemoved) {
+			[self notifyWithNotification:notification forDevice:device];
+		} else {
 			[self requestNotificationAttributesForUID:notification.notificationUID peripheral:peripheral];
 		}
 	} else if (characteristic == device.DSCharacteristic) {
@@ -266,7 +298,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 			if (commandID == INDANCSCommandIDGetNotificationAttributes) {
 				INDANCSNotification *notification = nil;
 				len = [self readNotificationResponseData:self.DSBuffer notification:&notification];
-				NSLog(@"%@", notification);
+				[self notifyWithNotification:notification forDevice:device];
 			}
 			if (len != 0) {
 				[self.DSBuffer replaceBytesInRange:NSMakeRange(0, len) withBytes:NULL length:0];
@@ -300,9 +332,28 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	[self.manager cancelPeripheralConnection:device.peripheral];
 }
 
+- (void)startRegistrationTimerForDevice:(INDANCSDevice *)device
+{
+	device.registrationTimer = [NSTimer scheduledTimerWithTimeInterval:self.registrationTimeout target:self selector:@selector(registrationTimerFired:) userInfo:@{INDANCSDeviceUserInfoKey : device} repeats:NO];
+}
+
+- (void)invalidateRegistrationTimerForDevice:(INDANCSDevice *)device
+{
+	[device.registrationTimer invalidate];
+	device.registrationTimer = nil;
+}
+
 #pragma mark - R/W
 
-- (INDANCSNotification *)readNotificationWithData:(NSData *)notificationData eventID:(INDANCSEventID *)eventID;
+- (void)notifyWithNotification:(INDANCSNotification *)notification forDevice:(INDANCSDevice *)device
+{
+	if (device.notificationBlock) {
+		INDANCSNotificationBlock notificationBlock = device.notificationBlock;
+		notificationBlock(self, device, notification.latestEventID, notification);
+	}
+}
+
+- (INDANCSNotification *)readNotificationWithData:(NSData *)notificationData
 {
 	NSUInteger offset = sizeof(uint8_t) * 4; // Skip straight to the UID
 	uint32_t UID = [notificationData ind_readUInt32At:&offset];
@@ -314,9 +365,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 		[self setNotification:notification forUID:UID];
 	}
 	offset = 0;
-	INDANCSEventID event = [notificationData ind_readUInt8At:&offset];
-	if (eventID) *eventID = event;
-	
+	notification.latestEventID = [notificationData ind_readUInt8At:&offset];
 	uint8_t flags = [notificationData ind_readUInt8At:&offset];
 	notification.silent = (flags & INDANCSEventFlagSilent) == INDANCSEventFlagSilent;
 	notification.important = (flags & INDANCSEventFlagImportant) == INDANCSEventFlagImportant;

@@ -19,4 +19,5 @@
 @property (nonatomic, strong) CBCharacteristic *CPCharacteristic;
 @property (nonatomic, strong) CBCharacteristic *DSCharacteristic;
 @property (nonatomic, strong) NSTimer *registrationTimer;
+@property (nonatomic, copy) id notificationBlock;
 @end
