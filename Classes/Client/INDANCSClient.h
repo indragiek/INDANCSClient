@@ -26,7 +26,7 @@
 @property (nonatomic, assign) id<INDANCSClientDelegate> delegate;
 
 /**
- *  Start scanning for iOS deviecs. Calls the `ANCSClient:didFindDevice`
+ *  Start scanning for iOS devices. Calls the `ANCSClient:didFindDevice`
  *  delegate method when a device is found.
  */
 - (void)scanForDevices;
@@ -38,11 +38,22 @@
 @end
 
 @protocol INDANCSClientDelegate <NSObject>
+
 /**
- *  Called when an iOS device is found during a scan.
+ *  Called when an iOS device is found during a scan. The device is automatically
+ *  connected to in order to find out the device name and other characteristics.
  *
  *  @param client The `INDANCSClient` instance that found the device.
  *  @param device The device that was found.
  */
 - (void)ANCSClient:(INDANCSClient *)client didFindDevice:(INDANCSDevice *)device;
+
+/**
+ *  Called when an `INDANCSDevice` disconnects.
+ *
+ *  @param client The `INDANCSClient` instance.
+ *  @param error  An error describing the cause of the disconnection.
+ */
+- (void)ANCSClient:(INDANCSClient *)client device:(INDANCSDevice *)device disconnectedWithError:(NSError *)error;
+
 @end

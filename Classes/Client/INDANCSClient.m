@@ -22,6 +22,7 @@
 @implementation INDANCSClient {
 	struct {
 		unsigned int didFindDevice:1;
+		unsigned int deviceDisconnectedWithError:1;
 	} _delegateFlags;
 }
 
@@ -77,8 +78,12 @@
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
 {
-	// TODO: Add delegate callback.
+	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
 	[self removeDeviceForPeripheral:peripheral];
+	
+	if (_delegateFlags.deviceDisconnectedWithError) {
+		[self.delegate ANCSClient:self device:device disconnectedWithError:error];
+	}
 }
 
 #pragma mark - CBPeripheralDelegate
@@ -160,6 +165,7 @@
 	if (_delegate != delegate) {
 		_delegate = delegate;
 		_delegateFlags.didFindDevice = [delegate respondsToSelector:@selector(ANCSClient:didFindDevice:)];
+		_delegateFlags.deviceDisconnectedWithError = [delegate respondsToSelector:@selector(ANCSClient:device:disconnectedWithError:)];
 	}
 }
 
