@@ -106,10 +106,16 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 - (void)registerForNotificationsFromDevice:(INDANCSDevice *)device withBlock:(INDANCSNotificationBlock)notificationBlock
 {
 	device.notificationBlock = notificationBlock;
-	if (device.peripheral.state == CBPeripheralStateDisconnected) {
-		[self.manager connectPeripheral:device.peripheral options:nil];
-	} else {
-		[self setNotificationSettingsForDevice:device];
+	CBPeripheralState state = device.peripheral.state;
+	switch (state) {
+		case CBPeripheralStateConnected:
+			[self setNotificationSettingsForDevice:device];
+			break;
+		case CBPeripheralStateDisconnected:
+			[self.manager connectPeripheral:device.peripheral options:nil];
+			break;
+		default:
+			break;
 	}
 }
 
