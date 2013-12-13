@@ -12,6 +12,9 @@
 #import "INDANCSApplication_Private.h"
 #import "NSData+INDANCSAdditions.h"
 
+// Uncomment to enable debug logging
+// #define DEBUG_LOGGING
+
 typedef NS_ENUM(uint8_t, INDANCSEventFlags) {
 	INDANCSEventFlagSilent = (1 << 0),
 	INDANCSEventFlagImportant = (1 << 1)
@@ -97,11 +100,17 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
 {
+#ifdef DEBUG_LOGGING
+	NSLog(@"[CBCentralManager] Updated state to: %ld", central.state);
+#endif
 	self.state = central.state;
 }
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
 {
+#ifdef DEBUG_LOGGING
+	NSLog(@"[CBCentralManager] Discovered peripheral: %@\nAdvertisement data:%@\nRSSI: %@", peripheral, advertisementData, RSSI);
+#endif
 	peripheral.delegate = self;
 	INDANCSDevice *device = [[INDANCSDevice alloc] initWithCBPeripheral:peripheral];
 	[self setDevice:device forPeripheral:peripheral];
@@ -111,11 +120,17 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
 {
+#ifdef DEBUG_LOGGING
+	NSLog(@"[CBCentralManager] Did connect to peripheral: %@", peripheral);
+#endif
 	[peripheral discoverServices:@[IND_ANCS_SV_UUID, IND_NAME_SV_UUID]];
 }
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
 {
+#ifdef DEBUG_LOGGING
+	NSLog(@"[CBCentralManager] Did disconnect peripheral: %@\nError: %@", peripheral, error);
+#endif
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
 	if (_delegateFlags.deviceDisconnectedWithError) {
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -127,6 +142,9 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 
 - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
 {
+#ifdef DEBUG_LOGGING
+	NSLog(@"[CBCentralManager] Did fail to connect to peripheral: %@\nError: %@", peripheral, error);
+#endif
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
 	if (_delegateFlags.deviceFailedToConnectWithError) {
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -140,6 +158,9 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
 {
+#ifdef DEBUG_LOGGING
+	NSLog(@"[%@] Did discover services: %@\nError: %@", peripheral, peripheral.services, error);
+#endif
 	if (error) {
 		[self delegateServiceDiscoveryFailedForPeripheral:peripheral withError:error];
 		return;
@@ -169,6 +190,9 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
 {
+#ifdef DEBUG_LOGGING
+	NSLog(@"[%@] Did discover characteristics: %@\nService: %@\nError: %@", peripheral, service.characteristics, service, error);
+#endif
 	if (error) {
 		[self delegateServiceDiscoveryFailedForPeripheral:peripheral withError:error];
 		return;
@@ -189,14 +213,14 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 	} else if ([serviceUUID isEqual:IND_ANCS_SV_UUID]) {
 		for (CBCharacteristic *characteristic in characteristics) {
 			CBUUID *charUUID = characteristic.UUID;
-			if ([charUUID isEqual:IND_ANCS_NS_UUID]) {
+			if ([charUUID isEqual:IND_ANCS_DS_UUID]) {
+				device.DSCharacteristic = characteristic;
+				[peripheral setNotifyValue:YES forCharacteristic:characteristic];
+			} else if ([charUUID isEqual:IND_ANCS_NS_UUID]) {
 				device.NSCharacteristic = characteristic;
 				[peripheral setNotifyValue:YES forCharacteristic:characteristic];
 			} else if ([charUUID isEqual:IND_ANCS_CP_UUID]) {
 				device.CPCharacteristic = characteristic;
-			} else if ([charUUID isEqual:IND_ANCS_DS_UUID]) {
-				device.DSCharacteristic = characteristic;
-				[peripheral setNotifyValue:YES forCharacteristic:characteristic];
 			}
 		}
 	}
@@ -204,6 +228,9 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
+#ifdef DEBUG_LOGGING
+	NSLog(@"[%@] Did update value: %@ for characteristic: %@\nError: %@", peripheral, characteristic.value, characteristic, error);
+#endif
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
 	if (characteristic == device.NAMECharacteristic) {
 		NSString *name = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
@@ -227,6 +254,7 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 			if (commandID == INDANCSCommandIDGetNotificationAttributes) {
 				INDANCSNotification *notification = nil;
 				len = [self readNotificationResponseData:self.DSBuffer notification:&notification];
+				NSLog(@"%@", notification);
 			}
 			if (len != 0) {
 				[self.DSBuffer replaceBytesInRange:NSMakeRange(0, len) withBytes:NULL length:0];
@@ -238,7 +266,9 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
 	if (error == nil) return;
-	
+#ifdef DEBUG_LOGGING
+	NSLog(@"[%@] Received error: %@ when writing to characteristic: %@", peripheral, error, characteristic);
+#endif
 	// TODO: Better error handling. Right now it doesn't look at the error code
 	// and just tosses notifications for which errors were received.
 	NSData *data = characteristic.value;
@@ -286,7 +316,7 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 		INDANCSNotificationAttributeIDMessage,
 		INDANCSNotificationAttributeIDDate};
 	
-	const uint16_t maxLen = UINT16_MAX;
+	const uint16_t maxLen = INT16_MAX;
 	for (int i = 0; i < sizeof(attributeIDs); i++) {
 		uint8_t attr = attributeIDs[i];
 		[data appendBytes:&attr length:sizeof(attr)];
@@ -323,7 +353,7 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 	while ((offset + headerByteCount) <= len && attrCount > 0) {
 		uint8_t attr __attribute__((unused)) = [responseData ind_readUInt8At:&offset];
 		offset += [responseData ind_readUInt16At:&offset]; // Attribute length
-		if (offset >= len) break;
+		if (offset > len) break;
 		attrCount--;
 	}
 	return (attrCount == 0);
@@ -336,7 +366,7 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 	INDANCSNotification *note = [self notificationForUID:UID];
 	if (notification) *notification = note;
 	
-	for (NSInteger i = 0; i < INDANCSGetAppAttributeCount; i++) {
+	for (int i = 0; i < INDANCSGetNotificationAttributeCount; i++) {
 		uint8_t attr = [responseData ind_readUInt8At:&offset];
 		uint16_t attrLen = [responseData ind_readUInt16At:&offset];
 		if (attrLen != 0) {
