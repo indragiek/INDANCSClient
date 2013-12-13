@@ -58,6 +58,15 @@
 - (void)ANCSClient:(INDANCSClient *)client device:(INDANCSDevice *)device disconnectedWithError:(NSError *)error;
 
 /**
+ *  Called when an attempted connection to an `INDANCSDevice` fails.
+ *
+ *  @param client The `INDANCSClient` instance.
+ *  @param device The `INDANCSDevice` for which the connection failed.
+ *  @param error  An error describing the connection failure.
+ */
+- (void)ANCSClient:(INDANCSClient *)client device:(INDANCSDevice *)device failedToConnectWithError:(NSError *)error;
+
+/**
  *  Called when service discovery fails for a device (ie. the ANCS service couldn't
  *  be found).
  *

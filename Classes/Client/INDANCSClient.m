@@ -24,6 +24,7 @@
 		unsigned int didFindDevice:1;
 		unsigned int deviceDisconnectedWithError:1;
 		unsigned int serviceDiscoveryFailedForDeviceWithError:1;
+		unsigned int deviceFailedToConnectWithError:1;
 	} _delegateFlags;
 }
 
@@ -80,13 +81,23 @@
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
 {
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
-	[self removeDeviceForPeripheral:peripheral];
-	
 	if (_delegateFlags.deviceDisconnectedWithError) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[self.delegate ANCSClient:self device:device disconnectedWithError:error];
 		});
 	}
+	[self removeDeviceForPeripheral:peripheral];
+}
+
+- (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
+{
+	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
+	if (_delegateFlags.deviceFailedToConnectWithError) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self.delegate ANCSClient:self device:device failedToConnectWithError:error];
+		});
+	}
+	[self removeDeviceForPeripheral:peripheral];
 }
 
 #pragma mark - CBPeripheralDelegate
@@ -144,10 +155,12 @@
 			CBUUID *charUUID = characteristic.UUID;
 			if ([charUUID isEqual:IND_ANCS_NS_UUID]) {
 				device.NSCharacteristic = characteristic;
+				[peripheral setNotifyValue:YES forCharacteristic:characteristic];
 			} else if ([charUUID isEqual:IND_ANCS_CP_UUID]) {
 				device.CPCharacteristic = characteristic;
 			} else if ([charUUID isEqual:IND_ANCS_DS_UUID]) {
 				device.DSCharacteristic = characteristic;
+				[peripheral setNotifyValue:YES forCharacteristic:characteristic];
 			}
 		}
 	}
@@ -176,6 +189,7 @@
 		_delegateFlags.didFindDevice = [delegate respondsToSelector:@selector(ANCSClient:didFindDevice:)];
 		_delegateFlags.deviceDisconnectedWithError = [delegate respondsToSelector:@selector(ANCSClient:device:disconnectedWithError:)];
 		_delegateFlags.serviceDiscoveryFailedForDeviceWithError = [delegate respondsToSelector:@selector(ANCSClient:serviceDiscoveryFailedForDevice:withError:)];
+		_delegateFlags.deviceFailedToConnectWithError = [delegate respondsToSelector:@selector(ANCSClient:device:failedToConnectWithError:)];
 	}
 }
 
