@@ -53,6 +53,7 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 @property (nonatomic, strong, readonly) NSMutableDictionary *notifications;
 @property (nonatomic, strong, readonly) NSMutableData *DSBuffer;
 @property (nonatomic, assign) BOOL ready;
+@property (nonatomic, assign) BOOL shouldScan;
 @end
 
 @implementation INDANCSClient {
@@ -84,15 +85,17 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 
 - (void)scanForDevices
 {
+	self.shouldScan = YES;
 	__weak __typeof(self) weakSelf = self;
 	[self schedulePowerOnBlock:^{
 		__typeof(self) strongSelf = weakSelf;
-		[strongSelf.manager scanForPeripheralsWithServices:nil options:nil];
+		[strongSelf.manager scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey : @YES}];
 	}];
 }
 
 - (void)stopScanning
 {
+	self.shouldScan = NO;
 	[self.manager stopScan];
 }
 
@@ -111,10 +114,14 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 #ifdef DEBUG_LOGGING
 	NSLog(@"[CBCentralManager] Discovered peripheral: %@\nAdvertisement data:%@\nRSSI: %@", peripheral, advertisementData, RSSI);
 #endif
+	// Already connected, ignore it.
+	if (peripheral.state != CBPeripheralStateDisconnected) return;
+	
 	peripheral.delegate = self;
 	INDANCSDevice *device = [[INDANCSDevice alloc] initWithCBPeripheral:peripheral];
 	[self setDevice:device forPeripheral:peripheral];
 	
+	[self.manager stopScan];
 	[central connectPeripheral:peripheral options:nil];
 }
 
@@ -124,6 +131,9 @@ static NSUInteger const INDANCSGetAppAttributeCount = 1;
 	NSLog(@"[CBCentralManager] Did connect to peripheral: %@", peripheral);
 #endif
 	[peripheral discoverServices:@[IND_ANCS_SV_UUID, IND_NAME_SV_UUID]];
+	if (self.shouldScan) {
+		[self.manager scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey : @YES}];
+	}
 }
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
