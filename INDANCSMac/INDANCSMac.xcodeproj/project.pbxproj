@@ -20,6 +20,7 @@
 		0397D86D1859755E005561AD /* INDANCSMacTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D86C1859755E005561AD /* INDANCSMacTests.m */; };
 		0397D8BA1859759A005561AD /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8B91859759A005561AD /* IOBluetooth.framework */; };
 		0397D8C518597BCF005561AD /* INDANCSClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D8C418597BCF005561AD /* INDANCSClient.m */; };
+		0397D8CA18597F9E005561AD /* INDANCSDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D8C918597F9E005561AD /* INDANCSDevice.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,9 @@
 		0397D8C318597BCF005561AD /* INDANCSClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSClient.h; sourceTree = "<group>"; };
 		0397D8C418597BCF005561AD /* INDANCSClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSClient.m; sourceTree = "<group>"; };
 		0397D8C718597BD4005561AD /* INDANCSDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDefines.h; sourceTree = "<group>"; };
+		0397D8C818597F9E005561AD /* INDANCSDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDevice.h; sourceTree = "<group>"; };
+		0397D8C918597F9E005561AD /* INDANCSDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSDevice.m; sourceTree = "<group>"; };
+		0397D8CB18598043005561AD /* INDANCSDevice_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDevice_Private.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +173,9 @@
 			children = (
 				0397D8C318597BCF005561AD /* INDANCSClient.h */,
 				0397D8C418597BCF005561AD /* INDANCSClient.m */,
+				0397D8C818597F9E005561AD /* INDANCSDevice.h */,
+				0397D8C918597F9E005561AD /* INDANCSDevice.m */,
+				0397D8CB18598043005561AD /* INDANCSDevice_Private.h */,
 			);
 			name = Client;
 			path = ../../Classes/Client;
@@ -284,6 +291,7 @@
 			files = (
 				0397D8561859755E005561AD /* INDAppDelegate.m in Sources */,
 				0397D8C518597BCF005561AD /* INDANCSClient.m in Sources */,
+				0397D8CA18597F9E005561AD /* INDANCSDevice.m in Sources */,
 				0397D84F1859755E005561AD /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

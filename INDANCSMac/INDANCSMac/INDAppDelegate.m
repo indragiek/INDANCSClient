@@ -9,7 +9,7 @@
 #import "INDAppDelegate.h"
 #import "INDANCSClient.h"
 
-@interface INDAppDelegate ()
+@interface INDAppDelegate () <INDANCSClientDelegate>
 @property (nonatomic, strong) INDANCSClient *client;
 @end
 
@@ -18,7 +18,15 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	self.client = [INDANCSClient new];
+	self.client.delegate = self;
 	[self.client scanForDevices];
+}
+
+#pragma mark - INDANCSClientDelegate
+
+- (void)ANCSClient:(INDANCSClient *)client didFindDevice:(INDANCSDevice *)device
+{
+	NSLog(@"%@", device);
 }
 
 @end
