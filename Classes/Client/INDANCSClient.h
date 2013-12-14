@@ -40,6 +40,12 @@ typedef void (^INDANCSNotificationBlock)(INDANCSClient *, INDANCSDevice *, INDAN
 @property (nonatomic, assign) NSTimeInterval registrationTimeout;
 
 /**
+ *  If a device disconnects on its own, whether to attempt an automatic
+ *  reconnection. Default value is `YES`.
+ */
+@property (nonatomic, assign) BOOL attemptAutomaticReconnection;
+
+/**
  *  Scans for iOS devices to connect to. For each iOS device found,
  *  the specified discovery block is called.
  *

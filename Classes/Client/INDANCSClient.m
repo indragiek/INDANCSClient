@@ -54,6 +54,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 @property (nonatomic, strong, readonly) NSMutableDictionary *devices;
 @property (nonatomic, strong, readonly) NSMutableDictionary *notifications;
 @property (nonatomic, strong, readonly) NSMutableData *DSBuffer;
+@property (nonatomic, strong, readonly) NSMutableDictionary *disconnects;
 @property (nonatomic, assign) BOOL ready;
 @end
 
@@ -73,11 +74,13 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 		_devices = [NSMutableDictionary dictionary];
 		_notifications = [NSMutableDictionary dictionary];
 		_DSBuffer = [NSMutableData data];
+		_disconnects = [NSMutableDictionary dictionary];
 		_powerOnBlocks = [NSMutableArray array];
 		_delegateQueue = dispatch_queue_create("com.indragie.INDANCSClient.DelegateQueue", DISPATCH_QUEUE_SERIAL);
 		_stateQueue = dispatch_queue_create("com.indragie.INDANCSClient.StateQueue", DISPATCH_QUEUE_CONCURRENT);
 		_manager = [[CBCentralManager alloc] initWithDelegate:self queue:_delegateQueue options:@{CBCentralManagerOptionShowPowerAlertKey : @YES}];
 		_registrationTimeout = 5.0;
+		_attemptAutomaticReconnection = YES;
 	}
 	return self;
 }
@@ -187,7 +190,15 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 			[self.delegate ANCSClient:self device:device disconnectedWithError:error];
 		});
 	}
-	[self removeDeviceForPeripheral:peripheral];
+	BOOL didDisconnect = [self didDisconnectForPeripheral:peripheral];
+	if (self.attemptAutomaticReconnection && didDisconnect == NO) {
+		[self.manager connectPeripheral:peripheral options:nil];
+	} else {
+		if (didDisconnect == YES) {
+			[self setDidDisconnect:NO forPeripheral:peripheral];
+		}
+		[self removeDeviceForPeripheral:peripheral];
+	}
 }
 
 - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
@@ -596,6 +607,34 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	});
 }
 
+- (void)setDidDisconnect:(BOOL)disconnect forPeripheral:(CBPeripheral *)peripheral
+{
+	NSParameterAssert(peripheral);
+	dispatch_barrier_async(self.stateQueue, ^{
+		if (disconnect == YES) {
+			self.disconnects[peripheral.identifier] = @YES;
+		} else {
+			[self.disconnects removeObjectForKey:peripheral.identifier];
+		}
+	});
+}
+
+- (BOOL)didDisconnectForPeripheral:(CBPeripheral *)peripheral
+{
+	NSParameterAssert(peripheral);
+	__block BOOL disconnect = NO;
+	dispatch_sync(self.stateQueue, ^{
+		disconnect = [self.disconnects[peripheral.identifier] boolValue];
+	});
+	return disconnect;
+}
+
+- (void)disconnectFromPeripheral:(CBPeripheral *)peripheral
+{
+	[self setDidDisconnect:YES forPeripheral:peripheral];
+	[self.manager cancelPeripheralConnection:peripheral];
+}
+
 - (void)delegateServiceDiscoveryFailedForPeripheral:(CBPeripheral *)peripheral withError:(NSError *)error
 {
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
@@ -604,7 +643,13 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 			[self.delegate ANCSClient:self serviceDiscoveryFailedForDevice:device withError:error];
 		});
 	}
-	[self.manager cancelPeripheralConnection:peripheral];
+	if (peripheral.state == CBPeripheralStateConnected) {
+		[self disconnectFromPeripheral:peripheral];
+	} else if (error.code == 3 && peripheral.state == CBPeripheralStateDisconnected && self.attemptAutomaticReconnection) {
+		// CBErrorDomain code 3 usually means that the device was not
+		// connected.
+		[self.manager connectPeripheral:peripheral options:nil];
+	}
 }
 
 @end
