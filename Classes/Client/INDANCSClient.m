@@ -185,11 +185,6 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	NSLog(@"[CBCentralManager] Did disconnect peripheral: %@\nError: %@", peripheral, error);
 #endif
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
-	if (device.name.length && _delegateFlags.deviceDisconnectedWithError) {
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[self.delegate ANCSClient:self device:device disconnectedWithError:error];
-		});
-	}
 	BOOL didDisconnect = [self didDisconnectForPeripheral:peripheral];
 	if (self.attemptAutomaticReconnection && didDisconnect == NO) {
 		[self.manager connectPeripheral:peripheral options:nil];
@@ -198,6 +193,12 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 			[self setDidDisconnect:NO forPeripheral:peripheral];
 		}
 		[self removeDeviceForPeripheral:peripheral];
+	}
+	
+	if (device.name.length && _delegateFlags.deviceDisconnectedWithError) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self.delegate ANCSClient:self device:device disconnectedWithError:error];
+		});
 	}
 }
 
