@@ -55,7 +55,6 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 @property (nonatomic, strong, readonly) NSMutableDictionary *notifications;
 @property (nonatomic, strong, readonly) NSMutableData *DSBuffer;
 @property (nonatomic, strong, readonly) NSMutableDictionary *disconnects;
-@property (nonatomic, assign) BOOL ready;
 @end
 
 @implementation INDANCSClient {
@@ -148,6 +147,14 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	NSLog(@"[CBCentralManager] Updated state to: %ld", central.state);
 #endif
 	self.state = central.state;
+	if (self.state == CBCentralManagerStatePoweredOn && self.powerOnBlocks.count) {
+		dispatch_sync(self.stateQueue, ^{
+			for (void(^block)() in self.powerOnBlocks) {
+				block();
+			}
+			[self.powerOnBlocks removeAllObjects];
+		});
+	}
 }
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
@@ -524,31 +531,12 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	}
 }
 
-- (void)setState:(CBCentralManagerState)state
-{
-	_state = state;
-	self.ready = (state == CBCentralManagerStatePoweredOn);
-}
-
-- (void)setReady:(BOOL)ready
-{
-	_ready = ready;
-	if (ready && self.powerOnBlocks.count) {
-		dispatch_sync(self.stateQueue, ^{
-			for (void(^block)() in self.powerOnBlocks) {
-				block();
-			}
-			[self.powerOnBlocks removeAllObjects];
-		});
-	}
-}
-
 #pragma mark - Private
 
 - (void)schedulePowerOnBlock:(void(^)())block
 {
 	NSParameterAssert(block);
-	if (self.ready) {
+	if (self.state == CBCentralManagerStatePoweredOn) {
 		block();
 	} else {
 		dispatch_barrier_async(self.stateQueue, ^{
