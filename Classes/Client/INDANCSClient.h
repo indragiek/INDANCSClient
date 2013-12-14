@@ -24,7 +24,7 @@ typedef void (^INDANCSNotificationBlock)(INDANCSClient *, INDANCSDevice *, INDAN
 /**
  *  Current state of the underlying Bluetooth manager. KVO observable.
  */
-@property (nonatomic, assign, readonly) CBCentralManagerState state;
+@property (assign, readonly) CBCentralManagerState state;
 
 /**
  *  Delegate object.
@@ -37,13 +37,13 @@ typedef void (^INDANCSNotificationBlock)(INDANCSClient *, INDANCSDevice *, INDAN
  *
  *  @seealso -scanForDevices:
  */
-@property (nonatomic, assign) NSTimeInterval registrationTimeout;
+@property (assign) NSTimeInterval registrationTimeout;
 
 /**
  *  If a device disconnects on its own, whether to attempt an automatic
  *  reconnection. Default value is `YES`.
  */
-@property (nonatomic, assign) BOOL attemptAutomaticReconnection;
+@property (assign) BOOL attemptAutomaticReconnection;
 
 /**
  *  Scans for iOS devices to connect to. For each iOS device found,
