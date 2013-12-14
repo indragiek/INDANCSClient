@@ -84,6 +84,16 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	return self;
 }
 
+#pragma mark - Cleanup
+
+- (void)dealloc
+{
+	NSArray *devices = self.devices.allValues;
+	for (INDANCSDevice *device in devices) {
+		[self.manager cancelPeripheralConnection:device.peripheral];
+	}
+}
+
 #pragma mark - Devices
 
 - (void)scanForDevices:(INDANCSDiscoveryBlock)discoveryBlock
