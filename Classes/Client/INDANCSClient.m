@@ -15,7 +15,7 @@
 // Uncomment to enable debug logging
 // #define DEBUG_LOGGING
 
-typedef NS_ENUM(uint8_t, INDANCSEventFlags) {
+typedef NS_OPTIONS(uint8_t, INDANCSEventFlags) {
 	INDANCSEventFlagSilent = (1 << 0),
 	INDANCSEventFlagImportant = (1 << 1)
 };
