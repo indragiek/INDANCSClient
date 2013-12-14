@@ -15,7 +15,7 @@
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"<%@:%p\nsilent: %d\nimportant: %d\ncategoryID: %d\ncategoryCount: %d\nnotificationUID: %d\napplication: %@\ntitle: %@\nsubtitle: %@\nmessage: %@\ndate: %@>", NSStringFromClass(self.class), self, self.silent, self.important, self.categoryID, self.categoryCount, self.notificationUID, self.application, self.title, self.subtitle, self.message, self.date];
+	return [NSString stringWithFormat:@"<%@:%p\nlatestEventID: %d\nsilent: %d\nimportant: %d\ncategoryID: %d\ncategoryCount: %d\nnotificationUID: %d\napplication: %@\ntitle: %@\nsubtitle: %@\nmessage: %@\ndate: %@>", NSStringFromClass(self.class), self, self.latestEventID, self.silent, self.important, self.categoryID, self.categoryCount, self.notificationUID, self.application, self.title, self.subtitle, self.message, self.date];
 }
 
 #pragma mark - NSCoder
