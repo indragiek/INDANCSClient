@@ -11,6 +11,7 @@
 #import "INDANCSNotification_Private.h"
 #import "INDANCSApplication_Private.h"
 #import "NSData+INDANCSAdditions.h"
+#import "CBCharacteristic+INDANCSAdditions.h"
 
 // Uncomment to enable debug logging
 // #define DEBUG_LOGGING
@@ -52,6 +53,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 
 @property (nonatomic, strong, readwrite) NSMutableArray *powerOnBlocks;
 @property (nonatomic, strong, readonly) NSMutableDictionary *devices;
+@property (nonatomic, strong, readonly) NSMutableSet *validDevices;
 @property (nonatomic, strong, readonly) NSMutableDictionary *notifications;
 @property (nonatomic, strong, readonly) NSMutableData *DSBuffer;
 @property (nonatomic, strong, readonly) NSMutableDictionary *disconnects;
@@ -71,6 +73,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 {
 	if ((self = [super init])) {
 		_devices = [NSMutableDictionary dictionary];
+		_validDevices = [NSMutableSet set];
 		_notifications = [NSMutableDictionary dictionary];
 		_DSBuffer = [NSMutableData data];
 		_disconnects = [NSMutableDictionary dictionary];
@@ -190,7 +193,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 #ifdef DEBUG_LOGGING
 	NSLog(@"[CBCentralManager] Did connect to peripheral: %@", peripheral);
 #endif
-	[peripheral discoverServices:@[IND_ANCS_SV_UUID, IND_NAME_SV_UUID]];
+	[peripheral discoverServices:@[IND_ANCS_SV_UUID, IND_DVCE_SV_UUID]];
 	if (self.discoveryBlock) {
 		[self.manager scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey : @YES}];
 	}
@@ -202,10 +205,11 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	NSLog(@"[CBCentralManager] Did disconnect peripheral: %@\nError: %@", peripheral, error);
 #endif
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
-	if (device.name.length && _delegateFlags.deviceDisconnectedWithError) {
+	if ([self.validDevices containsObject:device] && _delegateFlags.deviceDisconnectedWithError) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[self.delegate ANCSClient:self device:device disconnectedWithError:error];
 		});
+		[self.validDevices removeObject:device];
 	}
 	BOOL didDisconnect = [self didDisconnectForPeripheral:peripheral];
 	if (self.attemptAutomaticReconnection && didDisconnect == NO) {
@@ -254,9 +258,9 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 				device.ANCSService = service;
 				[peripheral discoverCharacteristics:@[IND_ANCS_CP_UUID, IND_ANCS_DS_UUID, IND_ANCS_NS_UUID] forService:service];
 				[foundServices addObject:service];
-			} else if ([service.UUID isEqual:IND_NAME_SV_UUID]) {
-				device.NAMEService = service;
-				[peripheral discoverCharacteristics:@[IND_NAME_CH_UUID] forService:service];
+			} else if ([service.UUID isEqual:IND_DVCE_SV_UUID]) {
+				device.DVCEService = service;
+				[peripheral discoverCharacteristics:@[IND_DVCE_NM_UUID, IND_DVCE_ML_UUID] forService:service];
 				[foundServices addObject:service];
 			}
 		}
@@ -278,16 +282,17 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	NSArray *characteristics = service.characteristics;
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
 	CBUUID *serviceUUID = service.UUID;
-	if ([serviceUUID isEqual:IND_NAME_SV_UUID]) {
-		CBCharacteristic *NAMECharacteristic = nil;
+	if ([serviceUUID isEqual:IND_DVCE_SV_UUID]) {
 		for (CBCharacteristic *characteristic in characteristics) {
-			if ([characteristic.UUID isEqual:IND_NAME_CH_UUID]) {
-				NAMECharacteristic = characteristic;
-				break;
+			CBUUID *charUUID = characteristic.UUID;
+			if ([charUUID isEqual:IND_DVCE_NM_UUID]) {
+				device.NMCharacteristic = characteristic;
+			} else if ([charUUID isEqual:IND_DVCE_ML_UUID]) {
+				device.MLCharacteristic = characteristic;
 			}
 		}
-		device.NAMECharacteristic = NAMECharacteristic;
-		[peripheral readValueForCharacteristic:NAMECharacteristic];
+		[peripheral readValueForCharacteristic:device.NMCharacteristic];
+		[peripheral readValueForCharacteristic:device.MLCharacteristic];
 	} else if ([serviceUUID isEqual:IND_ANCS_SV_UUID]) {
 		for (CBCharacteristic *characteristic in characteristics) {
 			CBUUID *charUUID = characteristic.UUID;
@@ -309,14 +314,12 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	NSLog(@"[%@] Did update value: %@ for characteristic: %@\nError: %@", peripheral, characteristic.value, characteristic, error);
 #endif
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
-	if (characteristic == device.NAMECharacteristic) {
-		NSString *name = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
-		if (name.length) device.name = name;
-		
-		if (self.discoveryBlock) {
-			self.discoveryBlock(self, device);
-			[self startRegistrationTimerForDevice:device];
-		}
+	if (characteristic == device.NMCharacteristic) {
+		device.name = characteristic.ind_stringValue;
+		[self handleDiscoveryForDevice:device];
+	} else if (characteristic == device.MLCharacteristic) {
+		device.modelIdentifier = characteristic.ind_stringValue;
+		[self handleDiscoveryForDevice:device];
 	} else if (characteristic == device.NSCharacteristic) {
 		INDANCSNotification *notification = [self readNotificationWithData:characteristic.value];
 		if (notification.latestEventID == INDANCSEventIDNotificationRemoved) {
@@ -355,6 +358,34 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	if (header == INDANCSCommandIDGetNotificationAttributes) {
 		uint32_t UID = [data ind_readUInt32At:&offset];
 		[self removeNotificationForUID:UID];
+	}
+}
+
+- (void)delegateServiceDiscoveryFailedForPeripheral:(CBPeripheral *)peripheral withError:(NSError *)error
+{
+	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
+	if (_delegateFlags.serviceDiscoveryFailedForDeviceWithError) {
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self.delegate ANCSClient:self serviceDiscoveryFailedForDevice:device withError:error];
+		});
+	}
+	if (peripheral.state == CBPeripheralStateConnected) {
+		[self disconnectFromPeripheral:peripheral];
+	} else if (error.code == 3 && peripheral.state == CBPeripheralStateDisconnected && self.attemptAutomaticReconnection) {
+		// CBErrorDomain code 3 usually means that the device was not
+		// connected.
+		[self.manager connectPeripheral:peripheral options:nil];
+	}
+}
+
+- (void)handleDiscoveryForDevice:(INDANCSDevice *)device
+{
+	if (device.name && device.modelIdentifier && [self.validDevices containsObject:device] == NO) {
+		[self.validDevices addObject:device];
+		if (self.discoveryBlock) {
+			self.discoveryBlock(self, device);
+		}
+		[self startRegistrationTimerForDevice:device];
 	}
 }
 
@@ -540,7 +571,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	}
 }
 
-#pragma mark - Private
+#pragma mark - State
 
 - (void)schedulePowerOnBlock:(void(^)())block
 {
@@ -631,23 +662,6 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 {
 	[self setDidDisconnect:YES forPeripheral:peripheral];
 	[self.manager cancelPeripheralConnection:peripheral];
-}
-
-- (void)delegateServiceDiscoveryFailedForPeripheral:(CBPeripheral *)peripheral withError:(NSError *)error
-{
-	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
-	if (_delegateFlags.serviceDiscoveryFailedForDeviceWithError) {
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[self.delegate ANCSClient:self serviceDiscoveryFailedForDevice:device withError:error];
-		});
-	}
-	if (peripheral.state == CBPeripheralStateConnected) {
-		[self disconnectFromPeripheral:peripheral];
-	} else if (error.code == 3 && peripheral.state == CBPeripheralStateDisconnected && self.attemptAutomaticReconnection) {
-		// CBErrorDomain code 3 usually means that the device was not
-		// connected.
-		[self.manager connectPeripheral:peripheral options:nil];
-	}
 }
 
 @end

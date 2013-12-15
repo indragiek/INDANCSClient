@@ -26,7 +26,7 @@
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"<%@:%p name:%@>", NSStringFromClass(self.class), self, self.name];
+	return [NSString stringWithFormat:@"<%@:%p name:%@ modelIdentifier:%@>", NSStringFromClass(self.class), self, self.name, self.modelIdentifier];
 }
 
 @end
