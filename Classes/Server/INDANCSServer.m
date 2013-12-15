@@ -125,7 +125,11 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
     char *model = malloc(size);
     int mib[] = {CTL_HW, HW_MACHINE};
     sysctl(mib, 2, model, &size, NULL, 0);
-	return [NSData dataWithBytesNoCopy:model length:size freeWhenDone:YES];
+	// Using size - 1 because we want to strip out the terminating null byte, which
+	// NSString does not like.
+	NSData *data = [NSData dataWithBytes:model length:size - 1];
+	free(model);
+	return data;
 }
 
 - (CBMutableService *)newDVCEService
