@@ -8,12 +8,14 @@
 
 #import "INDANCSServer.h"
 #import "INDANCSDefines.h"
+#include <sys/types.h>
+#include <sys/sysctl.h>
 
 static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 
 @interface INDANCSServer () <CBPeripheralManagerDelegate>
 @property (nonatomic, strong) CBPeripheralManager *manager;
-@property (nonatomic, strong) CBMutableService *NAMEService;
+@property (nonatomic, strong) CBMutableService *DVCEService;
 @property (nonatomic) dispatch_queue_t delegateQueue;
 @property (nonatomic, assign, readwrite) CBPeripheralManagerState state;
 @property (nonatomic, assign) BOOL shouldAdvertise;
@@ -46,7 +48,7 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 {
 	self.shouldAdvertise = YES;
 	if (self.manager.state == CBCentralManagerStatePoweredOn && self.manager.isAdvertising == NO) {
-		NSDictionary *advertisementData = @{CBAdvertisementDataServiceUUIDsKey : @[IND_ANCS_SV_UUID, IND_NAME_SV_UUID], CBAdvertisementDataLocalNameKey : UIDevice.currentDevice.name};
+		NSDictionary *advertisementData = @{CBAdvertisementDataServiceUUIDsKey : @[IND_ANCS_SV_UUID, IND_DVCE_SV_UUID], CBAdvertisementDataLocalNameKey : UIDevice.currentDevice.name};
 		[self.manager startAdvertising:advertisementData];
 	}
 }
@@ -85,9 +87,9 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 {
 	self.state = peripheral.state;
 	if (self.state == CBPeripheralManagerStatePoweredOn) {
-		if (self.NAMEService == nil) {
-			self.NAMEService = [self newNAMEService];
-			[_manager addService:self.NAMEService];
+		if (self.DVCEService == nil) {
+			self.DVCEService = [self newDVCEService];
+			[_manager addService:self.DVCEService];
 		}
 		if (self.shouldAdvertise) {
 			[self startAdvertising];
@@ -95,15 +97,6 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 	} else {
 		[self stopAdvertising];
 	}
-}
-
-- (CBMutableService *)newNAMEService
-{
-	CBMutableService *service = [[CBMutableService alloc] initWithType:IND_NAME_SV_UUID primary:YES];
-	NSData *nameData = [UIDevice.currentDevice.name dataUsingEncoding:NSUTF8StringEncoding];
-	CBMutableCharacteristic *nameCharacteristic = [[CBMutableCharacteristic alloc] initWithType:IND_NAME_CH_UUID properties:CBCharacteristicPropertyRead value:nameData permissions:CBAttributePermissionsReadable];
-	service.characteristics = @[nameCharacteristic];
-	return service;
 }
 
 - (void)peripheralManagerDidStartAdvertising:(CBPeripheralManager *)peripheral error:(NSError *)error
@@ -117,7 +110,34 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 
 - (void)peripheralManager:(CBPeripheralManager *)peripheral willRestoreState:(NSDictionary *)dict
 {
-	NSLog(@"%@", dict);
+}
+
+#pragma mark - NAME Service
+
++ (NSData *)deviceNameData
+{
+	return [UIDevice.currentDevice.name dataUsingEncoding:NSUTF8StringEncoding];
+}
+
++ (NSData *)deviceModelData
+{
+	size_t size = 20;
+    char *model = malloc(size);
+    int mib[] = {CTL_HW, HW_MACHINE};
+    sysctl(mib, 2, model, &size, NULL, 0);
+	return [NSData dataWithBytesNoCopy:model length:size freeWhenDone:YES];
+}
+
+- (CBMutableService *)newDVCEService
+{
+	CBMutableService *service = [[CBMutableService alloc] initWithType:IND_DVCE_SV_UUID primary:YES];
+	NSData *nameData = self.class.deviceNameData;
+	NSData *modelData = self.class.deviceModelData;
+	
+	CBMutableCharacteristic *NMCharacteristic = [[CBMutableCharacteristic alloc] initWithType:IND_DVCE_NM_UUID properties:CBCharacteristicPropertyRead value:nameData permissions:CBAttributePermissionsReadable];
+	CBMutableCharacteristic *MLCharacteristic = [[CBMutableCharacteristic alloc] initWithType:IND_DVCE_ML_UUID properties:CBCharacteristicPropertyRead value:modelData permissions:CBAttributePermissionsReadable];
+	service.characteristics = @[NMCharacteristic, MLCharacteristic];
+	return service;
 }
 
 @end
