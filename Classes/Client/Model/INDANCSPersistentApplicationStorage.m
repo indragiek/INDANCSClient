@@ -7,6 +7,8 @@
 //
 
 #import "INDANCSPersistentApplicationStorage.h"
+#import "INDANCSPersistentApplication.h"
+#import "INDANCSApplication_Private.h"
 #import <CoreData/CoreData.h>
 
 static NSString * const INDANCSDatabaseFilename = @"ANCSApplications.db";
@@ -15,7 +17,6 @@ static NSString * const INDANCSMOMDFilename = @"INDANCSPersistentApplicationStor
 @interface INDANCSPersistentApplicationStorage ()
 @property (nonatomic, strong, readonly) NSManagedObjectContext *mainQueueContext;
 @property (nonatomic, strong, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, strong, readonly) NSMutableArray *activeContexts;
 @property (nonatomic, strong, readonly) NSManagedObjectModel *managedObjectModel;
 @end
 
@@ -41,8 +42,6 @@ static NSString * const INDANCSMOMDFilename = @"INDANCSPersistentApplicationStor
 			return nil;
 		}
 		_mainQueueContext = [self newContextWithType:NSMainQueueConcurrencyType];
-		_activeContexts = [NSMutableArray array];
-		NSLog(@"%@", self.mainQueueContext);
 	}
 	return self;
 }
@@ -69,7 +68,35 @@ static NSString * const INDANCSMOMDFilename = @"INDANCSPersistentApplicationStor
 
 #pragma mark - Fetching
 
-
+- (void)fetchApplicationForBundleID:(NSString *)bundleID completion:(INDANCSPersistentStorageFetchBlock)block
+{
+	NSParameterAssert(block);
+	NSParameterAssert(bundleID);
+	
+	dispatch_queue_t global = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	dispatch_async(global, ^{
+		NSManagedObjectContext *context = [self newContextWithType:NSConfinementConcurrencyType];
+		NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:INDANCSPersistentApplication.entityName];
+		NSString *displayNameKeypath = INDANCSPersistentApplicationAttributes.displayName;
+		request.resultType = NSDictionaryResultType;
+		request.fetchLimit = 1;
+		request.propertiesToFetch = @[displayNameKeypath];
+		request.predicate = [NSPredicate predicateWithFormat:@"bundleIdentifier == %@", bundleID];
+		NSError *error = nil;
+		NSArray *results = [context executeFetchRequest:request error:&error];
+		NSString *displayName = results.firstObject[displayNameKeypath];
+		
+		INDANCSApplication *application = nil;
+		if (displayName != nil) {
+			application = [[INDANCSApplication alloc] init];
+			application.bundleIdentifier = bundleID;
+			application.name = displayName;
+		}
+		dispatch_async(dispatch_get_main_queue(), ^{
+			block(application, error);
+		});
+	});
+}
 
 
 @end
