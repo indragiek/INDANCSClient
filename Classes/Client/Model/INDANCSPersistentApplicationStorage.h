@@ -10,4 +10,5 @@
 
 @interface INDANCSPersistentApplicationStorage : NSObject
 
+
 @end
