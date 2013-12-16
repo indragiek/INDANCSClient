@@ -20,13 +20,9 @@
 		0397D86D1859755E005561AD /* INDANCSMacTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D86C1859755E005561AD /* INDANCSMacTests.m */; };
 		0397D8BA1859759A005561AD /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8B91859759A005561AD /* IOBluetooth.framework */; };
 		0397D8C518597BCF005561AD /* INDANCSClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D8C418597BCF005561AD /* INDANCSClient.m */; };
-		03ED962B185D74E2009FF2E8 /* _INDANCSPersistentApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ED961B185D74E2009FF2E8 /* _INDANCSPersistentApplication.m */; };
 		03ED962C185D74E2009FF2E8 /* INDANCSApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ED961D185D74E2009FF2E8 /* INDANCSApplication.m */; };
 		03ED962D185D74E2009FF2E8 /* INDANCSDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ED9620185D74E2009FF2E8 /* INDANCSDevice.m */; };
 		03ED962E185D74E2009FF2E8 /* INDANCSNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ED9623185D74E2009FF2E8 /* INDANCSNotification.m */; };
-		03ED962F185D74E2009FF2E8 /* INDANCSPersistentApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ED9626185D74E2009FF2E8 /* INDANCSPersistentApplication.m */; };
-		03ED9630185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ED9628185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.m */; };
-		03ED9631185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 03ED9629185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.xcdatamodeld */; };
 		03ED9637185D74E6009FF2E8 /* CBCharacteristic+INDANCSAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ED9634185D74E6009FF2E8 /* CBCharacteristic+INDANCSAdditions.m */; };
 		03ED9638185D74E6009FF2E8 /* NSData+INDANCSAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ED9636185D74E6009FF2E8 /* NSData+INDANCSAdditions.m */; };
 /* End PBXBuildFile section */
@@ -65,8 +61,6 @@
 		0397D8C318597BCF005561AD /* INDANCSClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSClient.h; sourceTree = "<group>"; };
 		0397D8C418597BCF005561AD /* INDANCSClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSClient.m; sourceTree = "<group>"; };
 		0397D8C718597BD4005561AD /* INDANCSDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDefines.h; sourceTree = "<group>"; };
-		03ED961A185D74E2009FF2E8 /* _INDANCSPersistentApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _INDANCSPersistentApplication.h; sourceTree = "<group>"; };
-		03ED961B185D74E2009FF2E8 /* _INDANCSPersistentApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _INDANCSPersistentApplication.m; sourceTree = "<group>"; };
 		03ED961C185D74E2009FF2E8 /* INDANCSApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSApplication.h; sourceTree = "<group>"; };
 		03ED961D185D74E2009FF2E8 /* INDANCSApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSApplication.m; sourceTree = "<group>"; };
 		03ED961E185D74E2009FF2E8 /* INDANCSApplication_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSApplication_Private.h; sourceTree = "<group>"; };
@@ -76,11 +70,6 @@
 		03ED9622185D74E2009FF2E8 /* INDANCSNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSNotification.h; sourceTree = "<group>"; };
 		03ED9623185D74E2009FF2E8 /* INDANCSNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSNotification.m; sourceTree = "<group>"; };
 		03ED9624185D74E2009FF2E8 /* INDANCSNotification_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSNotification_Private.h; sourceTree = "<group>"; };
-		03ED9625185D74E2009FF2E8 /* INDANCSPersistentApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSPersistentApplication.h; sourceTree = "<group>"; };
-		03ED9626185D74E2009FF2E8 /* INDANCSPersistentApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSPersistentApplication.m; sourceTree = "<group>"; };
-		03ED9627185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSPersistentApplicationStorage.h; sourceTree = "<group>"; };
-		03ED9628185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSPersistentApplicationStorage.m; sourceTree = "<group>"; };
-		03ED962A185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = INDANCSPersistentApplicationStorage.xcdatamodel; sourceTree = "<group>"; };
 		03ED9633185D74E6009FF2E8 /* CBCharacteristic+INDANCSAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBCharacteristic+INDANCSAdditions.h"; sourceTree = "<group>"; };
 		03ED9634185D74E6009FF2E8 /* CBCharacteristic+INDANCSAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBCharacteristic+INDANCSAdditions.m"; sourceTree = "<group>"; };
 		03ED9635185D74E6009FF2E8 /* NSData+INDANCSAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+INDANCSAdditions.h"; sourceTree = "<group>"; };
@@ -217,8 +206,6 @@
 		03ED9619185D74E2009FF2E8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				03ED961A185D74E2009FF2E8 /* _INDANCSPersistentApplication.h */,
-				03ED961B185D74E2009FF2E8 /* _INDANCSPersistentApplication.m */,
 				03ED961C185D74E2009FF2E8 /* INDANCSApplication.h */,
 				03ED961D185D74E2009FF2E8 /* INDANCSApplication.m */,
 				03ED961E185D74E2009FF2E8 /* INDANCSApplication_Private.h */,
@@ -228,11 +215,6 @@
 				03ED9622185D74E2009FF2E8 /* INDANCSNotification.h */,
 				03ED9623185D74E2009FF2E8 /* INDANCSNotification.m */,
 				03ED9624185D74E2009FF2E8 /* INDANCSNotification_Private.h */,
-				03ED9625185D74E2009FF2E8 /* INDANCSPersistentApplication.h */,
-				03ED9626185D74E2009FF2E8 /* INDANCSPersistentApplication.m */,
-				03ED9627185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.h */,
-				03ED9628185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.m */,
-				03ED9629185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.xcdatamodeld */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -349,12 +331,8 @@
 			files = (
 				03ED962D185D74E2009FF2E8 /* INDANCSDevice.m in Sources */,
 				0397D8561859755E005561AD /* INDAppDelegate.m in Sources */,
-				03ED9631185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.xcdatamodeld in Sources */,
-				03ED962B185D74E2009FF2E8 /* _INDANCSPersistentApplication.m in Sources */,
 				03ED962E185D74E2009FF2E8 /* INDANCSNotification.m in Sources */,
 				03ED9638185D74E6009FF2E8 /* NSData+INDANCSAdditions.m in Sources */,
-				03ED962F185D74E2009FF2E8 /* INDANCSPersistentApplication.m in Sources */,
-				03ED9630185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.m in Sources */,
 				03ED962C185D74E2009FF2E8 /* INDANCSApplication.m in Sources */,
 				0397D8C518597BCF005561AD /* INDANCSClient.m in Sources */,
 				03ED9637185D74E6009FF2E8 /* CBCharacteristic+INDANCSAdditions.m in Sources */,
@@ -581,19 +559,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		03ED9629185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				03ED962A185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.xcdatamodel */,
-			);
-			currentVersion = 03ED962A185D74E2009FF2E8 /* INDANCSPersistentApplicationStorage.xcdatamodel */;
-			path = INDANCSPersistentApplicationStorage.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 0397D8371859755E005561AD /* Project object */;
 }
