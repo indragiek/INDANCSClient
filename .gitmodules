@@ -1,0 +1,3 @@
+[submodule "External/ObjectiveKVDB"]
+	path = External/ObjectiveKVDB
+	url = git@github.com:indragiek/ObjectiveKVDB.git
