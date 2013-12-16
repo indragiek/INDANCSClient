@@ -11,8 +11,8 @@
 @interface INDANCSDevice ()
 - (id)initWithCBPeripheral:(CBPeripheral *)peripheral;
 @property (nonatomic, strong, readonly) CBPeripheral *peripheral;
-@property (nonatomic, copy, readwrite) NSString *name;
-@property (nonatomic, copy, readwrite) NSString *modelIdentifier;
+@property (nonatomic, strong, readwrite) NSString *name;
+@property (nonatomic, strong, readwrite) NSString *modelIdentifier;
 @property (nonatomic, strong) CBService *ANCSService;
 @property (nonatomic, strong) CBService *DVCEService;
 @property (nonatomic, strong) CBCharacteristic *NMCharacteristic;

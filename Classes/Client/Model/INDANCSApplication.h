@@ -7,11 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "INDANCSDictionarySerialization.h"
 
 /**
  *  Model object representing an iOS application that posted a notification.
  */
-@interface INDANCSApplication : NSObject <NSCoding>
+@interface INDANCSApplication : NSObject <NSCoding, INDANCSDictionarySerialization>
 
 /**
  *  The bundle identifier of the application.

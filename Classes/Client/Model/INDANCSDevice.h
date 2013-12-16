@@ -15,10 +15,10 @@
 /**
  *  The name of the device.
  */
-@property (nonatomic, copy, readonly) NSString *name;
+@property (nonatomic, strong, readonly) NSString *name;
 
 /**
  *  The model identifier of the device (e.g. iPhone 5,1)
  */
-@property (nonatomic, copy, readonly) NSString *modelIdentifier;
+@property (nonatomic, strong, readonly) NSString *modelIdentifier;
 @end

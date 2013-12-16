@@ -11,4 +11,5 @@
 @interface INDANCSApplication ()
 @property (nonatomic, strong, readwrite) NSString *bundleIdentifier;
 @property (nonatomic, strong, readwrite) NSString *name;
+- (id)initWithBundleIdentifier:(NSString *)bundleID dictionary:(NSDictionary *)dictionary;
 @end

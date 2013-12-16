@@ -11,6 +11,30 @@
 
 @implementation INDANCSApplication
 
+#pragma mark - INDANCSDictionarySerialization
+
+- (id)initWithBundleIdentifier:(NSString *)bundleID dictionary:(NSDictionary *)dictionary
+{
+	if ((self = [self initWithDictionary:dictionary])) {
+		_bundleIdentifier = bundleID;
+	}
+	return self;
+}
+
+- (id)initWithDictionary:(NSDictionary *)dictionary
+{
+	if ((self = [super init])) {
+		_name = dictionary[@"name"];
+	}
+	return self;
+}
+
+- (NSDictionary *)dictionaryValue
+{
+	if (self.name == nil) return nil;
+	return @{@"name" : self.name};
+}
+
 #pragma mark - NSObject
 
 - (NSString *)description

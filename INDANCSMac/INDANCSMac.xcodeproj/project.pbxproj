@@ -74,6 +74,7 @@
 		03ED9634185D74E6009FF2E8 /* CBCharacteristic+INDANCSAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBCharacteristic+INDANCSAdditions.m"; sourceTree = "<group>"; };
 		03ED9635185D74E6009FF2E8 /* NSData+INDANCSAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+INDANCSAdditions.h"; sourceTree = "<group>"; };
 		03ED9636185D74E6009FF2E8 /* NSData+INDANCSAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+INDANCSAdditions.m"; sourceTree = "<group>"; };
+		03EDF44C185ED1070097E380 /* INDANCSDictionarySerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDictionarySerialization.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +216,7 @@
 				03ED9622185D74E2009FF2E8 /* INDANCSNotification.h */,
 				03ED9623185D74E2009FF2E8 /* INDANCSNotification.m */,
 				03ED9624185D74E2009FF2E8 /* INDANCSNotification_Private.h */,
+				03EDF44C185ED1070097E380 /* INDANCSDictionarySerialization.h */,
 			);
 			path = Model;
 			sourceTree = "<group>";
