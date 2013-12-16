@@ -12,7 +12,7 @@
 /**
  *  Model object representing an iOS application that posted a notification.
  */
-@interface INDANCSApplication : NSObject <NSCoding, INDANCSDictionarySerialization>
+@interface INDANCSApplication : NSObject <NSCoding, NSCopying, INDANCSDictionarySerialization>
 
 /**
  *  The bundle identifier of the application.

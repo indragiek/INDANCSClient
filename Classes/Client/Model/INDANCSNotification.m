@@ -18,6 +18,23 @@
 	return [NSString stringWithFormat:@"<%@:%p\nlatestEventID: %d\nsilent: %d\nimportant: %d\ncategoryID: %d\ncategoryCount: %d\nnotificationUID: %d\napplication: %@\ntitle: %@\nsubtitle: %@\nmessage: %@\ndate: %@>", NSStringFromClass(self.class), self, self.latestEventID, self.silent, self.important, self.categoryID, self.categoryCount, self.notificationUID, self.application, self.title, self.subtitle, self.message, self.date];
 }
 
+- (BOOL)isEqual:(id)object
+{
+	if (object == self) return YES;
+	if (![object isMemberOfClass:self.class]) return NO;
+	
+	INDANCSNotification *notification = object;
+	
+	// TODO: Fix this. Should check the parent device as well.
+	return (self.notificationUID == notification.notificationUID);
+}
+
+- (NSUInteger)hash
+{
+	// TOOD: Fix this too.
+	return self.notificationUID;
+}
+
 #pragma mark - NSCoder
 
 - (id)initWithCoder:(NSCoder *)aDecoder

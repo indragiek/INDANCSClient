@@ -122,6 +122,7 @@
 		03EDF462185ED69C0097E380 /* INDANCSApplicationStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSApplicationStorage.m; sourceTree = "<group>"; };
 		03EDF464185ED7040097E380 /* INDANCSInMemoryStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSInMemoryStore.h; sourceTree = "<group>"; };
 		03EDF465185ED7040097E380 /* INDANCSInMemoryStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSInMemoryStore.m; sourceTree = "<group>"; };
+		03EDF467185EDD540097E380 /* INDANCSObjectEquality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSObjectEquality.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -273,6 +274,7 @@
 				03EDF465185ED7040097E380 /* INDANCSInMemoryStore.m */,
 				03EDF461185ED69C0097E380 /* INDANCSApplicationStorage.h */,
 				03EDF462185ED69C0097E380 /* INDANCSApplicationStorage.m */,
+				03EDF467185EDD540097E380 /* INDANCSObjectEquality.h */,
 			);
 			path = Model;
 			sourceTree = "<group>";

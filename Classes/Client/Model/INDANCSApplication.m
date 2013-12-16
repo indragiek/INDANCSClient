@@ -8,6 +8,7 @@
 
 #import "INDANCSApplication.h"
 #import "INDANCSApplication_Private.h"
+#import "INDANCSObjectEquality.h"
 
 @implementation INDANCSApplication
 
@@ -42,6 +43,21 @@
 	return [NSString stringWithFormat:@"<%@:%p bundleIdentifier:%@ name:%@>", NSStringFromClass(self.class), self, self.bundleIdentifier, self.name];
 }
 
+- (BOOL)isEqual:(id)object
+{
+	if (object == self) return YES;
+	if (![object isMemberOfClass:self.class]) return NO;
+	
+	INDANCSApplication *application = object;
+	return INDANCSEqualObjects(self.bundleIdentifier, application.bundleIdentifier)
+		&& INDANCSEqualObjects(self.name, application.name);
+}
+
+- (NSUInteger)hash
+{
+	return self.name.hash ^ self.bundleIdentifier.hash;
+}
+
 #pragma mark - NSCoder
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -57,6 +73,16 @@
 {
 	[aCoder encodeObject:self.bundleIdentifier forKey:@"bundleIdentifier"];
 	[aCoder encodeObject:self.name forKey:@"name"];
+}
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone
+{
+	INDANCSApplication *application = [[INDANCSApplication allocWithZone:zone] init];
+	application.bundleIdentifier = self.bundleIdentifier;
+	application.name = self.name;
+	return application;
 }
 
 @end

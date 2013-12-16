@@ -8,6 +8,7 @@
 
 #import "INDANCSDevice.h"
 #import "INDANCSDevice_Private.h"
+#import "INDANCSObjectEquality.h"
 
 @implementation INDANCSDevice
 
@@ -22,11 +23,32 @@
 	return self;
 }
 
+#pragma mark - Accessors
+
+- (NSUUID *)identifier
+{
+	return self.peripheral.identifier;
+}
+
 #pragma mark - NSObject
 
 - (NSString *)description
 {
 	return [NSString stringWithFormat:@"<%@:%p name:%@ modelIdentifier:%@>", NSStringFromClass(self.class), self, self.name, self.modelIdentifier];
+}
+
+- (BOOL)isEqual:(id)object
+{
+	if (object == self) return YES;
+	if (![object isMemberOfClass:self.class]) return NO;
+	
+	INDANCSDevice *device = object;
+	return INDANCSEqualObjects(self.identifier, device.identifier);
+}
+
+- (NSUInteger)hash
+{
+	return self.identifier.hash;
 }
 
 @end

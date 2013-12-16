@@ -21,4 +21,9 @@
  *  The model identifier of the device (e.g. iPhone 5,1)
  */
 @property (nonatomic, strong, readonly) NSString *modelIdentifier;
+
+/**
+ * The unique identifier for the device.
+ */
+@property (nonatomic, strong, readonly) NSUUID *identifier;
 @end
