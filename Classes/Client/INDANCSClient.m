@@ -420,6 +420,16 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	}
 }
 
+/*
+ * GATT notification format
+ *
+ *  ----------------------------------------------------------------------------------------------
+ * |              |                 |                 |                    |                      |
+ * | Event ID (1) | Event Flags (1) | Category ID (1) | Category Count (1) | Notification UID (4) |
+ * |              |                 |                 |                    |                      |
+ *  ----------------------------------------------------------------------------------------------
+ *
+ */
 - (INDANCSNotification *)readNotificationWithData:(NSData *)notificationData device:(INDANCSDevice *)device
 {
 	NSUInteger offset = sizeof(uint8_t) * 4; // Skip straight to the UID
@@ -441,6 +451,16 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	return notification;
 }
 
+/*
+ * Get Notification Attributes format
+ *
+ *  ----------------------------------------------------------------------------------------------
+ * |                |                      |                    |                            |
+ * | Command ID (1) | Notification UID (4) | Attribute ID n (1) | Attribute n Max Length (1) | ....
+ * |                |                      |                    |                            |
+ *  ----------------------------------------------------------------------------------------------
+ *
+ */
 - (void)requestNotificationAttributesForUID:(uint32_t)UID peripheral:(CBPeripheral *)peripheral
 {
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
@@ -495,6 +515,16 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	return (attrCount == 0);
 }
 
+/*
+ * Get Notification Attributes response format
+ *
+ *  -----------------------------------------------------------------------------------------------------------------
+ * |                |                      |                    |                        |
+ * | Command ID (1) | Notification UID (4) | Attribute ID n (1) | Attribute n Length (1) | Attribute n Contents ...
+ * |                |                      |                    |                        |
+ *  -----------------------------------------------------------------------------------------------------------------
+ *
+ */
 - (NSUInteger)readNotificationResponseData:(NSData *)responseData
 							  notification:(INDANCSNotification **)notification
 									device:(INDANCSDevice *)device
