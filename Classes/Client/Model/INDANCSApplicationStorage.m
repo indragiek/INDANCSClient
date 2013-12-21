@@ -8,6 +8,7 @@
 
 #import "INDANCSApplicationStorage.h"
 #import "INDANCSApplication_Private.h"
+#import "INDANCSDevice.h"
 
 @interface INDANCSApplicationStorage ()
 @property (nonatomic, strong) NSMutableDictionary *metadataCache;
@@ -68,7 +69,7 @@
 	NSDictionary *dictionary = [existingApplication dictionaryValue];
 	NSString *JSONString = nil;
 	
-	if (dictionary != nil ) {
+	if (dictionary != nil) {
 		NSError *error = nil;
 		NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&error];
 		if (JSONData == nil) {
@@ -91,12 +92,32 @@
 
 - (void)setBlacklisted:(BOOL)blacklisted forApplication:(INDANCSApplication *)application device:(INDANCSDevice *)device
 {
-	
+	NSString *key = [self blacklistKeyForApplication:application device:device];
+	BOOL hasExistingValue = (self.blacklistCache[key] != nil);
+	if (blacklisted && !hasExistingValue) {
+		self.blacklistStore[key] = @"1";
+		self.blacklistCache[key] = @YES;
+	} else if (!blacklisted && hasExistingValue) {
+		self.blacklistStore[key] = nil;
+		[self.blacklistCache removeObjectForKey:key];
+	}
 }
 
 - (BOOL)isBlacklistedApplication:(INDANCSApplication *)application forDevice:(INDANCSDevice *)device
 {
-	return NO;
+	NSString *key = [self blacklistKeyForApplication:application device:device];
+	NSNumber *value = self.blacklistCache[key];
+	if (value == nil) {
+		NSString *stringValue = self.blacklistStore[key];
+		value = @(stringValue.boolValue);
+		self.blacklistCache[key] = value;
+	}
+	return value.boolValue;
+}
+
+- (NSString *)blacklistKeyForApplication:(INDANCSApplication *)application device:(INDANCSDevice *)device
+{
+	return [NSString stringWithFormat:@"%@:%@", application.bundleIdentifier, device.identifier.UUIDString];
 }
 
 @end
