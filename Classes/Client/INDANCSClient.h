@@ -10,6 +10,7 @@
 #import "INDANCSDevice.h"
 #import "INDANCSNotification.h"
 #import "INDANCSApplication.h"
+#import "INDANCSKeyValueStore.h"
 
 @class INDANCSClient;
 @protocol INDANCSClientDelegate;
@@ -44,6 +45,36 @@ typedef void (^INDANCSNotificationBlock)(INDANCSClient *, INDANCSDevice *, INDAN
  *  reconnection. Default value is `YES`.
  */
 @property (assign) BOOL attemptAutomaticReconnection;
+
+/**
+ *  Key value store used to store application metadata.
+ */
+@property (nonatomic, strong, readonly) id<INDANCSKeyValueStore> metadataStore;
+
+/**
+ *  Key value store used to store blacklist preferences.
+ */
+@property (nonatomic, strong, readonly) id<INDANCSKeyValueStore> blacklistStore;
+
+/**
+ *  Default initializer that initializes the client using persistent key value
+ *  stores for both the metadata and blacklist stores (using instances of 
+ *  `INDANCSObjectiveKVDBStore`). The store files will be placed in the
+ *  application support directory.
+ *
+ *  @return A new instance of `INDANCSClient`.
+ */
+- (id)init;
+
+/**
+ *  Initializes the receiver using manually specified key value stores instances.
+ *
+ *  @param metadata  Key value store for storing application metadata.
+ *  @param blacklist Key value store for storing blacklist preferences.
+ *
+ *  @return A new instance of `INDANCSClient`
+ */
+- (id)initWithMetadataStore:(id<INDANCSKeyValueStore>)metadata blacklistStore:(id<INDANCSKeyValueStore>)blacklist;
 
 /**
  *  Scans for iOS devices to connect to. For each iOS device found,

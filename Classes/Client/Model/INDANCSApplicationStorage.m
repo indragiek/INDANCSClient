@@ -19,7 +19,7 @@
 
 #pragma mark - Initialization
 
-- (id)initWithMetadataStore:(id<INDANCSKeyValueStore>)metadata blacklist:(id<INDANCSKeyValueStore>)blacklist
+- (id)initWithMetadataStore:(id<INDANCSKeyValueStore>)metadata blacklistStore:(id<INDANCSKeyValueStore>)blacklist
 {
 	NSParameterAssert(metadata);
 	NSParameterAssert(blacklist);

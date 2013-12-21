@@ -35,7 +35,7 @@
  *
  *  @return A new instance of `INDANCSApplicationStorage`
  */
-- (id)initWithMetadataStore:(id<INDANCSKeyValueStore>)metadata blacklist:(id<INDANCSKeyValueStore>)blacklist;
+- (id)initWithMetadataStore:(id<INDANCSKeyValueStore>)metadata blacklistStore:(id<INDANCSKeyValueStore>)blacklist;
 
 #pragma mark - Metadata
 

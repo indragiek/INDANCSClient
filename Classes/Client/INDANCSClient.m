@@ -10,6 +10,8 @@
 #import "INDANCSDevice_Private.h"
 #import "INDANCSNotification_Private.h"
 #import "INDANCSApplication_Private.h"
+#import "INDANCSApplicationStorage.h"
+#import "INDANCSObjectiveKVDBStore.h"
 #import "NSData+INDANCSAdditions.h"
 #import "CBCharacteristic+INDANCSAdditions.h"
 
@@ -42,10 +44,13 @@ typedef NS_ENUM(uint8_t, INDANCSAppAttributeID) {
 static NSUInteger const INDANCSGetNotificationAttributeCount = 5;
 static NSUInteger const INDANCSGetAppAttributeCount = 1;
 static NSString * const INDANCSDeviceUserInfoKey = @"device";
+static NSString * const INDANCSMetadataStoreFilename = @"ANCSMetadata.db";
+static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 
 @interface INDANCSClient () <CBCentralManagerDelegate, CBPeripheralDelegate>
 @property (nonatomic, strong, readonly) CBCentralManager *manager;
 @property (nonatomic, assign, readwrite) CBCentralManagerState state;
+@property (nonatomic, strong, readonly) INDANCSApplicationStorage *appStorage;
 @property (nonatomic, copy) INDANCSDiscoveryBlock discoveryBlock;
 @property (nonatomic, readonly) dispatch_queue_t delegateQueue;
 @property (nonatomic, strong) NSMutableArray *powerOnBlocks;
@@ -67,7 +72,18 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 
 - (id)init
 {
+	NSURL *parentURL = self.applicationSupportURL;
+	NSURL *metadataURL = [parentURL URLByAppendingPathComponent:INDANCSMetadataStoreFilename];
+	NSURL *blacklistURL = [parentURL URLByAppendingPathComponent:INDANCSBlacklistStoreFilename];
+	INDANCSObjectiveKVDBStore *metadata = [[INDANCSObjectiveKVDBStore alloc] initWithDatabasePath:metadataURL.path];
+	INDANCSObjectiveKVDBStore *blacklist = [[INDANCSObjectiveKVDBStore alloc] initWithDatabasePath:blacklistURL.path];
+	return [self initWithMetadataStore:metadata blacklistStore:blacklist];
+}
+
+- (id)initWithMetadataStore:(id<INDANCSKeyValueStore>)metadata blacklistStore:(id<INDANCSKeyValueStore>)blacklist
+{
 	if ((self = [super init])) {
+		_appStorage = [[INDANCSApplicationStorage alloc] initWithMetadataStore:metadata blacklistStore:blacklist];
 		_devices = [NSMutableDictionary dictionary];
 		_validDevices = [NSMutableSet set];
 		_DSBuffer = [NSMutableData data];
@@ -79,6 +95,16 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 		_attemptAutomaticReconnection = YES;
 	}
 	return self;
+}
+
+- (NSURL *)applicationSupportURL
+{
+	NSFileManager *fm = NSFileManager.defaultManager;
+	NSURL *appSupportURL = [[fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject];
+	NSString *bundleName = NSBundle.mainBundle.infoDictionary[@"CFBundleName"];
+	NSURL *dataURL = [appSupportURL URLByAppendingPathComponent:bundleName];
+	[fm createDirectoryAtURL:dataURL withIntermediateDirectories:YES attributes:nil error:nil];
+	return dataURL;
 }
 
 #pragma mark - Cleanup
