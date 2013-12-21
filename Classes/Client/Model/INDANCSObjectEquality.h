@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+#ifndef IND_ANCS_OBJECT_EQUALITY
+#define IND_ANCS_OBJECT_EQUALITY
+
 NS_INLINE BOOL INDANCSEqualObjects(id obj1, id obj2) {
 	return (obj1 == obj2) || [obj1 isEqual:obj2];
 }
+
+#endif

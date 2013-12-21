@@ -30,11 +30,16 @@ typedef NS_ENUM(uint8_t, INDANCSEventID) {
 };
 
 @class INDANCSApplication;
+@class INDANCSDevice;
 
 /**
  *  Model object representing a push notification received from an iOS device.
  */
 @interface INDANCSNotification : NSObject <NSCoding>
+/**
+ *  The device the notification originated from.
+ */
+@property (nonatomic, weak, readonly) INDANCSDevice *device;
 /**
  *  The event ID of the latest event received for the notification.
  */

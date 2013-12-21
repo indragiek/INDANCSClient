@@ -8,6 +8,8 @@
 
 #import "INDANCSNotification.h"
 #import "INDANCSNotification_Private.h"
+#import "INDANCSDevice.h"
+#import "INDANCSObjectEquality.h"
 
 @implementation INDANCSNotification
 
@@ -24,15 +26,13 @@
 	if (![object isMemberOfClass:self.class]) return NO;
 	
 	INDANCSNotification *notification = object;
-	
-	// TODO: Fix this. Should check the parent device as well.
-	return (self.notificationUID == notification.notificationUID);
+	return (self.notificationUID == notification.notificationUID)
+		&& INDANCSEqualObjects(self.device, notification.device);
 }
 
 - (NSUInteger)hash
 {
-	// TOOD: Fix this too.
-	return self.notificationUID;
+	return self.notificationUID ^ self.device.hash;
 }
 
 #pragma mark - NSCoder

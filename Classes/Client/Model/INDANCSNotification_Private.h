@@ -9,6 +9,7 @@
 #import "INDANCSNotification.h"
 
 @interface INDANCSNotification ()
+@property (nonatomic, weak, readwrite) INDANCSDevice *device;
 @property (nonatomic, assign, readwrite) INDANCSEventID latestEventID;
 @property (nonatomic, assign, readwrite) BOOL silent;
 @property (nonatomic, assign, readwrite) BOOL important;

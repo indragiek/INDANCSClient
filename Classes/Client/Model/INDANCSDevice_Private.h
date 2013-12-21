@@ -8,6 +8,7 @@
 
 #import "INDANCSDevice.h"
 
+@class INDANCSNotification;
 @interface INDANCSDevice ()
 - (id)initWithCBPeripheral:(CBPeripheral *)peripheral;
 @property (nonatomic, strong, readonly) CBPeripheral *peripheral;
@@ -22,4 +23,9 @@
 @property (nonatomic, strong) CBCharacteristic *DSCharacteristic;
 @property (nonatomic, strong) NSTimer *registrationTimer;
 @property (nonatomic, copy) id notificationBlock;
+
+- (void)addNotification:(INDANCSNotification *)notification;
+- (void)removeNotification:(INDANCSNotification *)notification;
+- (void)removeNotificationForUID:(uint32_t)UID;
+
 @end

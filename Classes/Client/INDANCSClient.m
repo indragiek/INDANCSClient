@@ -48,13 +48,12 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 @property (nonatomic, assign, readwrite) CBCentralManagerState state;
 @property (nonatomic, copy) INDANCSDiscoveryBlock discoveryBlock;
 
-@property (nonatomic) dispatch_queue_t delegateQueue;
-@property (nonatomic) dispatch_queue_t stateQueue;
+@property (nonatomic, readonly) dispatch_queue_t delegateQueue;
+@property (nonatomic, readonly) dispatch_queue_t stateQueue;
 
 @property (nonatomic, strong, readwrite) NSMutableArray *powerOnBlocks;
 @property (nonatomic, strong, readonly) NSMutableDictionary *devices;
 @property (nonatomic, strong, readonly) NSMutableSet *validDevices;
-@property (nonatomic, strong, readonly) NSMutableDictionary *notifications;
 @property (nonatomic, strong, readonly) NSMutableData *DSBuffer;
 @property (nonatomic, strong, readonly) NSMutableDictionary *disconnects;
 @end
@@ -74,7 +73,6 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	if ((self = [super init])) {
 		_devices = [NSMutableDictionary dictionary];
 		_validDevices = [NSMutableSet set];
-		_notifications = [NSMutableDictionary dictionary];
 		_DSBuffer = [NSMutableData data];
 		_disconnects = [NSMutableDictionary dictionary];
 		_powerOnBlocks = [NSMutableArray array];
@@ -324,7 +322,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 		device.modelIdentifier = characteristic.ind_stringValue;
 		[self handleDiscoveryForDevice:device];
 	} else if (characteristic == device.NSCharacteristic) {
-		INDANCSNotification *notification = [self readNotificationWithData:characteristic.value];
+		INDANCSNotification *notification = [self readNotificationWithData:characteristic.value device:device];
 		if (notification.latestEventID == INDANCSEventIDNotificationRemoved) {
 			[self notifyWithNotification:notification forDevice:device];
 		} else {
@@ -337,7 +335,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 			NSUInteger len = 0;
 			if (commandID == INDANCSCommandIDGetNotificationAttributes) {
 				INDANCSNotification *notification = nil;
-				len = [self readNotificationResponseData:self.DSBuffer notification:&notification];
+				len = [self readNotificationResponseData:self.DSBuffer notification:&notification device:device];
 				[self notifyWithNotification:notification forDevice:device];
 			}
 			if (len != 0) {
@@ -360,7 +358,8 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	uint8_t header = [data ind_readUInt8At:&offset];
 	if (header == INDANCSCommandIDGetNotificationAttributes) {
 		uint32_t UID = [data ind_readUInt32At:&offset];
-		[self removeNotificationForUID:UID];
+		INDANCSDevice *device = [self deviceForPeripheral:peripheral];
+		[device removeNotificationForUID:UID];
 	}
 }
 
@@ -421,16 +420,16 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	}
 }
 
-- (INDANCSNotification *)readNotificationWithData:(NSData *)notificationData
+- (INDANCSNotification *)readNotificationWithData:(NSData *)notificationData device:(INDANCSDevice *)device
 {
 	NSUInteger offset = sizeof(uint8_t) * 4; // Skip straight to the UID
 	uint32_t UID = [notificationData ind_readUInt32At:&offset];
 	
-	INDANCSNotification *notification = [self notificationForUID:UID];
+	INDANCSNotification *notification = [device notificationForUID:UID];
 	if (notification == nil) {
 		notification = [[INDANCSNotification alloc] init];
 		notification.notificationUID = UID;
-		[self setNotification:notification forUID:UID];
+		[device addNotification:notification];
 	}
 	offset = 0;
 	notification.latestEventID = [notificationData ind_readUInt8At:&offset];
@@ -496,11 +495,13 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	return (attrCount == 0);
 }
 
-- (NSUInteger)readNotificationResponseData:(NSData *)responseData notification:(INDANCSNotification **)notification
+- (NSUInteger)readNotificationResponseData:(NSData *)responseData
+							  notification:(INDANCSNotification **)notification
+									device:(INDANCSDevice *)device
 {
 	NSUInteger offset = sizeof(INDANCSCommandID); // Skip the command.
 	uint32_t UID = [responseData ind_readUInt32At:&offset];
-	INDANCSNotification *note = [self notificationForUID:UID];
+	INDANCSNotification *note = [device notificationForUID:UID];
 	if (notification) *notification = note;
 	
 	for (int i = 0; i < INDANCSGetNotificationAttributeCount; i++) {
@@ -612,30 +613,6 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	NSParameterAssert(peripheral);
 	dispatch_barrier_async(self.stateQueue, ^{
 		[self.devices removeObjectForKey:peripheral.identifier];
-	});
-}
-
-- (void)setNotification:(INDANCSNotification *)notification forUID:(uint32_t)UID
-{
-	NSParameterAssert(notification);
-	dispatch_barrier_async(self.stateQueue, ^{
-		self.notifications[@(UID)] = notification;
-	});
-}
-
-- (INDANCSNotification *)notificationForUID:(uint32_t)UID
-{
-	__block INDANCSNotification *notification = nil;
-	dispatch_sync(self.stateQueue, ^{
-		notification = self.notifications[@(UID)];
-	});
-	return notification;
-}
-
-- (void)removeNotificationForUID:(uint32_t)UID
-{
-	dispatch_barrier_async(self.stateQueue, ^{
-		[self.notifications removeObjectForKey:@(UID)];
 	});
 }
 
