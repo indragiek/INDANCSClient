@@ -471,38 +471,6 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	return notification;
 }
 
-/*
- * Get Notification Attributes format
- *
- *  ----------------------------------------------------------------------------------------------
- * |                |                      |                    |                            |
- * | Command ID (1) | Notification UID (4) | Attribute ID n (1) | Attribute n Max Length (1) | ....
- * |                |                      |                    |                            |
- *  ----------------------------------------------------------------------------------------------
- *
- */
-- (void)requestNotificationAttributesForUID:(uint32_t)UID peripheral:(CBPeripheral *)peripheral
-{
-	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
-	NSMutableData *data = [NSMutableData dataWithBytes:"\x00" length:1]; // INDANCSCommandIDGetNotificationAttributes
-	[data appendBytes:&UID length:sizeof(UID)];
-	const uint8_t attributeIDs[] = {INDANCSNotificationAttributeIDAppIdentifier,
-		INDANCSNotificationAttributeIDTitle,
-		INDANCSNotificationAttributeIDSubtitle,
-		INDANCSNotificationAttributeIDMessage,
-		INDANCSNotificationAttributeIDDate};
-	
-	const uint16_t maxLen = UINT16_MAX;
-	for (int i = 0; i < sizeof(attributeIDs); i++) {
-		uint8_t attr = attributeIDs[i];
-		[data appendBytes:&attr length:sizeof(attr)];
-		if (attr != INDANCSNotificationAttributeIDAppIdentifier && attr != INDANCSNotificationAttributeIDDate) {
-			[data appendBytes:&maxLen length:sizeof(maxLen)];
-		}
-	}
-	[peripheral writeValue:data forCharacteristic:device.CPCharacteristic type:CBCharacteristicWriteWithResponse];
-}
-
 - (BOOL)requestResponseIsComplete:(NSData *)responseData commandID:(INDANCSCommandID *)commandID
 {
 	if (responseData.length == 0) return NO;
@@ -533,6 +501,67 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 		attrCount--;
 	}
 	return (attrCount == 0);
+}
+
+/*
+ * Get Notification Attributes format
+ *
+ *  ----------------------------------------------------------------------------------------------
+ * |                |                      |                    |                            |
+ * | Command ID (1) | Notification UID (4) | Attribute ID n (1) | Attribute n Max Length (1) | ....
+ * |                |                      |                    |                            |
+ *  ----------------------------------------------------------------------------------------------
+ *
+ */
+- (void)requestNotificationAttributesForUID:(uint32_t)UID peripheral:(CBPeripheral *)peripheral
+{
+	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
+	NSMutableData *data = [NSMutableData dataWithBytes:"\x00" length:1]; // INDANCSCommandIDGetNotificationAttributes
+	[data appendBytes:&UID length:sizeof(UID)];
+	const INDANCSNotificationAttributeID attributeIDs[INDANCSGetNotificationAttributeCount] = {
+		INDANCSNotificationAttributeIDAppIdentifier,
+		INDANCSNotificationAttributeIDTitle,
+		INDANCSNotificationAttributeIDSubtitle,
+		INDANCSNotificationAttributeIDMessage,
+		INDANCSNotificationAttributeIDDate,
+	};
+	
+	const uint16_t maxLen = UINT16_MAX;
+	for (int i = 0; i < INDANCSGetNotificationAttributeCount; i++) {
+		INDANCSNotificationAttributeID attr = attributeIDs[i];
+		[data appendBytes:&attr length:sizeof(attr)];
+		if (attr != INDANCSNotificationAttributeIDAppIdentifier && attr != INDANCSNotificationAttributeIDDate) {
+			[data appendBytes:&maxLen length:sizeof(maxLen)];
+		}
+	}
+	[peripheral writeValue:data forCharacteristic:device.CPCharacteristic type:CBCharacteristicWriteWithResponse];
+}
+
+/*
+ * Get App Attributes format
+ *
+ *  -------------------------------------------------------------
+ * |                |                |                    |
+ * | Command ID (1) | App Identifier | Attribute ID n (1) | ....
+ * |                |                |                    |
+ *  -------------------------------------------------------------
+ *
+ */
+- (void)requestAppAttributesForApplication:(INDANCSApplication *)app peripheral:(CBPeripheral *)peripheral
+{
+	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
+	NSMutableData *data = [NSMutableData dataWithBytes:"\x01" length:1]; // INDANCSCommandIDGetAppAttributes
+	const char *identifier = app.bundleIdentifier.UTF8String;
+	[data appendBytes:identifier length:sizeof(identifier)];
+	const INDANCSAppAttributeID attributesIDs[INDANCSGetAppAttributeCount] = {
+		INDANCSAppAttributeIDDisplayName
+	};
+	
+	for (int i = 0; i < INDANCSGetAppAttributeCount; i++) {
+		INDANCSAppAttributeID attr = attributesIDs[i];
+		[data appendBytes:&attr length:sizeof(attr)];
+	}
+	[peripheral writeValue:data forCharacteristic:device.CPCharacteristic type:CBCharacteristicWriteWithResponse];
 }
 
 /*
