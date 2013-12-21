@@ -345,6 +345,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 		INDANCSNotification *notification = [self readNotificationWithData:characteristic.value device:device];
 		if (notification.latestEventID == INDANCSEventIDNotificationRemoved) {
 			[self notifyWithNotification:notification forDevice:device];
+			[device removeNotification:notification];
 		} else {
 			[self requestNotificationAttributesForUID:notification.notificationUID peripheral:peripheral];
 		}
