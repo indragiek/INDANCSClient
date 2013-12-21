@@ -14,8 +14,9 @@
  *
  *  The implementation of the store is decoupled so that you are free to swap in
  *  your choice of persistent or in-memory key value storage. This framework
- *  includes one concrete implementation of an `INDANCSKeyValueStore` using the
- *  ObjectiveKVDB library (INDANCSObjectiveKVDBStore).
+ *  includes two concrete implementations of an `INDANCSKeyValueStore`, the in
+ *  memory store (`INDANCSInMemoryStore`) and a persistent store using kvdb 
+ *  (`INDANCSObjectiveKVDBStore`).
  */
 @protocol INDANCSKeyValueStore <NSObject>
 /**

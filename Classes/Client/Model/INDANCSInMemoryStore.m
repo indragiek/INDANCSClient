@@ -26,12 +26,16 @@
 
 - (id)objectForKeyedSubscript:(id <NSCopying>)key
 {
-	return [self.backingDictionary objectForKeyedSubscript:key];
+	return self.backingDictionary[key];
 }
 
 - (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key
 {
-	[self.backingDictionary setObject:obj forKeyedSubscript:key];
+	if (obj) {
+		self.backingDictionary[key] = obj;
+	} else {
+		[self.backingDictionary removeObjectForKey:key];
+	}
 }
 
 @end
