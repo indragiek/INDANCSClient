@@ -145,7 +145,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	CBPeripheral *peripheral = device.peripheral;
 	[peripheral setNotifyValue:notify forCharacteristic:device.DSCharacteristic];
 	[peripheral setNotifyValue:notify forCharacteristic:device.NSCharacteristic];
-	if (notify == NO) {
+	if (!notify) {
 		[self startRegistrationTimerForDevice:device];
 	}
 }
@@ -203,7 +203,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	NSLog(@"[CBCentralManager] Did disconnect peripheral: %@\nError: %@", peripheral, error);
 #endif
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
-	if ([self.validDevices containsObject:device] == YES) {
+	if ([self.validDevices containsObject:device]) {
 		if (_delegateFlags.deviceDisconnectedWithError) {
 			dispatch_async(dispatch_get_main_queue(), ^{
 				[self.delegate ANCSClient:self device:device disconnectedWithError:error];
@@ -213,10 +213,10 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	}
 	
 	BOOL didDisconnect = [self didDisconnectForPeripheral:peripheral];
-	if (self.attemptAutomaticReconnection && didDisconnect == NO) {
+	if (self.attemptAutomaticReconnection && !didDisconnect) {
 		[self.manager connectPeripheral:peripheral options:nil];
 	} else {
-		if (didDisconnect == YES) {
+		if (didDisconnect) {
 			[self setDidDisconnect:NO forPeripheral:peripheral];
 		}
 		[self removeDeviceForPeripheral:peripheral];
@@ -331,7 +331,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	} else if (characteristic == device.DSCharacteristic) {
 		[self.DSBuffer appendData:characteristic.value];
 		INDANCSCommandID commandID;
-		if ([self requestResponseIsComplete:self.DSBuffer commandID:&commandID] == YES) {
+		if ([self requestResponseIsComplete:self.DSBuffer commandID:&commandID]) {
 			NSUInteger len = 0;
 			if (commandID == INDANCSCommandIDGetNotificationAttributes) {
 				INDANCSNotification *notification = nil;
@@ -382,7 +382,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 
 - (void)handleDiscoveryForDevice:(INDANCSDevice *)device
 {
-	if (device.name && device.modelIdentifier && [self.validDevices containsObject:device] == NO) {
+	if (device.name && device.modelIdentifier && ![self.validDevices containsObject:device]) {
 		[self.validDevices addObject:device];
 		if (self.discoveryBlock) {
 			self.discoveryBlock(self, device);
@@ -650,7 +650,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 {
 	NSParameterAssert(peripheral);
 	dispatch_barrier_async(self.stateQueue, ^{
-		if (disconnect == YES) {
+		if (disconnect) {
 			self.disconnects[peripheral.identifier] = @YES;
 		} else {
 			[self.disconnects removeObjectForKey:peripheral.identifier];

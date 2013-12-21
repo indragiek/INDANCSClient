@@ -47,7 +47,7 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 - (void)startAdvertising
 {
 	self.shouldAdvertise = YES;
-	if (self.manager.state == CBCentralManagerStatePoweredOn && self.manager.isAdvertising == NO) {
+	if (self.manager.state == CBCentralManagerStatePoweredOn && self.manager.isAdvertising) {
 		NSDictionary *advertisementData = @{CBAdvertisementDataServiceUUIDsKey : @[IND_ANCS_SV_UUID, IND_DVCE_SV_UUID], CBAdvertisementDataLocalNameKey : UIDevice.currentDevice.name};
 		[self.manager startAdvertising:advertisementData];
 	}
@@ -56,7 +56,7 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 - (void)stopAdvertising
 {
 	self.shouldAdvertise = NO;
-	if (self.manager.isAdvertising == YES) {
+	if (self.manager.isAdvertising) {
 		[self.manager stopAdvertising];
 	}
 }
