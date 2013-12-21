@@ -47,11 +47,8 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 @property (nonatomic, strong, readonly) CBCentralManager *manager;
 @property (nonatomic, assign, readwrite) CBCentralManagerState state;
 @property (nonatomic, copy) INDANCSDiscoveryBlock discoveryBlock;
-
 @property (nonatomic, readonly) dispatch_queue_t delegateQueue;
-@property (nonatomic, readonly) dispatch_queue_t stateQueue;
-
-@property (nonatomic, strong, readwrite) NSMutableArray *powerOnBlocks;
+@property (nonatomic, strong) NSMutableArray *powerOnBlocks;
 @property (nonatomic, strong, readonly) NSMutableDictionary *devices;
 @property (nonatomic, strong, readonly) NSMutableSet *validDevices;
 @property (nonatomic, strong, readonly) NSMutableData *DSBuffer;
@@ -77,7 +74,6 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 		_disconnects = [NSMutableDictionary dictionary];
 		_powerOnBlocks = [NSMutableArray array];
 		_delegateQueue = dispatch_queue_create("com.indragie.INDANCSClient.DelegateQueue", DISPATCH_QUEUE_SERIAL);
-		_stateQueue = dispatch_queue_create("com.indragie.INDANCSClient.StateQueue", DISPATCH_QUEUE_CONCURRENT);
 		_manager = [[CBCentralManager alloc] initWithDelegate:self queue:_delegateQueue options:@{CBCentralManagerOptionShowPowerAlertKey : @YES}];
 		_registrationTimeout = 5.0;
 		_attemptAutomaticReconnection = YES;
@@ -159,12 +155,10 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 #endif
 	self.state = central.state;
 	if (self.state == CBCentralManagerStatePoweredOn && self.powerOnBlocks.count) {
-		dispatch_sync(self.stateQueue, ^{
-			for (void(^block)() in self.powerOnBlocks) {
-				block();
-			}
-			[self.powerOnBlocks removeAllObjects];
-		});
+		for (void(^block)() in self.powerOnBlocks) {
+			block();
+		}
+		[self.powerOnBlocks removeAllObjects];
 	}
 }
 
@@ -613,7 +607,7 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 	if (self.state == CBCentralManagerStatePoweredOn) {
 		block();
 	} else {
-		dispatch_barrier_async(self.stateQueue, ^{
+		dispatch_async(self.delegateQueue, ^{
 			[self.powerOnBlocks addObject:[block copy]];
 		});
 	}
@@ -623,49 +617,35 @@ static NSString * const INDANCSDeviceUserInfoKey = @"device";
 {
 	NSParameterAssert(peripheral);
 	NSParameterAssert(device);
-	dispatch_barrier_async(self.stateQueue, ^{
-		self.devices[peripheral.identifier] = device;
-	});
+	self.devices[peripheral.identifier] = device;
 }
 
 - (INDANCSDevice *)deviceForPeripheral:(CBPeripheral *)peripheral
 {
 	NSParameterAssert(peripheral);
-	__block INDANCSDevice *device = nil;
-	dispatch_sync(self.stateQueue, ^{
-		device = self.devices[peripheral.identifier];
-	});
-	return device;
+	return self.devices[peripheral.identifier];
 }
 
 - (void)removeDeviceForPeripheral:(CBPeripheral *)peripheral
 {
 	NSParameterAssert(peripheral);
-	dispatch_barrier_async(self.stateQueue, ^{
-		[self.devices removeObjectForKey:peripheral.identifier];
-	});
+	[self.devices removeObjectForKey:peripheral.identifier];
 }
 
 - (void)setDidDisconnect:(BOOL)disconnect forPeripheral:(CBPeripheral *)peripheral
 {
 	NSParameterAssert(peripheral);
-	dispatch_barrier_async(self.stateQueue, ^{
-		if (disconnect) {
-			self.disconnects[peripheral.identifier] = @YES;
-		} else {
-			[self.disconnects removeObjectForKey:peripheral.identifier];
-		}
-	});
+	if (disconnect) {
+		self.disconnects[peripheral.identifier] = @YES;
+	} else {
+		[self.disconnects removeObjectForKey:peripheral.identifier];
+	}
 }
 
 - (BOOL)didDisconnectForPeripheral:(CBPeripheral *)peripheral
 {
 	NSParameterAssert(peripheral);
-	__block BOOL disconnect = NO;
-	dispatch_sync(self.stateQueue, ^{
-		disconnect = [self.disconnects[peripheral.identifier] boolValue];
-	});
-	return disconnect;
+	return [self.disconnects[peripheral.identifier] boolValue];
 }
 
 - (void)disconnectFromPeripheral:(CBPeripheral *)peripheral
