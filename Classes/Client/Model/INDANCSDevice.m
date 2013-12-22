@@ -9,6 +9,7 @@
 #import "INDANCSDevice.h"
 #import "INDANCSDevice_Private.h"
 #import "INDANCSNotification_Private.h"
+#import "INDANCSRequest.h"
 #import "INDANCSObjectEquality.h"
 
 @interface INDANCSDevice ()
@@ -87,6 +88,13 @@
 - (NSMutableOrderedSet *)notificationsSet
 {
 	return [self mutableOrderedSetValueForKey:@"notifications"];
+}
+
+#pragma mark - Requests
+
+- (void)sendRequest:(INDANCSRequest *)request
+{
+	[self.peripheral writeValue:request.requestData forCharacteristic:self.CPCharacteristic type:CBCharacteristicWriteWithResponse];
 }
 
 #pragma mark - NSObject
