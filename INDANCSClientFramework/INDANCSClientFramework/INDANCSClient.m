@@ -7,6 +7,7 @@
 //
 
 #import "INDANCSClient.h"
+#import "INDANCSDefines.h"
 #import "INDANCSDevice_Private.h"
 #import "INDANCSNotification_Private.h"
 #import "INDANCSApplication_Private.h"

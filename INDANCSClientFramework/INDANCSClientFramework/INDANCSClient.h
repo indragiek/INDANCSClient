@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Indragie Karunaratne. All rights reserved.
 //
 
-#import "INDANCSDefines.h"
+#import <IOBluetooth/IOBluetooth.h>
 #import "INDANCSDevice.h"
 #import "INDANCSNotification.h"
 #import "INDANCSApplication.h"

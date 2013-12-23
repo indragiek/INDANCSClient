@@ -8,6 +8,7 @@
 
 #import "INDANCSApplication.h"
 #import "INDANCSApplication_Private.h"
+#import "INDANCSDictionarySerialization.h"
 #import "INDANCSResponse.h"
 #import "INDANCSObjectEquality.h"
 

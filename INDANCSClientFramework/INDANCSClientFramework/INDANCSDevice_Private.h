@@ -7,6 +7,7 @@
 //
 
 #import "INDANCSDevice.h"
+#import <IOBluetooth/IOBluetooth.h>
 
 @class INDANCSNotification;
 @class INDANCSRequest;

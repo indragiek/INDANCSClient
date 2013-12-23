@@ -7,7 +7,7 @@
 //
 
 #import "INDAppDelegate.h"
-#import "INDANCSClient.h"
+#import <INDANCSClient/INDANCSClientFramework.h>
 
 @interface INDAppDelegate () <INDANCSClientDelegate>
 @property (nonatomic, strong) INDANCSClient *client;

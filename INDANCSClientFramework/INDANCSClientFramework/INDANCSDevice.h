@@ -6,8 +6,6 @@
 //  Copyright (c) 2013 Indragie Karunaratne. All rights reserved.
 //
 
-#import "INDANCSDefines.h"
-
 @class INDANCSNotification;
 /**
  *  Model object representing an iOS device.

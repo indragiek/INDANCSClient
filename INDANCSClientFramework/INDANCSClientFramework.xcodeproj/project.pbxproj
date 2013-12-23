@@ -26,7 +26,7 @@
 		0357900D1867DEBB0055FB4E /* INDANCSDevice_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FF51867DEBB0055FB4E /* INDANCSDevice_Private.h */; };
 		0357900E1867DEBB0055FB4E /* INDANCSDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FF61867DEBB0055FB4E /* INDANCSDevice.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0357900F1867DEBB0055FB4E /* INDANCSDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 03578FF71867DEBB0055FB4E /* INDANCSDevice.m */; };
-		035790101867DEBB0055FB4E /* INDANCSDictionarySerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FF81867DEBB0055FB4E /* INDANCSDictionarySerialization.h */; };
+		035790101867DEBB0055FB4E /* INDANCSDictionarySerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FF81867DEBB0055FB4E /* INDANCSDictionarySerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		035790111867DEBB0055FB4E /* INDANCSInMemoryStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FF91867DEBB0055FB4E /* INDANCSInMemoryStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		035790121867DEBB0055FB4E /* INDANCSInMemoryStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 03578FFA1867DEBB0055FB4E /* INDANCSInMemoryStore.m */; };
 		035790131867DEBB0055FB4E /* INDANCSKeyValueStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FFB1867DEBB0055FB4E /* INDANCSKeyValueStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -104,7 +104,7 @@
 		03578FC71867DDC30055FB4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		03578FC91867DDC30055FB4E /* INDANCSClientFramework-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "INDANCSClientFramework-Prefix.pch"; sourceTree = "<group>"; };
 		03578FCA1867DDC30055FB4E /* INDANCSClientFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = INDANCSClientFramework.h; sourceTree = "<group>"; };
-		03578FD11867DDC40055FB4E /* INDANCSClientFrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = INDANCSClientFrameworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		03578FD11867DDC40055FB4E /* INDANCSClientFrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = INDANCSClientFrameworkTests.xctest; path = INDANCSClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		03578FD21867DDC40055FB4E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		03578FDA1867DDC40055FB4E /* INDANCSClientFrameworkTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "INDANCSClientFrameworkTests-Info.plist"; sourceTree = "<group>"; };
 		03578FDC1867DDC40055FB4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -686,6 +686,7 @@
 				03578FE41867DDC40055FB4E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		03578FE51867DDC40055FB4E /* Build configuration list for PBXNativeTarget "INDANCSClientTests" */ = {
 			isa = XCConfigurationList;
@@ -694,6 +695,7 @@
 				03578FE71867DDC40055FB4E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

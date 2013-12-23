@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		03578F8318678F540055FB4E /* INDANCSRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 03578F8218678F540055FB4E /* INDANCSRequest.m */; };
-		03578F88186797A80055FB4E /* INDANCSResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 03578F87186797A80055FB4E /* INDANCSResponse.m */; };
+		0357906F1867E25C0055FB4E /* INDANCSClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 035790691867E24A0055FB4E /* INDANCSClient.framework */; };
+		035790701867E2620055FB4E /* INDANCSClient.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 035790691867E24A0055FB4E /* INDANCSClient.framework */; };
 		0397D8431859755E005561AD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8421859755E005561AD /* Cocoa.framework */; };
 		0397D84D1859755E005561AD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0397D84B1859755E005561AD /* InfoPlist.strings */; };
 		0397D84F1859755E005561AD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D84E1859755E005561AD /* main.m */; };
@@ -20,48 +20,36 @@
 		0397D8631859755E005561AD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8421859755E005561AD /* Cocoa.framework */; };
 		0397D86B1859755E005561AD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0397D8691859755E005561AD /* InfoPlist.strings */; };
 		0397D86D1859755E005561AD /* INDANCSMacTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D86C1859755E005561AD /* INDANCSMacTests.m */; };
-		0397D8BA1859759A005561AD /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8B91859759A005561AD /* IOBluetooth.framework */; };
-		0397D8C518597BCF005561AD /* INDANCSClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D8C418597BCF005561AD /* INDANCSClient.m */; };
-		03ED962C185D74E2009FF2E8 /* INDANCSApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ED961D185D74E2009FF2E8 /* INDANCSApplication.m */; };
-		03ED962D185D74E2009FF2E8 /* INDANCSDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ED9620185D74E2009FF2E8 /* INDANCSDevice.m */; };
-		03ED962E185D74E2009FF2E8 /* INDANCSNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ED9623185D74E2009FF2E8 /* INDANCSNotification.m */; };
-		03ED9637185D74E6009FF2E8 /* CBCharacteristic+INDANCSAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ED9634185D74E6009FF2E8 /* CBCharacteristic+INDANCSAdditions.m */; };
-		03ED9638185D74E6009FF2E8 /* NSData+INDANCSAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03ED9636185D74E6009FF2E8 /* NSData+INDANCSAdditions.m */; };
-		03EDF45B185ED3B60097E380 /* ObjectiveKVDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03EDF456185ED3910097E380 /* ObjectiveKVDB.framework */; };
-		03EDF45D185ED3C20097E380 /* ObjectiveKVDB.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03EDF456185ED3910097E380 /* ObjectiveKVDB.framework */; };
-		03EDF460185ED5880097E380 /* INDANCSObjectiveKVDBStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 03EDF45F185ED5880097E380 /* INDANCSObjectiveKVDBStore.m */; };
-		03EDF463185ED69C0097E380 /* INDANCSApplicationStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 03EDF462185ED69C0097E380 /* INDANCSApplicationStorage.m */; };
-		03EDF466185ED7040097E380 /* INDANCSInMemoryStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 03EDF465185ED7040097E380 /* INDANCSInMemoryStore.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		035790681867E24A0055FB4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 035790611867E24A0055FB4E /* INDANCSClientFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03578FBA1867DDC30055FB4E;
+			remoteInfo = INDANCSClient;
+		};
+		0357906A1867E24A0055FB4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 035790611867E24A0055FB4E /* INDANCSClientFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03578FD11867DDC40055FB4E;
+			remoteInfo = INDANCSClientTests;
+		};
+		0357906D1867E2560055FB4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 035790611867E24A0055FB4E /* INDANCSClientFramework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 03578FB91867DDC30055FB4E;
+			remoteInfo = INDANCSClient;
+		};
 		0397D8641859755E005561AD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0397D8371859755E005561AD /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 0397D83E1859755E005561AD;
 			remoteInfo = INDANCSMac;
-		};
-		03EDF455185ED3910097E380 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 03EDF44F185ED3910097E380 /* ObjectiveKVDB.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 03ED9658185D99D0009FF2E8;
-			remoteInfo = ObjectiveKVDB;
-		};
-		03EDF457185ED3910097E380 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 03EDF44F185ED3910097E380 /* ObjectiveKVDB.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 03ED966F185D99D0009FF2E8;
-			remoteInfo = ObjectiveKVDBTests;
-		};
-		03EDF459185ED3B30097E380 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 03EDF44F185ED3910097E380 /* ObjectiveKVDB.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 03ED9657185D99D0009FF2E8;
-			remoteInfo = ObjectiveKVDB;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -72,18 +60,14 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				03EDF45D185ED3C20097E380 /* ObjectiveKVDB.framework in CopyFiles */,
+				035790701867E2620055FB4E /* INDANCSClient.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		03578F8118678F540055FB4E /* INDANCSRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSRequest.h; sourceTree = "<group>"; };
-		03578F8218678F540055FB4E /* INDANCSRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSRequest.m; sourceTree = "<group>"; };
-		03578F85186790C10055FB4E /* INDANCSAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSAttributes.h; sourceTree = "<group>"; };
-		03578F86186797A80055FB4E /* INDANCSResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSResponse.h; sourceTree = "<group>"; };
-		03578F87186797A80055FB4E /* INDANCSResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSResponse.m; sourceTree = "<group>"; };
+		035790611867E24A0055FB4E /* INDANCSClientFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = INDANCSClientFramework.xcodeproj; path = ../../../INDANCSClientFramework/INDANCSClientFramework.xcodeproj; sourceTree = "<group>"; };
 		0397D83F1859755E005561AD /* INDANCSMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = INDANCSMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0397D8421859755E005561AD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		0397D8451859755E005561AD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -104,32 +88,6 @@
 		0397D86A1859755E005561AD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0397D86C1859755E005561AD /* INDANCSMacTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = INDANCSMacTests.m; sourceTree = "<group>"; };
 		0397D8B91859759A005561AD /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
-		0397D8C318597BCF005561AD /* INDANCSClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSClient.h; sourceTree = "<group>"; };
-		0397D8C418597BCF005561AD /* INDANCSClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSClient.m; sourceTree = "<group>"; };
-		0397D8C718597BD4005561AD /* INDANCSDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDefines.h; sourceTree = "<group>"; };
-		03ED961C185D74E2009FF2E8 /* INDANCSApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSApplication.h; sourceTree = "<group>"; };
-		03ED961D185D74E2009FF2E8 /* INDANCSApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSApplication.m; sourceTree = "<group>"; };
-		03ED961E185D74E2009FF2E8 /* INDANCSApplication_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSApplication_Private.h; sourceTree = "<group>"; };
-		03ED961F185D74E2009FF2E8 /* INDANCSDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDevice.h; sourceTree = "<group>"; };
-		03ED9620185D74E2009FF2E8 /* INDANCSDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSDevice.m; sourceTree = "<group>"; };
-		03ED9621185D74E2009FF2E8 /* INDANCSDevice_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDevice_Private.h; sourceTree = "<group>"; };
-		03ED9622185D74E2009FF2E8 /* INDANCSNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSNotification.h; sourceTree = "<group>"; };
-		03ED9623185D74E2009FF2E8 /* INDANCSNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSNotification.m; sourceTree = "<group>"; };
-		03ED9624185D74E2009FF2E8 /* INDANCSNotification_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSNotification_Private.h; sourceTree = "<group>"; };
-		03ED9633185D74E6009FF2E8 /* CBCharacteristic+INDANCSAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBCharacteristic+INDANCSAdditions.h"; sourceTree = "<group>"; };
-		03ED9634185D74E6009FF2E8 /* CBCharacteristic+INDANCSAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBCharacteristic+INDANCSAdditions.m"; sourceTree = "<group>"; };
-		03ED9635185D74E6009FF2E8 /* NSData+INDANCSAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+INDANCSAdditions.h"; sourceTree = "<group>"; };
-		03ED9636185D74E6009FF2E8 /* NSData+INDANCSAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+INDANCSAdditions.m"; sourceTree = "<group>"; };
-		03EDF44C185ED1070097E380 /* INDANCSDictionarySerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDictionarySerialization.h; sourceTree = "<group>"; };
-		03EDF44D185ED3260097E380 /* INDANCSKeyValueStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSKeyValueStore.h; sourceTree = "<group>"; };
-		03EDF44F185ED3910097E380 /* ObjectiveKVDB.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectiveKVDB.xcodeproj; path = ../../External/ObjectiveKVDB/ObjectiveKVDB/ObjectiveKVDB.xcodeproj; sourceTree = "<group>"; };
-		03EDF45E185ED5880097E380 /* INDANCSObjectiveKVDBStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSObjectiveKVDBStore.h; sourceTree = "<group>"; };
-		03EDF45F185ED5880097E380 /* INDANCSObjectiveKVDBStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSObjectiveKVDBStore.m; sourceTree = "<group>"; };
-		03EDF461185ED69C0097E380 /* INDANCSApplicationStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSApplicationStorage.h; sourceTree = "<group>"; };
-		03EDF462185ED69C0097E380 /* INDANCSApplicationStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSApplicationStorage.m; sourceTree = "<group>"; };
-		03EDF464185ED7040097E380 /* INDANCSInMemoryStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSInMemoryStore.h; sourceTree = "<group>"; };
-		03EDF465185ED7040097E380 /* INDANCSInMemoryStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSInMemoryStore.m; sourceTree = "<group>"; };
-		03EDF467185EDD540097E380 /* INDANCSObjectEquality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSObjectEquality.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,8 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03EDF45B185ED3B60097E380 /* ObjectiveKVDB.framework in Frameworks */,
-				0397D8BA1859759A005561AD /* IOBluetooth.framework in Frameworks */,
+				0357906F1867E25C0055FB4E /* INDANCSClient.framework in Frameworks */,
 				0397D8431859755E005561AD /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -155,6 +112,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		035790621867E24A0055FB4E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				035790691867E24A0055FB4E /* INDANCSClient.framework */,
+				0357906B1867E24A0055FB4E /* INDANCSClientFrameworkTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0397D8361859755E005561AD = {
 			isa = PBXGroup;
 			children = (
@@ -198,8 +164,7 @@
 		0397D8481859755E005561AD /* INDANCSMac */ = {
 			isa = PBXGroup;
 			children = (
-				0397D8C618597BD4005561AD /* Common */,
-				0397D8C218597BCF005561AD /* Client */,
+				035790611867E24A0055FB4E /* INDANCSClientFramework.xcodeproj */,
 				0397D8541859755E005561AD /* INDAppDelegate.h */,
 				0397D8551859755E005561AD /* INDAppDelegate.m */,
 				0397D8571859755E005561AD /* MainMenu.xib */,
@@ -239,86 +204,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		0397D8C218597BCF005561AD /* Client */ = {
-			isa = PBXGroup;
-			children = (
-				03EDF44E185ED3810097E380 /* External */,
-				03ED9632185D74E6009FF2E8 /* Categories */,
-				03ED9619185D74E2009FF2E8 /* Model */,
-				0397D8C318597BCF005561AD /* INDANCSClient.h */,
-				0397D8C418597BCF005561AD /* INDANCSClient.m */,
-			);
-			name = Client;
-			path = ../../Classes/Client;
-			sourceTree = "<group>";
-		};
-		0397D8C618597BD4005561AD /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				0397D8C718597BD4005561AD /* INDANCSDefines.h */,
-			);
-			name = Common;
-			path = ../../Classes/Common;
-			sourceTree = "<group>";
-		};
-		03ED9619185D74E2009FF2E8 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				03ED961C185D74E2009FF2E8 /* INDANCSApplication.h */,
-				03ED961D185D74E2009FF2E8 /* INDANCSApplication.m */,
-				03ED961E185D74E2009FF2E8 /* INDANCSApplication_Private.h */,
-				03ED961F185D74E2009FF2E8 /* INDANCSDevice.h */,
-				03ED9620185D74E2009FF2E8 /* INDANCSDevice.m */,
-				03ED9621185D74E2009FF2E8 /* INDANCSDevice_Private.h */,
-				03ED9622185D74E2009FF2E8 /* INDANCSNotification.h */,
-				03ED9623185D74E2009FF2E8 /* INDANCSNotification.m */,
-				03ED9624185D74E2009FF2E8 /* INDANCSNotification_Private.h */,
-				03EDF44C185ED1070097E380 /* INDANCSDictionarySerialization.h */,
-				03EDF44D185ED3260097E380 /* INDANCSKeyValueStore.h */,
-				03EDF45E185ED5880097E380 /* INDANCSObjectiveKVDBStore.h */,
-				03EDF45F185ED5880097E380 /* INDANCSObjectiveKVDBStore.m */,
-				03EDF464185ED7040097E380 /* INDANCSInMemoryStore.h */,
-				03EDF465185ED7040097E380 /* INDANCSInMemoryStore.m */,
-				03EDF461185ED69C0097E380 /* INDANCSApplicationStorage.h */,
-				03EDF462185ED69C0097E380 /* INDANCSApplicationStorage.m */,
-				03EDF467185EDD540097E380 /* INDANCSObjectEquality.h */,
-				03578F8118678F540055FB4E /* INDANCSRequest.h */,
-				03578F8218678F540055FB4E /* INDANCSRequest.m */,
-				03578F85186790C10055FB4E /* INDANCSAttributes.h */,
-				03578F86186797A80055FB4E /* INDANCSResponse.h */,
-				03578F87186797A80055FB4E /* INDANCSResponse.m */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		03ED9632185D74E6009FF2E8 /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				03ED9633185D74E6009FF2E8 /* CBCharacteristic+INDANCSAdditions.h */,
-				03ED9634185D74E6009FF2E8 /* CBCharacteristic+INDANCSAdditions.m */,
-				03ED9635185D74E6009FF2E8 /* NSData+INDANCSAdditions.h */,
-				03ED9636185D74E6009FF2E8 /* NSData+INDANCSAdditions.m */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
-		03EDF44E185ED3810097E380 /* External */ = {
-			isa = PBXGroup;
-			children = (
-				03EDF44F185ED3910097E380 /* ObjectiveKVDB.xcodeproj */,
-			);
-			name = External;
-			sourceTree = "<group>";
-		};
-		03EDF450185ED3910097E380 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				03EDF456185ED3910097E380 /* ObjectiveKVDB.framework */,
-				03EDF458185ED3910097E380 /* ObjectiveKVDBTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -334,7 +219,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				03EDF45A185ED3B30097E380 /* PBXTargetDependency */,
+				0357906E1867E2560055FB4E /* PBXTargetDependency */,
 			);
 			name = INDANCSMac;
 			productName = INDANCSMac;
@@ -387,8 +272,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 03EDF450185ED3910097E380 /* Products */;
-					ProjectRef = 03EDF44F185ED3910097E380 /* ObjectiveKVDB.xcodeproj */;
+					ProductGroup = 035790621867E24A0055FB4E /* Products */;
+					ProjectRef = 035790611867E24A0055FB4E /* INDANCSClientFramework.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -400,18 +285,19 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		03EDF456185ED3910097E380 /* ObjectiveKVDB.framework */ = {
+		035790691867E24A0055FB4E /* INDANCSClient.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = ObjectiveKVDB.framework;
-			remoteRef = 03EDF455185ED3910097E380 /* PBXContainerItemProxy */;
+			path = INDANCSClient.framework;
+			remoteRef = 035790681867E24A0055FB4E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		03EDF458185ED3910097E380 /* ObjectiveKVDBTests.xctest */ = {
+		0357906B1867E24A0055FB4E /* INDANCSClientFrameworkTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = ObjectiveKVDBTests.xctest;
-			remoteRef = 03EDF457185ED3910097E380 /* PBXContainerItemProxy */;
+			name = INDANCSClientFrameworkTests.xctest;
+			path = INDANCSClientTests.xctest;
+			remoteRef = 0357906A1867E24A0055FB4E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -443,19 +329,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03ED962D185D74E2009FF2E8 /* INDANCSDevice.m in Sources */,
 				0397D8561859755E005561AD /* INDAppDelegate.m in Sources */,
-				03ED962E185D74E2009FF2E8 /* INDANCSNotification.m in Sources */,
-				03578F88186797A80055FB4E /* INDANCSResponse.m in Sources */,
-				03ED9638185D74E6009FF2E8 /* NSData+INDANCSAdditions.m in Sources */,
-				03578F8318678F540055FB4E /* INDANCSRequest.m in Sources */,
-				03ED962C185D74E2009FF2E8 /* INDANCSApplication.m in Sources */,
-				03EDF466185ED7040097E380 /* INDANCSInMemoryStore.m in Sources */,
-				0397D8C518597BCF005561AD /* INDANCSClient.m in Sources */,
-				03ED9637185D74E6009FF2E8 /* CBCharacteristic+INDANCSAdditions.m in Sources */,
-				03EDF463185ED69C0097E380 /* INDANCSApplicationStorage.m in Sources */,
 				0397D84F1859755E005561AD /* main.m in Sources */,
-				03EDF460185ED5880097E380 /* INDANCSObjectiveKVDBStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,15 +345,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0357906E1867E2560055FB4E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = INDANCSClient;
+			targetProxy = 0357906D1867E2560055FB4E /* PBXContainerItemProxy */;
+		};
 		0397D8651859755E005561AD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0397D83E1859755E005561AD /* INDANCSMac */;
 			targetProxy = 0397D8641859755E005561AD /* PBXContainerItemProxy */;
-		};
-		03EDF45A185ED3B30097E380 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ObjectiveKVDB;
-			targetProxy = 03EDF459185ED3B30097E380 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
