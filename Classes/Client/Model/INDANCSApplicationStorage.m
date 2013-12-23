@@ -12,23 +12,19 @@
 
 @interface INDANCSApplicationStorage ()
 @property (nonatomic, strong) NSMutableDictionary *metadataCache;
-@property (nonatomic, strong) NSMutableDictionary *blacklistCache;
 @end
 
 @implementation INDANCSApplicationStorage
 
 #pragma mark - Initialization
 
-- (id)initWithMetadataStore:(id<INDANCSKeyValueStore>)metadata blacklistStore:(id<INDANCSKeyValueStore>)blacklist
+- (id)initWithMetadataStore:(id<INDANCSKeyValueStore>)metadata
 {
 	NSParameterAssert(metadata);
-	NSParameterAssert(blacklist);
 	
 	if ((self = [super init])) {
 		_metadataStore = metadata;
-		_blacklistStore = blacklist;
 		_metadataCache = [NSMutableDictionary dictionary];
-		_blacklistCache = [NSMutableDictionary dictionary];
 	}
 	return self;
 }
@@ -87,38 +83,6 @@
 	} else {
 		self.metadataCache[identifier] = [application copy];
 	}
-}
-
-#pragma mark - Blacklisting
-
-- (void)setBlacklisted:(BOOL)blacklisted forApplication:(INDANCSApplication *)application device:(INDANCSDevice *)device
-{
-	NSString *key = [self blacklistKeyForApplication:application device:device];
-	BOOL hasExistingValue = (self.blacklistCache[key] != nil);
-	if (blacklisted && !hasExistingValue) {
-		self.blacklistStore[key] = @"1";
-		self.blacklistCache[key] = @YES;
-	} else if (!blacklisted && hasExistingValue) {
-		self.blacklistStore[key] = nil;
-		[self.blacklistCache removeObjectForKey:key];
-	}
-}
-
-- (BOOL)isBlacklistedApplication:(INDANCSApplication *)application forDevice:(INDANCSDevice *)device
-{
-	NSString *key = [self blacklistKeyForApplication:application device:device];
-	NSNumber *value = self.blacklistCache[key];
-	if (value == nil) {
-		NSString *stringValue = self.blacklistStore[key];
-		value = @(stringValue.boolValue);
-		self.blacklistCache[key] = value;
-	}
-	return value.boolValue;
-}
-
-- (NSString *)blacklistKeyForApplication:(INDANCSApplication *)application device:(INDANCSDevice *)device
-{
-	return [NSString stringWithFormat:@"%@:%@", application.bundleIdentifier, device.identifier.UUIDString];
 }
 
 @end

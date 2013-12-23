@@ -56,10 +56,12 @@ typedef void (^INDANCSNotificationBlock)(INDANCSClient *, INDANCSNotification *)
  */
 @property (nonatomic, strong, readonly) id<INDANCSKeyValueStore> blacklistStore;
 
+
+#pragma mark - Initialization
+
 /**
- *  Default initializer that initializes the client using persistent key value
- *  stores for both the metadata and blacklist stores (using instances of 
- *  `INDANCSObjectiveKVDBStore`). The store files will be placed in the
+ *  Default initializer that initializes the client using a persistent 
+ *  key value store for app metadata. The store file will be placed in the
  *  application support directory.
  *
  *  @return A new instance of `INDANCSClient`.
@@ -70,11 +72,12 @@ typedef void (^INDANCSNotificationBlock)(INDANCSClient *, INDANCSNotification *)
  *  Initializes the receiver using manually specified key value stores instances.
  *
  *  @param metadata  Key value store for storing application metadata.
- *  @param blacklist Key value store for storing blacklist preferences.
  *
  *  @return A new instance of `INDANCSClient`
  */
-- (id)initWithMetadataStore:(id<INDANCSKeyValueStore>)metadata blacklistStore:(id<INDANCSKeyValueStore>)blacklist;
+- (id)initWithMetadataStore:(id<INDANCSKeyValueStore>)metadata;
+
+#pragma mark - Devices
 
 /**
  *  Scans for iOS devices to connect to. For each iOS device found,
@@ -99,6 +102,8 @@ typedef void (^INDANCSNotificationBlock)(INDANCSClient *, INDANCSNotification *)
  *  Stops a scan previously started using `-scanForDevices:`.
  */
 - (void)stopScanning;
+
+#pragma mark - Notifications
 
 /**
  *  Registers to receive notifications from a specified iOS device.

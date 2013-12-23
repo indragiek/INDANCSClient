@@ -55,16 +55,14 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 {
 	NSURL *parentURL = self.applicationSupportURL;
 	NSURL *metadataURL = [parentURL URLByAppendingPathComponent:INDANCSMetadataStoreFilename];
-	NSURL *blacklistURL = [parentURL URLByAppendingPathComponent:INDANCSBlacklistStoreFilename];
 	INDANCSObjectiveKVDBStore *metadata = [[INDANCSObjectiveKVDBStore alloc] initWithDatabasePath:metadataURL.path];
-	INDANCSObjectiveKVDBStore *blacklist = [[INDANCSObjectiveKVDBStore alloc] initWithDatabasePath:blacklistURL.path];
-	return [self initWithMetadataStore:metadata blacklistStore:blacklist];
+	return [self initWithMetadataStore:metadata];
 }
 
-- (id)initWithMetadataStore:(id<INDANCSKeyValueStore>)metadata blacklistStore:(id<INDANCSKeyValueStore>)blacklist
+- (id)initWithMetadataStore:(id<INDANCSKeyValueStore>)metadata
 {
 	if ((self = [super init])) {
-		_appStorage = [[INDANCSApplicationStorage alloc] initWithMetadataStore:metadata blacklistStore:blacklist];
+		_appStorage = [[INDANCSApplicationStorage alloc] initWithMetadataStore:metadata];
 		_devices = [NSMutableDictionary dictionary];
 		_validDevices = [NSMutableSet set];
 		_disconnects = [NSMutableDictionary dictionary];
