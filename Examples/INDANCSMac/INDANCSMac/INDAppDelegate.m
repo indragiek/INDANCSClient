@@ -9,7 +9,7 @@
 #import "INDAppDelegate.h"
 #import <INDANCSClient/INDANCSClientFramework.h>
 
-@interface INDAppDelegate () <INDANCSClientDelegate>
+@interface INDAppDelegate () <INDANCSClientDelegate, NSUserNotificationCenterDelegate>
 @property (nonatomic, strong) INDANCSClient *client;
 @property (nonatomic, weak) IBOutlet NSTableView *tableView;
 @property (nonatomic, strong) NSMutableArray *notifications;
@@ -22,8 +22,17 @@
 	self.notifications = [NSMutableArray array];
 	self.client = [[INDANCSClient alloc] init];
 	self.client.delegate = self;
+	
+	NSUserNotificationCenter *nc = NSUserNotificationCenter.defaultUserNotificationCenter;
+	nc.delegate = self;
+	
 	[self.client scanForDevices:^(INDANCSClient *client, INDANCSDevice *device) {
-		NSLog(@"Found %@", device.name);
+		NSLog(@"Found device: %@", device.name);
+		NSUserNotification *notification = [[NSUserNotification alloc] init];
+		notification.title = @"Found iOS Device";
+		notification.informativeText = [NSString stringWithFormat:@"Registered for notifications from %@", device.name];
+		[nc deliverNotification:notification];
+		
 		[client registerForNotificationsFromDevice:device withBlock:^(INDANCSClient *c, INDANCSNotification *n) {
 			switch (n.latestEventID) {
 				case INDANCSEventIDNotificationAdded:
@@ -80,6 +89,13 @@
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
 	return self.notifications[rowIndex];
+}
+
+#pragma mark - NSUserNotificationCenterDelegate
+
+- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification
+{
+	return YES;
 }
 
 @end
