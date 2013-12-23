@@ -8,11 +8,21 @@
 
 #import "INDANCSApplication.h"
 #import "INDANCSApplication_Private.h"
+#import "INDANCSResponse.h"
 #import "INDANCSObjectEquality.h"
 
 @implementation INDANCSApplication
 
-#pragma mark - INDANCSDictionarySerialization
+#pragma mark - Initialization
+
+- (id)initWithAppAttributeResponse:(INDANCSResponse *)response
+{
+	if ((self = [super init])) {
+		_bundleIdentifier = response.bundleIdentifier;
+		_name = [response valueForAttributeID:INDANCSAppAttributeIDDisplayName];
+	}
+	return self;
+}
 
 - (id)initWithBundleIdentifier:(NSString *)bundleID dictionary:(NSDictionary *)dictionary
 {
@@ -21,6 +31,9 @@
 	}
 	return self;
 }
+
+#pragma mark - INDANCSDictionarySerialization
+
 
 - (id)initWithDictionary:(NSDictionary *)dictionary
 {

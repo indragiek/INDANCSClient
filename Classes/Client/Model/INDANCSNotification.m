@@ -19,15 +19,15 @@ typedef NS_OPTIONS(uint8_t, INDANCSEventFlags) {
 };
 
 @interface INDANCSNotification ()
-@property (nonatomic, assign, readwrite) INDANCSEventID latestEventID;
-@property (nonatomic, assign, readwrite) BOOL silent;
-@property (nonatomic, assign, readwrite) BOOL important;
-@property (nonatomic, assign, readwrite) INDANCSCategoryID categoryID;
-@property (nonatomic, assign, readwrite) uint8_t categoryCount;
-@property (nonatomic, strong, readwrite) NSString *title;
-@property (nonatomic, strong, readwrite) NSString *subtitle;
-@property (nonatomic, strong, readwrite) NSString *message;
-@property (nonatomic, strong, readwrite) NSDate *date;
+@property (assign, readwrite) INDANCSEventID latestEventID;
+@property (assign, readwrite) BOOL silent;
+@property (assign, readwrite) BOOL important;
+@property (assign, readwrite) INDANCSCategoryID categoryID;
+@property (assign, readwrite) uint8_t categoryCount;
+@property (strong, readwrite) NSString *title;
+@property (strong, readwrite) NSString *subtitle;
+@property (strong, readwrite) NSString *message;
+@property (strong, readwrite) NSDate *date;
 @end
 
 @implementation INDANCSNotification
@@ -134,7 +134,7 @@ typedef NS_OPTIONS(uint8_t, INDANCSEventFlags) {
 {
 	switch (attributeID) {
 		case INDANCSNotificationAttributeIDAppIdentifier:
-			return @"application";
+			return @"bundleIdentifier";
 		case INDANCSNotificationAttributeIDMessage:
 			return @"message";
 		case INDANCSNotificationAttributeIDDate:

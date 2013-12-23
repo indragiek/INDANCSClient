@@ -37,6 +37,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 @property (nonatomic, strong, readonly) NSMutableDictionary *devices;
 @property (nonatomic, strong, readonly) NSMutableSet *validDevices;
 @property (nonatomic, strong, readonly) NSMutableDictionary *disconnects;
+@property (nonatomic, strong, readonly) NSMutableDictionary *pendingNotifications;
 @end
 
 @implementation INDANCSClient {
@@ -66,6 +67,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 		_devices = [NSMutableDictionary dictionary];
 		_validDevices = [NSMutableSet set];
 		_disconnects = [NSMutableDictionary dictionary];
+		_pendingNotifications = [NSMutableDictionary dictionary];
 		_powerOnBlocks = [NSMutableArray array];
 		_delegateQueue = dispatch_queue_create("com.indragie.INDANCSClient.DelegateQueue", DISPATCH_QUEUE_SERIAL);
 		_manager = [[CBCentralManager alloc] initWithDelegate:self queue:_delegateQueue options:@{CBCentralManagerOptionShowPowerAlertKey : @YES}];
@@ -322,19 +324,24 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	} else if (characteristic == device.NSCharacteristic) {
 		INDANCSNotification *notification = [self readNotificationWithData:characteristic.value device:device];
 		if (notification.latestEventID == INDANCSEventIDNotificationRemoved) {
-			[self notifyWithNotification:notification forDevice:device];
+			[self notifyWithNotification:notification];
 			[device removeNotification:notification];
 		} else {
-			[self requestNotificationAttributesForUID:notification.notificationUID peripheral:peripheral];
+			[self requestNotificationAttributesForUID:notification.notificationUID device:device];
 		}
 	} else if (characteristic == device.DSCharacteristic) {
 		INDANCSResponse *response = [device appendDSResponseData:characteristic.value];
 		if (response == nil) return;
 		
-		if (response.commandID == INDANCSCommandIDGetNotificationAttributes) {
-			INDANCSNotification *notification = [device notificationForUID:response.notificationUID];
-			[notification mergeAttributesFromNotificationAttributeResponse:response];
-			[self notifyWithNotification:notification forDevice:device];
+		switch (response.commandID) {
+			case INDANCSCommandIDGetNotificationAttributes:
+				[self readNotificationAttributeResponse:response device:device];
+				break;
+			case INDANCSCommandIDGetAppAttributes:
+				[self readAppAttributeResponse:response device:device];
+				break;
+			default:
+				break;
 		}
 	}
 }
@@ -404,13 +411,14 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	device.registrationTimer = nil;
 }
 
-#pragma mark - R/W
+#pragma mark - Notifications
 
-- (void)notifyWithNotification:(INDANCSNotification *)notification forDevice:(INDANCSDevice *)device
+- (void)notifyWithNotification:(INDANCSNotification *)notification
 {
+	INDANCSDevice *device = notification.device;
 	INDANCSNotificationBlock notificationBlock = device.notificationBlock;
 	if (notificationBlock) {
-		notificationBlock(self, device, notification.latestEventID, notification);
+		notificationBlock(self, notification);
 	}
 }
 
@@ -428,9 +436,38 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	return notification;
 }
 
-- (void)requestNotificationAttributesForUID:(uint32_t)UID peripheral:(CBPeripheral *)peripheral
+- (void)readNotificationAttributeResponse:(INDANCSResponse *)response device:(INDANCSDevice *)device
 {
-	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
+	INDANCSNotification *notification = [device notificationForUID:response.notificationUID];
+	[notification mergeAttributesFromNotificationAttributeResponse:response];
+	if (notification.application == nil) {
+		notification.application = [self.appStorage applicationForBundleIdentifier:notification.bundleIdentifier];
+		NSLog(@"Got cached app: %@", notification.application);
+	}
+	if (notification.application == nil) {
+		NSString *identifier = notification.bundleIdentifier;
+		[self addPendingNotification:notification forBundleIdentifier:identifier];
+		[self requestAppAttributesForBundleIdentifier:identifier device:device];
+	} else {
+		[self notifyWithNotification:notification];
+	}
+}
+
+- (void)readAppAttributeResponse:(INDANCSResponse *)response device:(INDANCSDevice *)device
+{
+	INDANCSApplication *application = [[INDANCSApplication alloc] initWithAppAttributeResponse:response];
+	NSString *identifier = response.bundleIdentifier;
+	[self.appStorage setApplication:application forBundleIdentifier:identifier];
+	NSArray *notifications = [self pendingNotificationsForBundleIdentifier:identifier];
+	for (INDANCSNotification *notification in notifications) {
+		notification.application = application;
+		[self notifyWithNotification:notification];
+	}
+	[self removePendingNotificationsForBundleIdentifier:identifier];
+}
+
+- (void)requestNotificationAttributesForUID:(uint32_t)UID device:(INDANCSDevice *)device
+{
 	INDANCSRequest *request = [INDANCSRequest getNotificationAttributesRequestWithUID:UID];
 	
 	const INDANCSNotificationAttributeID attributeIDs[INDANCSGetNotificationAttributeCount] = {
@@ -449,10 +486,9 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	[device sendRequest:request];
 }
 
-- (void)requestAppAttributesForApplication:(INDANCSApplication *)app peripheral:(CBPeripheral *)peripheral
+- (void)requestAppAttributesForBundleIdentifier:(NSString *)identifier device:(INDANCSDevice *)device
 {
-	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
-	INDANCSRequest *request = [INDANCSRequest getAppAttributesRequestWithBundleIdentifier:app.bundleIdentifier];
+	INDANCSRequest *request = [INDANCSRequest getAppAttributesRequestWithBundleIdentifier:identifier];
 	
 	const INDANCSAppAttributeID attributesIDs[INDANCSGetAppAttributeCount] = {
 		INDANCSAppAttributeIDDisplayName
@@ -528,6 +564,29 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 {
 	[self setDidDisconnect:YES forPeripheral:peripheral];
 	[self.manager cancelPeripheralConnection:peripheral];
+}
+
+- (void)addPendingNotification:(INDANCSNotification *)notification forBundleIdentifier:(NSString *)identifier
+{
+	NSParameterAssert(identifier);
+	NSMutableArray *notifications = self.pendingNotifications[identifier];
+	if (notifications == nil) {
+		notifications = [NSMutableArray arrayWithCapacity:1];
+		self.pendingNotifications[identifier] = notifications;
+	}
+	[notifications addObject:notification];
+}
+
+- (void)removePendingNotificationsForBundleIdentifier:(NSString *)identifier
+{
+	NSParameterAssert(identifier);
+	[self.pendingNotifications removeObjectForKey:identifier];
+}
+
+- (NSArray *)pendingNotificationsForBundleIdentifier:(NSString *)identifier
+{
+	NSParameterAssert(identifier);
+	return self.pendingNotifications[identifier];
 }
 
 @end

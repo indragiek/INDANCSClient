@@ -45,13 +45,14 @@
 	
 	NSString *JSONString = self.metadataStore[identifier];
 	NSData *JSONData = [JSONString dataUsingEncoding:NSUTF8StringEncoding];
+	if (JSONData == nil) return nil;
+	
 	NSError *error = nil;
 	NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:JSONData options:0 error:&error];
 	if (dictionary == nil) {
 		NSLog(@"Error reading JSON data: %@", error);
 		return nil;
 	}
-	
 	application = [[INDANCSApplication alloc] initWithBundleIdentifier:identifier dictionary:dictionary];
 	if (application) {
 		self.metadataCache[identifier] = [application copy];
@@ -80,6 +81,7 @@
 		}
 	}
 	
+	NSLog(@"wrote cached value: %@", self.metadataStore);
 	self.metadataStore[identifier] = JSONString;
 	if (application == nil) {
 		[self.metadataCache removeObjectForKey:identifier];

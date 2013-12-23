@@ -16,7 +16,7 @@
 @protocol INDANCSClientDelegate;
 
 typedef void (^INDANCSDiscoveryBlock)(INDANCSClient *, INDANCSDevice *);
-typedef void (^INDANCSNotificationBlock)(INDANCSClient *, INDANCSDevice *, INDANCSEventID, INDANCSNotification *);
+typedef void (^INDANCSNotificationBlock)(INDANCSClient *, INDANCSNotification *);
 
 /**
  *  Objective-C client for the Apple Notification Center Service.
