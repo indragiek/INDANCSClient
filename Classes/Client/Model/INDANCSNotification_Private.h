@@ -8,17 +8,41 @@
 
 #import "INDANCSNotification.h"
 
+@class INDANCSResponse;
 @interface INDANCSNotification ()
+/**
+ *  Read/write declarations of public facing properties.
+ */
 @property (nonatomic, weak, readwrite) INDANCSDevice *device;
-@property (nonatomic, assign, readwrite) INDANCSEventID latestEventID;
-@property (nonatomic, assign, readwrite) BOOL silent;
-@property (nonatomic, assign, readwrite) BOOL important;
-@property (nonatomic, assign, readwrite) INDANCSCategoryID categoryID;
-@property (nonatomic, assign, readwrite) uint8_t categoryCount;
-@property (nonatomic, assign, readwrite) uint32_t notificationUID;
 @property (nonatomic, strong, readwrite) INDANCSApplication *application;
-@property (nonatomic, strong, readwrite) NSString *title;
-@property (nonatomic, strong, readwrite) NSString *subtitle;
-@property (nonatomic, strong, readwrite) NSString *message;
-@property (nonatomic, strong, readwrite) NSDate *date;
+
+/**
+ *  Bundle identifier of the application that this notification
+ *  originated from.
+ */
+@property (nonatomic, strong) NSString *bundleIdentifier;
+
+/**
+ *  Designated initializer.
+ *
+ *  @param UID The UID of the receiver.
+ *
+ *  @return A new instance of `INDANCSNotification`.
+ */
+- (id)initWithUID:(uint32_t)UID;
+
+/**
+ *  Merges notification attributes contained in a GATT notification.
+ *
+ *  @param data Notification data.
+ */
+- (void)mergeAttributesFromGATTNotificationData:(NSData *)data;
+
+/**
+ *  Merges notification attributes contained in a response to
+ *  a Get Notification Attributes command.
+ *
+ *  @param response Command response.
+ */
+- (void)mergeAttributesFromNotificationAttributeResponse:(INDANCSResponse *)response;
 @end

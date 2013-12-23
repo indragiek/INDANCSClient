@@ -21,11 +21,6 @@
 // Uncomment to enable debug logging
 // #define DEBUG_LOGGING
 
-typedef NS_OPTIONS(uint8_t, INDANCSEventFlags) {
-	INDANCSEventFlagSilent = (1 << 0),
-	INDANCSEventFlagImportant = (1 << 1)
-};
-
 static NSUInteger const INDANCSGetNotificationAttributeCount = 5;
 static NSUInteger const INDANCSGetAppAttributeCount = 1;
 static NSString * const INDANCSDeviceUserInfoKey = @"device";
@@ -337,7 +332,8 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 		if (response == nil) return;
 		
 		if (response.commandID == INDANCSCommandIDGetNotificationAttributes) {
-			INDANCSNotification *notification = [self readNotificationResponse:response device:device];
+			INDANCSNotification *notification = [device notificationForUID:response.notificationUID];
+			[notification mergeAttributesFromNotificationAttributeResponse:response];
 			[self notifyWithNotification:notification forDevice:device];
 		}
 	}
@@ -418,16 +414,6 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	}
 }
 
-/*
- * GATT notification format
- *
- *  ----------------------------------------------------------------------------------------------
- * |              |                 |                 |                    |                      |
- * | Event ID (1) | Event Flags (1) | Category ID (1) | Category Count (1) | Notification UID (4) |
- * |              |                 |                 |                    |                      |
- *  ----------------------------------------------------------------------------------------------
- *
- */
 - (INDANCSNotification *)readNotificationWithData:(NSData *)notificationData device:(INDANCSDevice *)device
 {
 	NSUInteger offset = sizeof(uint8_t) * 4; // Skip straight to the UID
@@ -435,17 +421,10 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	
 	INDANCSNotification *notification = [device notificationForUID:UID];
 	if (notification == nil) {
-		notification = [[INDANCSNotification alloc] init];
-		notification.notificationUID = UID;
+		notification = [[INDANCSNotification alloc] initWithUID:UID];
 		[device addNotification:notification];
 	}
-	offset = 0;
-	notification.latestEventID = [notificationData ind_readUInt8At:&offset];
-	uint8_t flags = [notificationData ind_readUInt8At:&offset];
-	notification.silent = (flags & INDANCSEventFlagSilent) == INDANCSEventFlagSilent;
-	notification.important = (flags & INDANCSEventFlagImportant) == INDANCSEventFlagImportant;
-	notification.categoryID = [notificationData ind_readUInt8At:&offset];
-	notification.categoryCount = [notificationData ind_readUInt8At:&offset];
+	[notification mergeAttributesFromGATTNotificationData:notificationData];
 	return notification;
 }
 
@@ -482,62 +461,6 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 		[request appendAttributeID:attributesIDs[i] maxLength:0];
 	}
 	[device sendRequest:request];
-}
-
-- (INDANCSNotification *)readNotificationResponse:(INDANCSResponse *)response device:(INDANCSDevice *)device
-{
-	INDANCSNotification *notification = [device notificationForUID:response.notificationUID];
-	[response.allAttributes enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, NSString *obj, BOOL *stop) {
-		INDANCSNotificationAttributeID attr = key.unsignedCharValue;
-		id transformedValue = [self transformedValueForAttributeValue:obj attributeID:attr];
-		NSString *keypath = [self notificationKeypathForAttributeID:attr];
-		[notification setValue:transformedValue forKey:keypath];
-	}];
-	return notification;
-}
-
-- (NSString *)notificationKeypathForAttributeID:(INDANCSNotificationAttributeID)attributeID
-{
-	switch (attributeID) {
-		case INDANCSNotificationAttributeIDAppIdentifier:
-			return @"application";
-		case INDANCSNotificationAttributeIDMessage:
-			return @"message";
-		case INDANCSNotificationAttributeIDDate:
-			return @"date";
-		case INDANCSNotificationAttributeIDTitle:
-			return @"title";
-		case INDANCSNotificationAttributeIDSubtitle:
-			return @"subtitle";
-		default:
-			return nil;
-	}
-}
-
-- (id)transformedValueForAttributeValue:(NSString *)value attributeID:(INDANCSNotificationAttributeID)attributeID
-{
-	switch (attributeID) {
-		case INDANCSNotificationAttributeIDDate:
-			return [self.notificationDateFormatter dateFromString:value];
-		case INDANCSNotificationAttributeIDAppIdentifier: {
-			INDANCSApplication *application = [[INDANCSApplication alloc] init];
-			application.bundleIdentifier = value;
-			return application;
-		}
-		default:
-			return value;
-	}
-}
-
-- (NSDateFormatter *)notificationDateFormatter
-{
-	static NSDateFormatter *formatter = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		formatter = [[NSDateFormatter alloc] init];
-		formatter.dateFormat = @"yyyyMMdd'T'HHmmSS";
-	});
-	return formatter;
 }
 
 #pragma mark - Accessors

@@ -39,41 +39,41 @@ typedef NS_ENUM(uint8_t, INDANCSEventID) {
 /**
  *  The device the notification originated from.
  */
-@property (nonatomic, weak, readonly) INDANCSDevice *device;
+@property (weak, readonly) INDANCSDevice *device;
 /**
  *  The event ID of the latest event received for the notification.
  */
-@property (nonatomic, assign, readonly) INDANCSEventID latestEventID;
+@property (assign, readonly) INDANCSEventID latestEventID;
 /**
  *  Whether the notification was silent.
  */
-@property (nonatomic, assign, readonly) BOOL silent;
+@property (assign, readonly) BOOL silent;
 
 /**
  *  Whether the notification was flagged as important.
  */
-@property (nonatomic, assign, readonly) BOOL important;
+@property (assign, readonly) BOOL important;
 
 /**
  *  The category in which the iOS notification can be classified.
  */
-@property (nonatomic, assign, readonly) INDANCSCategoryID categoryID;
+@property (assign, readonly) INDANCSCategoryID categoryID;
 
 /**
  *  The current number of active iOS notifications in the given category.
  */
-@property (nonatomic, assign, readonly) uint8_t categoryCount;
+@property (assign, readonly) uint8_t categoryCount;
 
 /**
  *  A 32-bit numerical value that is the unique identifier (UID) for the 
  *  iOS notification.
  */
-@property (nonatomic, assign, readonly) uint32_t notificationUID;
+@property (assign, readonly) uint32_t notificationUID;
 
 /**
  *  The application that posted the notification.
  */
-@property (nonatomic, strong, readonly) INDANCSApplication *application;
+@property (strong, readonly) INDANCSApplication *application;
 
 /**
  *  The title of the notification.

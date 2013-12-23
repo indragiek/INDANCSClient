@@ -9,9 +9,38 @@
 #import "INDANCSNotification.h"
 #import "INDANCSNotification_Private.h"
 #import "INDANCSDevice.h"
+#import "INDANCSResponse.h"
 #import "INDANCSObjectEquality.h"
+#import "NSData+INDANCSAdditions.h"
+
+typedef NS_OPTIONS(uint8_t, INDANCSEventFlags) {
+	INDANCSEventFlagSilent = (1 << 0),
+	INDANCSEventFlagImportant = (1 << 1)
+};
+
+@interface INDANCSNotification ()
+@property (nonatomic, assign, readwrite) INDANCSEventID latestEventID;
+@property (nonatomic, assign, readwrite) BOOL silent;
+@property (nonatomic, assign, readwrite) BOOL important;
+@property (nonatomic, assign, readwrite) INDANCSCategoryID categoryID;
+@property (nonatomic, assign, readwrite) uint8_t categoryCount;
+@property (nonatomic, strong, readwrite) NSString *title;
+@property (nonatomic, strong, readwrite) NSString *subtitle;
+@property (nonatomic, strong, readwrite) NSString *message;
+@property (nonatomic, strong, readwrite) NSDate *date;
+@end
 
 @implementation INDANCSNotification
+
+#pragma mark - Initialization
+
+- (id)initWithUID:(uint32_t)UID
+{
+	if ((self = [super init])) {
+		_notificationUID = UID;
+	}
+	return self;
+}
 
 #pragma mark - NSObject
 
@@ -66,6 +95,78 @@
 	[aCoder encodeObject:self.subtitle forKey:@"subtitle"];
 	[aCoder encodeObject:self.message forKey:@"message"];
 	[aCoder encodeObject:self.date forKey:@"date"];
+}
+
+#pragma mark - Private
+
+/*
+ * GATT notification format
+ *
+ *  ----------------------------------------------------------------------------------------------
+ * |              |                 |                 |                    |                      |
+ * | Event ID (1) | Event Flags (1) | Category ID (1) | Category Count (1) | Notification UID (4) |
+ * |              |                 |                 |                    |                      |
+ *  ----------------------------------------------------------------------------------------------
+ *
+ */
+- (void)mergeAttributesFromGATTNotificationData:(NSData *)data
+{
+	NSUInteger offset = 0;
+	self.latestEventID = [data ind_readUInt8At:&offset];
+	uint8_t flags = [data ind_readUInt8At:&offset];
+	self.silent = (flags & INDANCSEventFlagSilent) == INDANCSEventFlagSilent;
+	self.important = (flags & INDANCSEventFlagImportant) == INDANCSEventFlagImportant;
+	self.categoryID = [data ind_readUInt8At:&offset];
+	self.categoryCount = [data ind_readUInt8At:&offset];
+}
+
+- (void)mergeAttributesFromNotificationAttributeResponse:(INDANCSResponse *)response
+{
+	[response.allAttributes enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, NSString *obj, BOOL *stop) {
+		INDANCSNotificationAttributeID attr = key.unsignedCharValue;
+		id transformedValue = [self transformedValueForAttributeValue:obj attributeID:attr];
+		NSString *keypath = [self keypathForAttributeID:attr];
+		[self setValue:transformedValue forKey:keypath];
+	}];
+}
+
+- (NSString *)keypathForAttributeID:(INDANCSNotificationAttributeID)attributeID
+{
+	switch (attributeID) {
+		case INDANCSNotificationAttributeIDAppIdentifier:
+			return @"application";
+		case INDANCSNotificationAttributeIDMessage:
+			return @"message";
+		case INDANCSNotificationAttributeIDDate:
+			return @"date";
+		case INDANCSNotificationAttributeIDTitle:
+			return @"title";
+		case INDANCSNotificationAttributeIDSubtitle:
+			return @"subtitle";
+		default:
+			return nil;
+	}
+}
+
+- (id)transformedValueForAttributeValue:(NSString *)value attributeID:(INDANCSNotificationAttributeID)attributeID
+{
+	switch (attributeID) {
+		case INDANCSNotificationAttributeIDDate:
+			return [self.notificationDateFormatter dateFromString:value];
+		default:
+			return value;
+	}
+}
+
+- (NSDateFormatter *)notificationDateFormatter
+{
+	static NSDateFormatter *formatter = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		formatter = [[NSDateFormatter alloc] init];
+		formatter.dateFormat = @"yyyyMMdd'T'HHmmSS";
+	});
+	return formatter;
 }
 
 @end
