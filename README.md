@@ -16,7 +16,7 @@ I made this because it was a great way to learn the ins and outs of Core Bluetoo
 
 ### Requirements
 
-* iPhone 4S or better running iOS 7 or higher. Previous iPhone models (including iPhone 4) do not support Bluetooth 4.0.
+* iPhone 4S/iPad 3 or better running iOS 7 or higher. Previous iPhone models (including iPhone 4) do not support Bluetooth 4.0.
 * A Mac with Bluetooth 4.0 support running OS X 10.9 or higher. Macs made after mid-2011 support Bluetooth 4.0 (starting with the mid-2011 MacBook Air). See [this page](http://www.everymac.com/systems/by_capability/macs-with-bluetooth-different-bluetooth-capabilities.html) for more info.
 
 ### Getting Started
