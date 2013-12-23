@@ -7,8 +7,8 @@ This is an Objective-C client and server implementation of the [Apple Notificati
 
 This project contains two main parts: 
 
-1. **`INDANCSServer`** *(iOS 7+)* - a small component that runs on an iOS device to expose the ANCS service and some device information (name, model). 
-2. **`INDANCSClient`** *(OS X 10.9+)* - a Mac framework that has a simple block based API for scanning and registering for notifications from iOS devices that are running the `INDANCSServer` code.
+1. **INDANCSServer** *(iOS 7+)* - a small component that runs on an iOS device to expose the ANCS service and some device information (name, model). 
+2. **INDANCSClient** *(OS X 10.9+)* - a Mac framework that has a simple block based API for scanning and registering for notifications from iOS devices that are running the `INDANCSServer` code.
 
 I made this because it was a great way to learn the ins and outs of Core Bluetooth and because the idea of wirelessly receiving notifications from an iOS device is way cool.
 
@@ -89,8 +89,8 @@ Since Bluetooth connections can often be unreliable, `INDANCSClient` includes su
 
 The `INDANCSKeyValueStore` protocol describes the interface that you can use to implement your custom key-value store for use with `INDANCSClient`. Two existing implementations are provided with the framework:
 
-* **`INDANCSInMemoryStore`** - An in-memory key-value store backed by an `NSDictionary`.
-* **`INDANCSObjectiveKVDBStore`** - A persistent key-value store backed by [ObjectiveKVDB](https://github.com/indragiek/ObjectiveKVDB).
+* **INDANCSInMemoryStore** - An in-memory key-value store backed by an `NSDictionary`.
+* **INDANCSObjectiveKVDBStore** - A persistent key-value store backed by [ObjectiveKVDB](https://github.com/indragiek/ObjectiveKVDB).
 
 Calling `-init` on `INDANCSClient` automatically initializes it using an instance of `INDANCSObjectiveKVDBStore` for persistent app metadata storage. If you want to use a different key-value store (or configure store file names, locations, etc.) you can use the `initWithMetadataStore:` initializer to pass in an object conforming to the `INDANCSKeyValueStore` protocol.
 
