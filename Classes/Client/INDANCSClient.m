@@ -38,6 +38,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 @property (nonatomic, strong, readonly) NSMutableSet *validDevices;
 @property (nonatomic, strong, readonly) NSMutableDictionary *disconnects;
 @property (nonatomic, strong, readonly) NSMutableDictionary *pendingNotifications;
+@property (nonatomic, strong, readonly) NSMutableSet *pendingAppRequests;
 @end
 
 @implementation INDANCSClient {
@@ -68,6 +69,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 		_validDevices = [NSMutableSet set];
 		_disconnects = [NSMutableDictionary dictionary];
 		_pendingNotifications = [NSMutableDictionary dictionary];
+		_pendingAppRequests = [NSMutableSet set];
 		_powerOnBlocks = [NSMutableArray array];
 		_delegateQueue = dispatch_queue_create("com.indragie.INDANCSClient.DelegateQueue", DISPATCH_QUEUE_SERIAL);
 		_manager = [[CBCentralManager alloc] initWithDelegate:self queue:_delegateQueue options:@{CBCentralManagerOptionShowPowerAlertKey : @YES}];
@@ -352,15 +354,30 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 #ifdef DEBUG_LOGGING
 	NSLog(@"[%@] Received error: %@ when writing to characteristic: %@", peripheral, error, characteristic);
 #endif
-	// TODO: Better error handling. Right now it doesn't look at the error code
-	// and just tosses notifications for which errors were received.
+	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
+	[device cancelCurrentResponse];
+	
 	NSData *data = characteristic.value;
 	NSUInteger offset = 0;
-	uint8_t header = [data ind_readUInt8At:&offset];
-	if (header == INDANCSCommandIDGetNotificationAttributes) {
-		uint32_t UID = [data ind_readUInt32At:&offset];
-		INDANCSDevice *device = [self deviceForPeripheral:peripheral];
-		[device removeNotificationForUID:UID];
+	INDANCSCommandID command = [data ind_readUInt8At:&offset];
+	switch (command) {
+		case INDANCSCommandIDGetNotificationAttributes: {
+			uint32_t UID = [data ind_readUInt32At:&offset];
+			INDANCSDevice *device = [self deviceForPeripheral:peripheral];
+			[device removeNotificationForUID:UID];
+			break;
+		}
+		case INDANCSCommandIDGetAppAttributes: {
+			NSUInteger loc = [data ind_locationOfNullByteFromOffset:offset];
+			if (loc != NSNotFound) {
+				NSData *stringData = [data subdataWithRange:NSMakeRange(offset, loc - offset)];
+				NSString *identifier = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+				[self.pendingAppRequests removeObject:identifier];
+			}
+			break;
+		}
+		default:
+			break;
 	}
 }
 
@@ -446,7 +463,9 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	if (notification.application == nil) {
 		NSString *identifier = notification.bundleIdentifier;
 		[self addPendingNotification:notification forBundleIdentifier:identifier];
-		[self requestAppAttributesForBundleIdentifier:identifier device:device];
+		if (![self.pendingAppRequests containsObject:identifier]) {
+			[self requestAppAttributesForBundleIdentifier:identifier device:device];
+		}
 	} else {
 		[self notifyWithNotification:notification];
 	}
@@ -463,6 +482,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 		[self notifyWithNotification:notification];
 	}
 	[self removePendingNotificationsForBundleIdentifier:identifier];
+	[self.pendingAppRequests removeObject:identifier];
 }
 
 - (void)requestNotificationAttributesForUID:(uint32_t)UID device:(INDANCSDevice *)device
@@ -495,6 +515,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	for (int i = 0; i < INDANCSGetAppAttributeCount; i++) {
 		[request appendAttributeID:attributesIDs[i] maxLength:0];
 	}
+	[self.pendingAppRequests addObject:identifier];
 	[device sendRequest:request];
 }
 
