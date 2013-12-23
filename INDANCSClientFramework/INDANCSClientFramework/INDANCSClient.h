@@ -51,11 +51,6 @@ typedef void (^INDANCSNotificationBlock)(INDANCSClient *, INDANCSNotification *)
  */
 @property (nonatomic, strong, readonly) id<INDANCSKeyValueStore> metadataStore;
 
-/**
- *  Key value store used to store blacklist preferences.
- */
-@property (nonatomic, strong, readonly) id<INDANCSKeyValueStore> blacklistStore;
-
 
 #pragma mark - Initialization
 
