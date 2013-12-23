@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:Examples/INDANCSMac/INDANCSMac.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Examples/INDANCSiPhone/INDANCSiPhone.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:INDANCSClientFramework/INDANCSClientFramework.xcodeproj">
+   </FileRef>
+</Workspace>
