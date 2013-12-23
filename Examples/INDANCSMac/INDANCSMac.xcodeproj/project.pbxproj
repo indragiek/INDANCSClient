@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0357906F1867E25C0055FB4E /* INDANCSClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 035790691867E24A0055FB4E /* INDANCSClient.framework */; };
 		035790701867E2620055FB4E /* INDANCSClient.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 035790691867E24A0055FB4E /* INDANCSClient.framework */; };
+		0357907E1867EBED0055FB4E /* INDANCSNotificationTableRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0357907D1867EBED0055FB4E /* INDANCSNotificationTableRowView.m */; };
 		0397D8431859755E005561AD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8421859755E005561AD /* Cocoa.framework */; };
 		0397D84D1859755E005561AD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0397D84B1859755E005561AD /* InfoPlist.strings */; };
 		0397D84F1859755E005561AD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D84E1859755E005561AD /* main.m */; };
@@ -68,6 +69,8 @@
 
 /* Begin PBXFileReference section */
 		035790611867E24A0055FB4E /* INDANCSClientFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = INDANCSClientFramework.xcodeproj; path = ../../../INDANCSClientFramework/INDANCSClientFramework.xcodeproj; sourceTree = "<group>"; };
+		0357907C1867EBED0055FB4E /* INDANCSNotificationTableRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSNotificationTableRowView.h; sourceTree = "<group>"; };
+		0357907D1867EBED0055FB4E /* INDANCSNotificationTableRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSNotificationTableRowView.m; sourceTree = "<group>"; };
 		0397D83F1859755E005561AD /* INDANCSMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = INDANCSMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0397D8421859755E005561AD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		0397D8451859755E005561AD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -167,6 +170,8 @@
 				035790611867E24A0055FB4E /* INDANCSClientFramework.xcodeproj */,
 				0397D8541859755E005561AD /* INDAppDelegate.h */,
 				0397D8551859755E005561AD /* INDAppDelegate.m */,
+				0357907C1867EBED0055FB4E /* INDANCSNotificationTableRowView.h */,
+				0357907D1867EBED0055FB4E /* INDANCSNotificationTableRowView.m */,
 				0397D8571859755E005561AD /* MainMenu.xib */,
 				0397D85A1859755E005561AD /* Images.xcassets */,
 				0397D8491859755E005561AD /* Supporting Files */,
@@ -329,6 +334,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0357907E1867EBED0055FB4E /* INDANCSNotificationTableRowView.m in Sources */,
 				0397D8561859755E005561AD /* INDAppDelegate.m in Sources */,
 				0397D84F1859755E005561AD /* main.m in Sources */,
 			);

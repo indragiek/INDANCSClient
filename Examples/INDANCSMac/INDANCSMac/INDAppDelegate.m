@@ -7,9 +7,10 @@
 //
 
 #import "INDAppDelegate.h"
+#import "INDANCSNotificationTableRowView.h"
 #import <INDANCSClient/INDANCSClientFramework.h>
 
-@interface INDAppDelegate () <INDANCSClientDelegate, NSUserNotificationCenterDelegate>
+@interface INDAppDelegate () <INDANCSClientDelegate, NSTableViewDataSource, NSTableViewDelegate, NSUserNotificationCenterDelegate>
 @property (nonatomic, strong) INDANCSClient *client;
 @property (nonatomic, weak) IBOutlet NSTableView *tableView;
 @property (nonatomic, strong) NSMutableArray *notifications;
@@ -89,6 +90,13 @@
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
 	return self.notifications[rowIndex];
+}
+
+#pragma mark - NSTableViewDelegate
+
+- (NSTableRowView *)tableView:(NSTableView *)tableView rowViewForRow:(NSInteger)row
+{
+	return [[INDANCSNotificationTableRowView alloc] initWithFrame:NSZeroRect];
 }
 
 #pragma mark - NSUserNotificationCenterDelegate
