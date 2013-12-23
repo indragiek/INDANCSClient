@@ -1,0 +1,701 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		03578FBE1867DDC30055FB4E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03578FBD1867DDC30055FB4E /* Cocoa.framework */; };
+		03578FC81867DDC30055FB4E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 03578FC61867DDC30055FB4E /* InfoPlist.strings */; };
+		03578FD31867DDC40055FB4E /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03578FD21867DDC40055FB4E /* XCTest.framework */; };
+		03578FD41867DDC40055FB4E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03578FBD1867DDC30055FB4E /* Cocoa.framework */; };
+		03578FD71867DDC40055FB4E /* INDANCSClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03578FBA1867DDC30055FB4E /* INDANCSClient.framework */; };
+		03578FDD1867DDC40055FB4E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 03578FDB1867DDC40055FB4E /* InfoPlist.strings */; };
+		03578FDF1867DDC40055FB4E /* INDANCSClientFrameworkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 03578FDE1867DDC40055FB4E /* INDANCSClientFrameworkTests.m */; };
+		03578FEB1867DEA20055FB4E /* CBCharacteristic+INDANCSAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FE91867DEA20055FB4E /* CBCharacteristic+INDANCSAdditions.h */; };
+		03578FEC1867DEA20055FB4E /* CBCharacteristic+INDANCSAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03578FEA1867DEA20055FB4E /* CBCharacteristic+INDANCSAdditions.m */; };
+		035790061867DEBB0055FB4E /* INDANCSApplication_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FEE1867DEBB0055FB4E /* INDANCSApplication_Private.h */; };
+		035790071867DEBB0055FB4E /* INDANCSApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FEF1867DEBB0055FB4E /* INDANCSApplication.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		035790081867DEBB0055FB4E /* INDANCSApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 03578FF01867DEBB0055FB4E /* INDANCSApplication.m */; };
+		035790091867DEBB0055FB4E /* INDANCSApplicationStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FF11867DEBB0055FB4E /* INDANCSApplicationStorage.h */; };
+		0357900A1867DEBB0055FB4E /* INDANCSApplicationStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 03578FF21867DEBB0055FB4E /* INDANCSApplicationStorage.m */; };
+		0357900B1867DEBB0055FB4E /* INDANCSAttributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FF31867DEBB0055FB4E /* INDANCSAttributes.h */; };
+		0357900C1867DEBB0055FB4E /* INDANCSClientFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FF41867DEBB0055FB4E /* INDANCSClientFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0357900D1867DEBB0055FB4E /* INDANCSDevice_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FF51867DEBB0055FB4E /* INDANCSDevice_Private.h */; };
+		0357900E1867DEBB0055FB4E /* INDANCSDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FF61867DEBB0055FB4E /* INDANCSDevice.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0357900F1867DEBB0055FB4E /* INDANCSDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 03578FF71867DEBB0055FB4E /* INDANCSDevice.m */; };
+		035790101867DEBB0055FB4E /* INDANCSDictionarySerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FF81867DEBB0055FB4E /* INDANCSDictionarySerialization.h */; };
+		035790111867DEBB0055FB4E /* INDANCSInMemoryStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FF91867DEBB0055FB4E /* INDANCSInMemoryStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		035790121867DEBB0055FB4E /* INDANCSInMemoryStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 03578FFA1867DEBB0055FB4E /* INDANCSInMemoryStore.m */; };
+		035790131867DEBB0055FB4E /* INDANCSKeyValueStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FFB1867DEBB0055FB4E /* INDANCSKeyValueStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		035790141867DEBB0055FB4E /* INDANCSNotification_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FFC1867DEBB0055FB4E /* INDANCSNotification_Private.h */; };
+		035790151867DEBB0055FB4E /* INDANCSNotification.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FFD1867DEBB0055FB4E /* INDANCSNotification.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		035790161867DEBB0055FB4E /* INDANCSNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 03578FFE1867DEBB0055FB4E /* INDANCSNotification.m */; };
+		035790171867DEBB0055FB4E /* INDANCSObjectEquality.h in Headers */ = {isa = PBXBuildFile; fileRef = 03578FFF1867DEBB0055FB4E /* INDANCSObjectEquality.h */; };
+		035790181867DEBB0055FB4E /* INDANCSObjectiveKVDBStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 035790001867DEBB0055FB4E /* INDANCSObjectiveKVDBStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		035790191867DEBB0055FB4E /* INDANCSObjectiveKVDBStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 035790011867DEBB0055FB4E /* INDANCSObjectiveKVDBStore.m */; };
+		0357901A1867DEBB0055FB4E /* INDANCSRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 035790021867DEBB0055FB4E /* INDANCSRequest.h */; };
+		0357901B1867DEBB0055FB4E /* INDANCSRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 035790031867DEBB0055FB4E /* INDANCSRequest.m */; };
+		0357901C1867DEBB0055FB4E /* INDANCSResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 035790041867DEBB0055FB4E /* INDANCSResponse.h */; };
+		0357901D1867DEBB0055FB4E /* INDANCSResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 035790051867DEBB0055FB4E /* INDANCSResponse.m */; };
+		035790201867DEC30055FB4E /* NSData+INDANCSAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 0357901E1867DEC30055FB4E /* NSData+INDANCSAdditions.h */; };
+		035790211867DEC30055FB4E /* NSData+INDANCSAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0357901F1867DEC30055FB4E /* NSData+INDANCSAdditions.m */; };
+		035790241867DEC90055FB4E /* INDANCSClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 035790221867DEC90055FB4E /* INDANCSClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		035790251867DEC90055FB4E /* INDANCSClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 035790231867DEC90055FB4E /* INDANCSClient.m */; };
+		035790291867DF530055FB4E /* INDANCSDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 035790281867DF530055FB4E /* INDANCSDefines.h */; };
+		035790501867E0570055FB4E /* ObjectiveKVDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 035790451867DFDD0055FB4E /* ObjectiveKVDB.framework */; };
+		035790521867E0640055FB4E /* ObjectiveKVDB.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 035790451867DFDD0055FB4E /* ObjectiveKVDB.framework */; };
+		035790541867E0740055FB4E /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 035790531867E0740055FB4E /* IOBluetooth.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		03578FD51867DDC40055FB4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03578FB11867DDC30055FB4E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 03578FB91867DDC30055FB4E;
+			remoteInfo = INDANCSClientFramework;
+		};
+		035790441867DFDD0055FB4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0357903C1867DFDC0055FB4E /* ObjectiveKVDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03ED9658185D99D0009FF2E8;
+			remoteInfo = ObjectiveKVDB;
+		};
+		035790461867DFDD0055FB4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0357903C1867DFDC0055FB4E /* ObjectiveKVDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03ED966F185D99D0009FF2E8;
+			remoteInfo = ObjectiveKVDBTests;
+		};
+		0357904E1867E0520055FB4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0357903C1867DFDC0055FB4E /* ObjectiveKVDB.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 03ED9657185D99D0009FF2E8;
+			remoteInfo = ObjectiveKVDB;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		035790511867E05B0055FB4E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				035790521867E0640055FB4E /* ObjectiveKVDB.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		03578FBA1867DDC30055FB4E /* INDANCSClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = INDANCSClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		03578FBD1867DDC30055FB4E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		03578FC01867DDC30055FB4E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		03578FC11867DDC30055FB4E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		03578FC21867DDC30055FB4E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		03578FC51867DDC30055FB4E /* INDANCSClientFramework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "INDANCSClientFramework-Info.plist"; sourceTree = "<group>"; };
+		03578FC71867DDC30055FB4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		03578FC91867DDC30055FB4E /* INDANCSClientFramework-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "INDANCSClientFramework-Prefix.pch"; sourceTree = "<group>"; };
+		03578FCA1867DDC30055FB4E /* INDANCSClientFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = INDANCSClientFramework.h; sourceTree = "<group>"; };
+		03578FD11867DDC40055FB4E /* INDANCSClientFrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = INDANCSClientFrameworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		03578FD21867DDC40055FB4E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		03578FDA1867DDC40055FB4E /* INDANCSClientFrameworkTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "INDANCSClientFrameworkTests-Info.plist"; sourceTree = "<group>"; };
+		03578FDC1867DDC40055FB4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		03578FDE1867DDC40055FB4E /* INDANCSClientFrameworkTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = INDANCSClientFrameworkTests.m; sourceTree = "<group>"; };
+		03578FE91867DEA20055FB4E /* CBCharacteristic+INDANCSAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBCharacteristic+INDANCSAdditions.h"; sourceTree = "<group>"; };
+		03578FEA1867DEA20055FB4E /* CBCharacteristic+INDANCSAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBCharacteristic+INDANCSAdditions.m"; sourceTree = "<group>"; };
+		03578FEE1867DEBB0055FB4E /* INDANCSApplication_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSApplication_Private.h; sourceTree = "<group>"; };
+		03578FEF1867DEBB0055FB4E /* INDANCSApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSApplication.h; sourceTree = "<group>"; };
+		03578FF01867DEBB0055FB4E /* INDANCSApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSApplication.m; sourceTree = "<group>"; };
+		03578FF11867DEBB0055FB4E /* INDANCSApplicationStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSApplicationStorage.h; sourceTree = "<group>"; };
+		03578FF21867DEBB0055FB4E /* INDANCSApplicationStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSApplicationStorage.m; sourceTree = "<group>"; };
+		03578FF31867DEBB0055FB4E /* INDANCSAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSAttributes.h; sourceTree = "<group>"; };
+		03578FF41867DEBB0055FB4E /* INDANCSClientFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSClientFramework.h; sourceTree = "<group>"; };
+		03578FF51867DEBB0055FB4E /* INDANCSDevice_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDevice_Private.h; sourceTree = "<group>"; };
+		03578FF61867DEBB0055FB4E /* INDANCSDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDevice.h; sourceTree = "<group>"; };
+		03578FF71867DEBB0055FB4E /* INDANCSDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSDevice.m; sourceTree = "<group>"; };
+		03578FF81867DEBB0055FB4E /* INDANCSDictionarySerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDictionarySerialization.h; sourceTree = "<group>"; };
+		03578FF91867DEBB0055FB4E /* INDANCSInMemoryStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSInMemoryStore.h; sourceTree = "<group>"; };
+		03578FFA1867DEBB0055FB4E /* INDANCSInMemoryStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSInMemoryStore.m; sourceTree = "<group>"; };
+		03578FFB1867DEBB0055FB4E /* INDANCSKeyValueStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSKeyValueStore.h; sourceTree = "<group>"; };
+		03578FFC1867DEBB0055FB4E /* INDANCSNotification_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSNotification_Private.h; sourceTree = "<group>"; };
+		03578FFD1867DEBB0055FB4E /* INDANCSNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSNotification.h; sourceTree = "<group>"; };
+		03578FFE1867DEBB0055FB4E /* INDANCSNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSNotification.m; sourceTree = "<group>"; };
+		03578FFF1867DEBB0055FB4E /* INDANCSObjectEquality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSObjectEquality.h; sourceTree = "<group>"; };
+		035790001867DEBB0055FB4E /* INDANCSObjectiveKVDBStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSObjectiveKVDBStore.h; sourceTree = "<group>"; };
+		035790011867DEBB0055FB4E /* INDANCSObjectiveKVDBStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSObjectiveKVDBStore.m; sourceTree = "<group>"; };
+		035790021867DEBB0055FB4E /* INDANCSRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSRequest.h; sourceTree = "<group>"; };
+		035790031867DEBB0055FB4E /* INDANCSRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSRequest.m; sourceTree = "<group>"; };
+		035790041867DEBB0055FB4E /* INDANCSResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSResponse.h; sourceTree = "<group>"; };
+		035790051867DEBB0055FB4E /* INDANCSResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSResponse.m; sourceTree = "<group>"; };
+		0357901E1867DEC30055FB4E /* NSData+INDANCSAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+INDANCSAdditions.h"; sourceTree = "<group>"; };
+		0357901F1867DEC30055FB4E /* NSData+INDANCSAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+INDANCSAdditions.m"; sourceTree = "<group>"; };
+		035790221867DEC90055FB4E /* INDANCSClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSClient.h; sourceTree = "<group>"; };
+		035790231867DEC90055FB4E /* INDANCSClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSClient.m; sourceTree = "<group>"; };
+		035790281867DF530055FB4E /* INDANCSDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDANCSDefines.h; path = ../../Common/INDANCSDefines.h; sourceTree = "<group>"; };
+		0357903C1867DFDC0055FB4E /* ObjectiveKVDB.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectiveKVDB.xcodeproj; path = ../../../ObjectiveKVDB/ObjectiveKVDB/ObjectiveKVDB.xcodeproj; sourceTree = "<group>"; };
+		035790531867E0740055FB4E /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		03578FB61867DDC30055FB4E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				035790541867E0740055FB4E /* IOBluetooth.framework in Frameworks */,
+				035790501867E0570055FB4E /* ObjectiveKVDB.framework in Frameworks */,
+				03578FBE1867DDC30055FB4E /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		03578FCE1867DDC40055FB4E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03578FD41867DDC40055FB4E /* Cocoa.framework in Frameworks */,
+				03578FD31867DDC40055FB4E /* XCTest.framework in Frameworks */,
+				03578FD71867DDC40055FB4E /* INDANCSClient.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		03578FB01867DDC30055FB4E = {
+			isa = PBXGroup;
+			children = (
+				03578FC31867DDC30055FB4E /* INDANCSClientFramework */,
+				03578FD81867DDC40055FB4E /* INDANCSClientFrameworkTests */,
+				03578FBC1867DDC30055FB4E /* Frameworks */,
+				03578FBB1867DDC30055FB4E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		03578FBB1867DDC30055FB4E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				03578FBA1867DDC30055FB4E /* INDANCSClient.framework */,
+				03578FD11867DDC40055FB4E /* INDANCSClientFrameworkTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		03578FBC1867DDC30055FB4E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				035790531867E0740055FB4E /* IOBluetooth.framework */,
+				03578FBD1867DDC30055FB4E /* Cocoa.framework */,
+				03578FD21867DDC40055FB4E /* XCTest.framework */,
+				03578FBF1867DDC30055FB4E /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		03578FBF1867DDC30055FB4E /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				03578FC01867DDC30055FB4E /* Foundation.framework */,
+				03578FC11867DDC30055FB4E /* CoreData.framework */,
+				03578FC21867DDC30055FB4E /* AppKit.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		03578FC31867DDC30055FB4E /* INDANCSClientFramework */ = {
+			isa = PBXGroup;
+			children = (
+				035790271867DF450055FB4E /* Common */,
+				035790261867DF3C0055FB4E /* ObjectiveKVDB */,
+				03578FED1867DEA40055FB4E /* Model */,
+				03578FE81867DE990055FB4E /* Categories */,
+				03578FCA1867DDC30055FB4E /* INDANCSClientFramework.h */,
+				035790221867DEC90055FB4E /* INDANCSClient.h */,
+				035790231867DEC90055FB4E /* INDANCSClient.m */,
+				03578FC41867DDC30055FB4E /* Supporting Files */,
+			);
+			path = INDANCSClientFramework;
+			sourceTree = "<group>";
+		};
+		03578FC41867DDC30055FB4E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				03578FC51867DDC30055FB4E /* INDANCSClientFramework-Info.plist */,
+				03578FC61867DDC30055FB4E /* InfoPlist.strings */,
+				03578FC91867DDC30055FB4E /* INDANCSClientFramework-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		03578FD81867DDC40055FB4E /* INDANCSClientFrameworkTests */ = {
+			isa = PBXGroup;
+			children = (
+				03578FDE1867DDC40055FB4E /* INDANCSClientFrameworkTests.m */,
+				03578FD91867DDC40055FB4E /* Supporting Files */,
+			);
+			path = INDANCSClientFrameworkTests;
+			sourceTree = "<group>";
+		};
+		03578FD91867DDC40055FB4E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				03578FDA1867DDC40055FB4E /* INDANCSClientFrameworkTests-Info.plist */,
+				03578FDB1867DDC40055FB4E /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		03578FE81867DE990055FB4E /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				0357901E1867DEC30055FB4E /* NSData+INDANCSAdditions.h */,
+				0357901F1867DEC30055FB4E /* NSData+INDANCSAdditions.m */,
+				03578FE91867DEA20055FB4E /* CBCharacteristic+INDANCSAdditions.h */,
+				03578FEA1867DEA20055FB4E /* CBCharacteristic+INDANCSAdditions.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
+		03578FED1867DEA40055FB4E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				03578FEE1867DEBB0055FB4E /* INDANCSApplication_Private.h */,
+				03578FEF1867DEBB0055FB4E /* INDANCSApplication.h */,
+				03578FF01867DEBB0055FB4E /* INDANCSApplication.m */,
+				03578FF11867DEBB0055FB4E /* INDANCSApplicationStorage.h */,
+				03578FF21867DEBB0055FB4E /* INDANCSApplicationStorage.m */,
+				03578FF31867DEBB0055FB4E /* INDANCSAttributes.h */,
+				03578FF41867DEBB0055FB4E /* INDANCSClientFramework.h */,
+				03578FF51867DEBB0055FB4E /* INDANCSDevice_Private.h */,
+				03578FF61867DEBB0055FB4E /* INDANCSDevice.h */,
+				03578FF71867DEBB0055FB4E /* INDANCSDevice.m */,
+				03578FF81867DEBB0055FB4E /* INDANCSDictionarySerialization.h */,
+				03578FF91867DEBB0055FB4E /* INDANCSInMemoryStore.h */,
+				03578FFA1867DEBB0055FB4E /* INDANCSInMemoryStore.m */,
+				03578FFB1867DEBB0055FB4E /* INDANCSKeyValueStore.h */,
+				03578FFC1867DEBB0055FB4E /* INDANCSNotification_Private.h */,
+				03578FFD1867DEBB0055FB4E /* INDANCSNotification.h */,
+				03578FFE1867DEBB0055FB4E /* INDANCSNotification.m */,
+				03578FFF1867DEBB0055FB4E /* INDANCSObjectEquality.h */,
+				035790001867DEBB0055FB4E /* INDANCSObjectiveKVDBStore.h */,
+				035790011867DEBB0055FB4E /* INDANCSObjectiveKVDBStore.m */,
+				035790021867DEBB0055FB4E /* INDANCSRequest.h */,
+				035790031867DEBB0055FB4E /* INDANCSRequest.m */,
+				035790041867DEBB0055FB4E /* INDANCSResponse.h */,
+				035790051867DEBB0055FB4E /* INDANCSResponse.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		035790261867DF3C0055FB4E /* ObjectiveKVDB */ = {
+			isa = PBXGroup;
+			children = (
+				0357903C1867DFDC0055FB4E /* ObjectiveKVDB.xcodeproj */,
+			);
+			name = ObjectiveKVDB;
+			sourceTree = "<group>";
+		};
+		035790271867DF450055FB4E /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				035790281867DF530055FB4E /* INDANCSDefines.h */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+		0357903D1867DFDC0055FB4E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				035790451867DFDD0055FB4E /* ObjectiveKVDB.framework */,
+				035790471867DFDD0055FB4E /* ObjectiveKVDBTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		03578FB71867DDC30055FB4E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0357900C1867DEBB0055FB4E /* INDANCSClientFramework.h in Headers */,
+				035790241867DEC90055FB4E /* INDANCSClient.h in Headers */,
+				035790151867DEBB0055FB4E /* INDANCSNotification.h in Headers */,
+				0357900E1867DEBB0055FB4E /* INDANCSDevice.h in Headers */,
+				035790071867DEBB0055FB4E /* INDANCSApplication.h in Headers */,
+				035790131867DEBB0055FB4E /* INDANCSKeyValueStore.h in Headers */,
+				035790111867DEBB0055FB4E /* INDANCSInMemoryStore.h in Headers */,
+				035790181867DEBB0055FB4E /* INDANCSObjectiveKVDBStore.h in Headers */,
+				035790101867DEBB0055FB4E /* INDANCSDictionarySerialization.h in Headers */,
+				0357900B1867DEBB0055FB4E /* INDANCSAttributes.h in Headers */,
+				035790061867DEBB0055FB4E /* INDANCSApplication_Private.h in Headers */,
+				035790091867DEBB0055FB4E /* INDANCSApplicationStorage.h in Headers */,
+				035790291867DF530055FB4E /* INDANCSDefines.h in Headers */,
+				035790171867DEBB0055FB4E /* INDANCSObjectEquality.h in Headers */,
+				035790141867DEBB0055FB4E /* INDANCSNotification_Private.h in Headers */,
+				0357900D1867DEBB0055FB4E /* INDANCSDevice_Private.h in Headers */,
+				0357901C1867DEBB0055FB4E /* INDANCSResponse.h in Headers */,
+				03578FEB1867DEA20055FB4E /* CBCharacteristic+INDANCSAdditions.h in Headers */,
+				035790201867DEC30055FB4E /* NSData+INDANCSAdditions.h in Headers */,
+				0357901A1867DEBB0055FB4E /* INDANCSRequest.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		03578FB91867DDC30055FB4E /* INDANCSClient */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 03578FE21867DDC40055FB4E /* Build configuration list for PBXNativeTarget "INDANCSClient" */;
+			buildPhases = (
+				03578FB51867DDC30055FB4E /* Sources */,
+				03578FB61867DDC30055FB4E /* Frameworks */,
+				03578FB71867DDC30055FB4E /* Headers */,
+				03578FB81867DDC30055FB4E /* Resources */,
+				035790511867E05B0055FB4E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0357904F1867E0520055FB4E /* PBXTargetDependency */,
+			);
+			name = INDANCSClient;
+			productName = INDANCSClientFramework;
+			productReference = 03578FBA1867DDC30055FB4E /* INDANCSClient.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		03578FD01867DDC40055FB4E /* INDANCSClientTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 03578FE51867DDC40055FB4E /* Build configuration list for PBXNativeTarget "INDANCSClientTests" */;
+			buildPhases = (
+				03578FCD1867DDC40055FB4E /* Sources */,
+				03578FCE1867DDC40055FB4E /* Frameworks */,
+				03578FCF1867DDC40055FB4E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				03578FD61867DDC40055FB4E /* PBXTargetDependency */,
+			);
+			name = INDANCSClientTests;
+			productName = INDANCSClientFrameworkTests;
+			productReference = 03578FD11867DDC40055FB4E /* INDANCSClientFrameworkTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		03578FB11867DDC30055FB4E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "Indragie Karunaratne";
+				TargetAttributes = {
+					03578FD01867DDC40055FB4E = {
+						TestTargetID = 03578FB91867DDC30055FB4E;
+					};
+				};
+			};
+			buildConfigurationList = 03578FB41867DDC30055FB4E /* Build configuration list for PBXProject "INDANCSClientFramework" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 03578FB01867DDC30055FB4E;
+			productRefGroup = 03578FBB1867DDC30055FB4E /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 0357903D1867DFDC0055FB4E /* Products */;
+					ProjectRef = 0357903C1867DFDC0055FB4E /* ObjectiveKVDB.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				03578FB91867DDC30055FB4E /* INDANCSClient */,
+				03578FD01867DDC40055FB4E /* INDANCSClientTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		035790451867DFDD0055FB4E /* ObjectiveKVDB.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ObjectiveKVDB.framework;
+			remoteRef = 035790441867DFDD0055FB4E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		035790471867DFDD0055FB4E /* ObjectiveKVDBTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ObjectiveKVDBTests.xctest;
+			remoteRef = 035790461867DFDD0055FB4E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		03578FB81867DDC30055FB4E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03578FC81867DDC30055FB4E /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		03578FCF1867DDC40055FB4E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03578FDD1867DDC40055FB4E /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		03578FB51867DDC30055FB4E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03578FEC1867DEA20055FB4E /* CBCharacteristic+INDANCSAdditions.m in Sources */,
+				035790161867DEBB0055FB4E /* INDANCSNotification.m in Sources */,
+				035790251867DEC90055FB4E /* INDANCSClient.m in Sources */,
+				035790191867DEBB0055FB4E /* INDANCSObjectiveKVDBStore.m in Sources */,
+				0357900A1867DEBB0055FB4E /* INDANCSApplicationStorage.m in Sources */,
+				0357901D1867DEBB0055FB4E /* INDANCSResponse.m in Sources */,
+				0357901B1867DEBB0055FB4E /* INDANCSRequest.m in Sources */,
+				0357900F1867DEBB0055FB4E /* INDANCSDevice.m in Sources */,
+				035790121867DEBB0055FB4E /* INDANCSInMemoryStore.m in Sources */,
+				035790081867DEBB0055FB4E /* INDANCSApplication.m in Sources */,
+				035790211867DEC30055FB4E /* NSData+INDANCSAdditions.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		03578FCD1867DDC40055FB4E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03578FDF1867DDC40055FB4E /* INDANCSClientFrameworkTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		03578FD61867DDC40055FB4E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 03578FB91867DDC30055FB4E /* INDANCSClient */;
+			targetProxy = 03578FD51867DDC40055FB4E /* PBXContainerItemProxy */;
+		};
+		0357904F1867E0520055FB4E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ObjectiveKVDB;
+			targetProxy = 0357904E1867E0520055FB4E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		03578FC61867DDC30055FB4E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				03578FC71867DDC30055FB4E /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		03578FDB1867DDC40055FB4E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				03578FDC1867DDC40055FB4E /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		03578FE01867DDC40055FB4E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		03578FE11867DDC40055FB4E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		03578FE31867DDC40055FB4E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "INDANCSClientFramework/INDANCSClientFramework-Prefix.pch";
+				INFOPLIST_FILE = "INDANCSClientFramework/INDANCSClientFramework-Info.plist";
+				INSTALL_PATH = "@rpath";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		03578FE41867DDC40055FB4E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "INDANCSClientFramework/INDANCSClientFramework-Prefix.pch";
+				INFOPLIST_FILE = "INDANCSClientFramework/INDANCSClientFramework-Info.plist";
+				INSTALL_PATH = "@rpath";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		03578FE61867DDC40055FB4E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/INDANCSClientFramework.framework/Versions/A/INDANCSClientFramework";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "INDANCSClientFramework/INDANCSClientFramework-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "INDANCSClientFrameworkTests/INDANCSClientFrameworkTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		03578FE71867DDC40055FB4E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/INDANCSClientFramework.framework/Versions/A/INDANCSClientFramework";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "INDANCSClientFramework/INDANCSClientFramework-Prefix.pch";
+				INFOPLIST_FILE = "INDANCSClientFrameworkTests/INDANCSClientFrameworkTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		03578FB41867DDC30055FB4E /* Build configuration list for PBXProject "INDANCSClientFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03578FE01867DDC40055FB4E /* Debug */,
+				03578FE11867DDC40055FB4E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		03578FE21867DDC40055FB4E /* Build configuration list for PBXNativeTarget "INDANCSClient" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03578FE31867DDC40055FB4E /* Debug */,
+				03578FE41867DDC40055FB4E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		03578FE51867DDC40055FB4E /* Build configuration list for PBXNativeTarget "INDANCSClientTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03578FE61867DDC40055FB4E /* Debug */,
+				03578FE71867DDC40055FB4E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 03578FB11867DDC30055FB4E /* Project object */;
+}

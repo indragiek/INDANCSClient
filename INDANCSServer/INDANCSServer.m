@@ -122,9 +122,9 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 + (NSData *)deviceModelData
 {
 	size_t size = 20;
-    char *model = malloc(size);
-    int mib[] = {CTL_HW, HW_MACHINE};
-    sysctl(mib, 2, model, &size, NULL, 0);
+	char *model = malloc(size);
+	int mib[] = {CTL_HW, HW_MACHINE};
+	sysctl(mib, 2, model, &size, NULL, 0);
 	// Using size - 1 because we want to strip out the terminating null byte, which
 	// NSString does not like.
 	NSData *data = [NSData dataWithBytes:model length:size - 1];

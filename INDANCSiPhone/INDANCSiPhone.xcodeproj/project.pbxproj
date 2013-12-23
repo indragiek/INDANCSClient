@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0357905E1867E1810055FB4E /* INDANCSServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0357905D1867E1810055FB4E /* INDANCSServer.m */; };
 		0397D88318597588005561AD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D88218597588005561AD /* Foundation.framework */; };
 		0397D88518597588005561AD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D88418597588005561AD /* CoreGraphics.framework */; };
 		0397D88718597588005561AD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D88618597588005561AD /* UIKit.framework */; };
@@ -22,7 +23,6 @@
 		0397D8AC18597588005561AD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0397D8AA18597588005561AD /* InfoPlist.strings */; };
 		0397D8AE18597588005561AD /* INDANCSiPhoneTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D8AD18597588005561AD /* INDANCSiPhoneTests.m */; };
 		0397D8B81859758F005561AD /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8B71859758F005561AD /* CoreBluetooth.framework */; };
-		0397D8BE18597631005561AD /* INDANCSServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D8BD18597631005561AD /* INDANCSServer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +36,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0357905A1867E1810055FB4E /* INDANCSDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDefines.h; sourceTree = "<group>"; };
+		0357905C1867E1810055FB4E /* INDANCSServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSServer.h; sourceTree = "<group>"; };
+		0357905D1867E1810055FB4E /* INDANCSServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSServer.m; sourceTree = "<group>"; };
 		0397D87F18597588005561AD /* INDANCSiPhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = INDANCSiPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0397D88218597588005561AD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0397D88418597588005561AD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -56,9 +59,6 @@
 		0397D8AB18597588005561AD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0397D8AD18597588005561AD /* INDANCSiPhoneTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = INDANCSiPhoneTests.m; sourceTree = "<group>"; };
 		0397D8B71859758F005561AD /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
-		0397D8BC18597631005561AD /* INDANCSServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSServer.h; sourceTree = "<group>"; };
-		0397D8BD18597631005561AD /* INDANCSServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSServer.m; sourceTree = "<group>"; };
-		0397D8C1185977C2005561AD /* INDANCSDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSDefines.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +86,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		035790591867E1810055FB4E /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				0357905A1867E1810055FB4E /* INDANCSDefines.h */,
+			);
+			name = Common;
+			path = ../../Common;
+			sourceTree = "<group>";
+		};
+		0357905B1867E1810055FB4E /* INDANCSServer */ = {
+			isa = PBXGroup;
+			children = (
+				0357905C1867E1810055FB4E /* INDANCSServer.h */,
+				0357905D1867E1810055FB4E /* INDANCSServer.m */,
+			);
+			name = INDANCSServer;
+			path = ../../INDANCSServer;
+			sourceTree = "<group>";
+		};
 		0397D87618597588005561AD = {
 			isa = PBXGroup;
 			children = (
@@ -120,8 +139,8 @@
 		0397D88818597588005561AD /* INDANCSiPhone */ = {
 			isa = PBXGroup;
 			children = (
-				0397D8C0185977C2005561AD /* Common */,
-				0397D8BB18597631005561AD /* Server */,
+				035790591867E1810055FB4E /* Common */,
+				0357905B1867E1810055FB4E /* INDANCSServer */,
 				0397D89118597588005561AD /* INDAppDelegate.h */,
 				0397D89218597588005561AD /* INDAppDelegate.m */,
 				0397D89418597588005561AD /* Main.storyboard */,
@@ -160,25 +179,6 @@
 				0397D8AA18597588005561AD /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		0397D8BB18597631005561AD /* Server */ = {
-			isa = PBXGroup;
-			children = (
-				0397D8BC18597631005561AD /* INDANCSServer.h */,
-				0397D8BD18597631005561AD /* INDANCSServer.m */,
-			);
-			name = Server;
-			path = ../../Classes/Server;
-			sourceTree = "<group>";
-		};
-		0397D8C0185977C2005561AD /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				0397D8C1185977C2005561AD /* INDANCSDefines.h */,
-			);
-			name = Common;
-			path = ../../Classes/Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -280,7 +280,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0397D89318597588005561AD /* INDAppDelegate.m in Sources */,
-				0397D8BE18597631005561AD /* INDANCSServer.m in Sources */,
+				0357905E1867E1810055FB4E /* INDANCSServer.m in Sources */,
 				0397D88F18597588005561AD /* main.m in Sources */,
 				0397D89918597588005561AD /* INDViewController.m in Sources */,
 			);
@@ -491,6 +491,7 @@
 				0397D8B318597588005561AD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0397D8B418597588005561AD /* Build configuration list for PBXNativeTarget "INDANCSiPhoneTests" */ = {
 			isa = XCConfigurationList;
@@ -499,6 +500,7 @@
 				0397D8B618597588005561AD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

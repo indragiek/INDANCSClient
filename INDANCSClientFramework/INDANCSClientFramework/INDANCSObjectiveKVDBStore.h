@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <ObjectiveKVDB/ObjectiveKVDB.h>
 #import "INDANCSKeyValueStore.h"
 
-@interface INDANCSObjectiveKVDBStore : KVDBDatabase <INDANCSKeyValueStore>
+@interface INDANCSObjectiveKVDBStore : NSObject <INDANCSKeyValueStore>
 @end
