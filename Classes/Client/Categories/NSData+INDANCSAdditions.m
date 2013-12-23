@@ -34,4 +34,11 @@
 	return val;
 }
 
+- (NSUInteger)ind_locationOfNullByteFromOffset:(NSUInteger)offset
+{
+	NSData *nullByte = [NSData dataWithBytes:"\0" length:1];
+	NSRange range = [self rangeOfData:nullByte options:0 range:NSMakeRange(offset, self.length - offset)];
+	return range.location;
+}
+
 @end

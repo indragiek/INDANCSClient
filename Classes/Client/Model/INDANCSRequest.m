@@ -9,7 +9,7 @@
 #import "INDANCSRequest.h"
 
 @interface INDANCSRequest ()
-@property (nonatomic, assign, readwrite) INDANCSCommandID commandID;
+@property (nonatomic, assign, readwrite) NSUInteger attributeCount;
 @end
 
 @implementation INDANCSRequest {
@@ -22,7 +22,9 @@
 - (id)initWithCommandID:(INDANCSCommandID)commandID;
 {
 	if ((self = [super init])) {
+		_commandID = commandID;
 		_requestData = [NSMutableData dataWithBytes:&commandID length:sizeof(commandID)];
+		_attributeCount = 0;
 	}
 	return self;
 }
@@ -69,6 +71,7 @@
 
 - (void)appendAttributeID:(uint8_t)attributeID maxLength:(uint16_t)maxLength
 {
+	self.attributeCount++;
 	[_requestData appendBytes:&attributeID length:sizeof(attributeID)];
 	if (maxLength != 0) {
 		[_requestData appendBytes:&maxLength length:sizeof(maxLength)];

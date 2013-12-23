@@ -11,6 +11,11 @@
 #ifndef IND_ANCS_ATTRIBUTES
 #define IND_ANCS_ATTRIBUTES
 
+typedef NS_ENUM(uint8_t, INDANCSCommandID) {
+	INDANCSCommandIDGetNotificationAttributes = 0,
+	INDANCSCommandIDGetAppAttributes = 1
+};
+
 typedef NS_ENUM(uint8_t, INDANCSNotificationAttributeID) {
 	INDANCSNotificationAttributeIDAppIdentifier = 0,
 	INDANCSNotificationAttributeIDTitle = 1,

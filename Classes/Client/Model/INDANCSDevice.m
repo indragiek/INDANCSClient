@@ -10,6 +10,7 @@
 #import "INDANCSDevice_Private.h"
 #import "INDANCSNotification_Private.h"
 #import "INDANCSRequest.h"
+#import "INDANCSResponse.h"
 #import "INDANCSObjectEquality.h"
 
 @interface INDANCSDevice ()
@@ -92,9 +93,10 @@
 
 #pragma mark - Requests
 
-- (void)sendRequest:(INDANCSRequest *)request
+- (INDANCSResponse *)sendRequest:(INDANCSRequest *)request
 {
 	[self.peripheral writeValue:request.requestData forCharacteristic:self.CPCharacteristic type:CBCharacteristicWriteWithResponse];
+	return [INDANCSResponse responseWithExpectedAttributeCount:request.attributeCount];
 }
 
 #pragma mark - NSObject

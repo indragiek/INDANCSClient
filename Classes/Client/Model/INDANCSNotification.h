@@ -78,20 +78,20 @@ typedef NS_ENUM(uint8_t, INDANCSEventID) {
 /**
  *  The title of the notification.
  */
-@property (nonatomic, strong, readonly) NSString *title;
+@property (strong, readonly) NSString *title;
 
 /**
  *  The subtitle of the notification.
  */
-@property (nonatomic, strong, readonly) NSString *subtitle;
+@property (strong, readonly) NSString *subtitle;
 
 /**
  *  The notification message.
  */
-@property (nonatomic, strong, readonly) NSString *message;
+@property (strong, readonly) NSString *message;
 
 /**
  *  The date the notification was posted.
  */
-@property (nonatomic, strong, readonly) NSDate *date;
+@property (strong, readonly) NSDate *date;
 @end

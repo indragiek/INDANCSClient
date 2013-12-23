@@ -10,6 +10,7 @@
 
 @class INDANCSNotification;
 @class INDANCSRequest;
+@class INDANCSResponse;
 
 @interface INDANCSDevice ()
 /**
@@ -97,7 +98,9 @@
  *  Sends a request through the ANCS Control Point characteristic.
  *
  *  @param request The request to send.
+ *
+ *  @return Empty response object to append response data to.
  */
-- (void)sendRequest:(INDANCSRequest *)request;
+- (INDANCSResponse *)sendRequest:(INDANCSRequest *)request;
 
 @end

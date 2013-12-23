@@ -9,11 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "INDANCSAttributes.h"
 
-typedef NS_ENUM(uint8_t, INDANCSCommandID) {
-	INDANCSCommandIDGetNotificationAttributes = 0,
-	INDANCSCommandIDGetAppAttributes = 1
-};
-
+/**
+ *  Model object for constructing ANCS control point requests.
+ */
 @interface INDANCSRequest : NSObject
 /**
  *  The command ID for the request.
@@ -24,6 +22,11 @@ typedef NS_ENUM(uint8_t, INDANCSCommandID) {
  *  Request data to be written to the control point.
  */
 @property (nonatomic, strong, readonly) NSData *requestData;
+
+/**
+ *  Number of attributes requested.
+ */
+@property (nonatomic, assign, readonly) NSUInteger attributeCount;
 
 /**
  *  Request for retrieving information about a particular notification.

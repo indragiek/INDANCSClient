@@ -13,6 +13,7 @@
 #import "INDANCSApplicationStorage.h"
 #import "INDANCSObjectiveKVDBStore.h"
 #import "INDANCSRequest.h"
+#import "INDANCSResponse.h"
 
 #import "NSData+INDANCSAdditions.h"
 #import "CBCharacteristic+INDANCSAdditions.h"
@@ -40,7 +41,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 @property (nonatomic, strong) NSMutableArray *powerOnBlocks;
 @property (nonatomic, strong, readonly) NSMutableDictionary *devices;
 @property (nonatomic, strong, readonly) NSMutableSet *validDevices;
-@property (nonatomic, strong, readonly) NSMutableData *DSBuffer;
+@property (nonatomic, strong, readonly) NSMutableArray *responseQueue;
 @property (nonatomic, strong, readonly) NSMutableDictionary *disconnects;
 @end
 
@@ -70,7 +71,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 		_appStorage = [[INDANCSApplicationStorage alloc] initWithMetadataStore:metadata blacklistStore:blacklist];
 		_devices = [NSMutableDictionary dictionary];
 		_validDevices = [NSMutableSet set];
-		_DSBuffer = [NSMutableData data];
+		_responseQueue = [NSMutableArray array];
 		_disconnects = [NSMutableDictionary dictionary];
 		_powerOnBlocks = [NSMutableArray array];
 		_delegateQueue = dispatch_queue_create("com.indragie.INDANCSClient.DelegateQueue", DISPATCH_QUEUE_SERIAL);
@@ -334,17 +335,17 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 			[self requestNotificationAttributesForUID:notification.notificationUID peripheral:peripheral];
 		}
 	} else if (characteristic == device.DSCharacteristic) {
-		[self.DSBuffer appendData:characteristic.value];
-		INDANCSCommandID commandID;
-		if ([self requestResponseIsComplete:self.DSBuffer commandID:&commandID]) {
-			NSUInteger len = 0;
-			if (commandID == INDANCSCommandIDGetNotificationAttributes) {
-				INDANCSNotification *notification = nil;
-				len = [self readNotificationResponseData:self.DSBuffer notification:&notification device:device];
+		INDANCSResponse *response = self.responseQueue.firstObject;
+		[response appendData:characteristic.value];
+		if (response.complete) {
+			[self.responseQueue removeObjectAtIndex:0];
+			if (response.commandID == INDANCSCommandIDGetNotificationAttributes) {
+				INDANCSNotification *notification = [self readNotificationResponse:response device:device];
 				[self notifyWithNotification:notification forDevice:device];
 			}
-			if (len != 0) {
-				[self.DSBuffer replaceBytesInRange:NSMakeRange(0, len) withBytes:NULL length:0];
+			if (response.extraneousData) {
+				INDANCSResponse *nextResponse = self.responseQueue.firstObject;
+				[nextResponse appendData:response.extraneousData];
 			}
 		}
 	}
@@ -456,38 +457,6 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	return notification;
 }
 
-- (BOOL)requestResponseIsComplete:(NSData *)responseData commandID:(INDANCSCommandID *)commandID
-{
-	if (responseData.length == 0) return NO;
-	NSUInteger offset = 0;
-	INDANCSCommandID command = [responseData ind_readUInt8At:&offset];
-	if (commandID) *commandID = command;
-	
-	NSUInteger attrCount = NSNotFound;
-	if (command == INDANCSCommandIDGetNotificationAttributes) {
-		offset += sizeof(uint32_t);
-		attrCount = INDANCSGetNotificationAttributeCount;
-	} else if (command == INDANCSCommandIDGetAppAttributes) {
-		NSData *nullByte = [NSData dataWithBytes:"\0" length:1];
-		NSRange range = [responseData rangeOfData:nullByte options:0 range:NSMakeRange(offset, responseData.length - offset)];
-		if (range.location == NSNotFound) return NO;
-		offset += range.location;
-		attrCount = INDANCSGetAppAttributeCount;
-	}
-	
-	// Header consists of one byte containing the Attribute ID and 2 bytes
-	// containing the Attribute Length.
-	const NSUInteger headerByteCount = sizeof(INDANCSNotificationAttributeID) + sizeof(uint16_t);
-	NSUInteger len = responseData.length;
-	while ((offset + headerByteCount) <= len && attrCount > 0) {
-		uint8_t attr __attribute__((unused)) = [responseData ind_readUInt8At:&offset];
-		offset += [responseData ind_readUInt16At:&offset]; // Attribute length
-		if (offset > len) break;
-		attrCount--;
-	}
-	return (attrCount == 0);
-}
-
 - (void)requestNotificationAttributesForUID:(uint32_t)UID peripheral:(CBPeripheral *)peripheral
 {
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
@@ -506,7 +475,8 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 		BOOL includeMax = (attr != INDANCSNotificationAttributeIDAppIdentifier && attr != INDANCSNotificationAttributeIDDate);
 		[request appendAttributeID:attr maxLength:includeMax ? maxLen : 0];
 	}
-	[device sendRequest:request];
+	INDANCSResponse *response = [device sendRequest:request];
+	[self.responseQueue addObject:response];
 }
 
 - (void)requestAppAttributesForApplication:(INDANCSApplication *)app peripheral:(CBPeripheral *)peripheral
@@ -520,41 +490,20 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	for (int i = 0; i < INDANCSGetAppAttributeCount; i++) {
 		[request appendAttributeID:attributesIDs[i] maxLength:0];
 	}
-	[device sendRequest:request];
+	INDANCSResponse *response = [device sendRequest:request];
+	[self.responseQueue addObject:response];
 }
 
-/*
- * Get Notification Attributes response format
- *
- *  -----------------------------------------------------------------------------------------------------------------
- * |                |                      |                    |                        |
- * | Command ID (1) | Notification UID (4) | Attribute ID n (1) | Attribute n Length (1) | Attribute n Contents ...
- * |                |                      |                    |                        |
- *  -----------------------------------------------------------------------------------------------------------------
- *
- */
-- (NSUInteger)readNotificationResponseData:(NSData *)responseData
-							  notification:(INDANCSNotification **)notification
-									device:(INDANCSDevice *)device
+- (INDANCSNotification *)readNotificationResponse:(INDANCSResponse *)response device:(INDANCSDevice *)device
 {
-	NSUInteger offset = sizeof(INDANCSCommandID); // Skip the command.
-	uint32_t UID = [responseData ind_readUInt32At:&offset];
-	INDANCSNotification *note = [device notificationForUID:UID];
-	if (notification) *notification = note;
-	
-	for (int i = 0; i < INDANCSGetNotificationAttributeCount; i++) {
-		uint8_t attr = [responseData ind_readUInt8At:&offset];
-		uint16_t attrLen = [responseData ind_readUInt16At:&offset];
-		if (attrLen != 0) {
-			NSData *val = [responseData subdataWithRange:NSMakeRange(offset, attrLen)];
-			offset += attrLen;
-			NSString *value = [[NSString alloc] initWithData:val encoding:NSUTF8StringEncoding];
-			id transformedValue = [self transformedValueForAttributeValue:value attributeID:attr];
-			NSString *keypath = [self notificationKeypathForAttributeID:attr];
-			[note setValue:transformedValue forKey:keypath];
-		}
-	}
-	return offset;
+	INDANCSNotification *notification = [device notificationForUID:response.notificationUID];
+	[response.allAttributes enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, NSString *obj, BOOL *stop) {
+		INDANCSNotificationAttributeID attr = key.unsignedCharValue;
+		id transformedValue = [self transformedValueForAttributeValue:obj attributeID:attr];
+		NSString *keypath = [self notificationKeypathForAttributeID:attr];
+		[notification setValue:transformedValue forKey:keypath];
+	}];
+	return notification;
 }
 
 - (NSString *)notificationKeypathForAttributeID:(INDANCSNotificationAttributeID)attributeID

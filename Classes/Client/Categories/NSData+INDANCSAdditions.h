@@ -40,5 +40,15 @@
  *
  *  @return The read integer.
  */
-- (uint32_t)ind_readUInt32At:(NSUInteger *)offest;
+- (uint32_t)ind_readUInt32At:(NSUInteger *)offset;
+
+/**
+ *  Returns the location of a null byte after the given offset
+ *  or NSNotFound if it can not be found.
+ *
+ *  @param range The offset to search from.
+ *
+ *  @return The location of the null byte.
+ */
+- (NSUInteger)ind_locationOfNullByteFromOffset:(NSUInteger)offset;
 @end
