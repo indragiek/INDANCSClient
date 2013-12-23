@@ -71,6 +71,8 @@
 @property (nonatomic, strong) NSTimer *registrationTimer;
 @property (nonatomic, copy) id notificationBlock;
 
+#pragma mark - Notifications
+
 /**
  *  Adds a notification to the notifications set.
  *
@@ -94,6 +96,8 @@
  */
 - (void)removeNotificationForUID:(uint32_t)UID;
 
+#pragma mark - Responses
+
 /**
  *  Sends a request through the ANCS Control Point characteristic.
  *
@@ -101,6 +105,25 @@
  *
  *  @return Empty response object to append response data to.
  */
-- (INDANCSResponse *)sendRequest:(INDANCSRequest *)request;
+- (void)sendRequest:(INDANCSRequest *)request;
+
+/**
+ *  Returns the currently pending response object.
+ */
+@property (nonatomic, strong, readwrite) INDANCSResponse *currentResponse;
+
+/**
+ *  Cancels the currently pending response.
+ */
+- (void)cancelCurrentResponse;
+
+/**
+ *  Append data received from the ANCS Data Source characteristic.
+ *
+ *  @param data Data from DS characteristic.
+ *
+ *  @return A completed response or `nil` if no response was completed.
+ */
+- (INDANCSResponse *)appendDSResponseData:(NSData *)data;
 
 @end

@@ -14,6 +14,7 @@
 #import "INDANCSObjectEquality.h"
 
 @interface INDANCSDevice ()
+@property (nonatomic, strong, readonly) NSMutableArray *responseQueue;
 @property (nonatomic, readonly) dispatch_queue_t notificationQueue;
 @property (nonatomic, strong, readonly) NSMutableDictionary *notificationMap;
 @end
@@ -32,6 +33,7 @@
 		_notificationQueue = dispatch_queue_create("com.indragie.INDANCSClient.NotificationQueue", DISPATCH_QUEUE_CONCURRENT);
 		_notifications = [NSMutableOrderedSet orderedSet];
 		_notificationMap = [NSMutableDictionary dictionary];
+		_responseQueue = [NSMutableArray array];
 		self.name = peripheral.name;
 	}
 	return self;
@@ -57,7 +59,11 @@
 
 - (NSOrderedSet *)notifications
 {
-	return [_notifications copy];
+	__block NSOrderedSet *notifications = nil;
+	dispatch_sync(self.notificationQueue, ^{
+		notifications = [_notifications copy];
+	});
+	return notifications;
 }
 
 - (void)addNotification:(INDANCSNotification *)notification
@@ -93,10 +99,38 @@
 
 #pragma mark - Requests
 
-- (INDANCSResponse *)sendRequest:(INDANCSRequest *)request
+- (void)sendRequest:(INDANCSRequest *)request
 {
+	INDANCSResponse *response = [INDANCSResponse responseWithExpectedAttributeCount:request.attributeCount];
+	[self.responseQueue addObject:response];
 	[self.peripheral writeValue:request.requestData forCharacteristic:self.CPCharacteristic type:CBCharacteristicWriteWithResponse];
-	return [INDANCSResponse responseWithExpectedAttributeCount:request.attributeCount];
+}
+
+- (INDANCSResponse *)currentResponse
+{
+	return self.responseQueue.firstObject;
+}
+
+- (void)cancelCurrentResponse
+{
+	if (self.responseQueue.count) {
+		[self.responseQueue removeObjectAtIndex:0];
+	}
+}
+
+- (INDANCSResponse *)appendDSResponseData:(NSData *)data
+{
+	INDANCSResponse *response = self.currentResponse;
+	[response appendData:data];
+	if (response.complete) {
+		[self cancelCurrentResponse];
+		if (response.extraneousData) {
+			INDANCSResponse *nextResponse = self.currentResponse;
+			[nextResponse appendData:response.extraneousData];
+		}
+		return response;
+	}
+	return nil;
 }
 
 #pragma mark - NSObject

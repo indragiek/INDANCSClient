@@ -41,7 +41,6 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 @property (nonatomic, strong) NSMutableArray *powerOnBlocks;
 @property (nonatomic, strong, readonly) NSMutableDictionary *devices;
 @property (nonatomic, strong, readonly) NSMutableSet *validDevices;
-@property (nonatomic, strong, readonly) NSMutableArray *responseQueue;
 @property (nonatomic, strong, readonly) NSMutableDictionary *disconnects;
 @end
 
@@ -71,7 +70,6 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 		_appStorage = [[INDANCSApplicationStorage alloc] initWithMetadataStore:metadata blacklistStore:blacklist];
 		_devices = [NSMutableDictionary dictionary];
 		_validDevices = [NSMutableSet set];
-		_responseQueue = [NSMutableArray array];
 		_disconnects = [NSMutableDictionary dictionary];
 		_powerOnBlocks = [NSMutableArray array];
 		_delegateQueue = dispatch_queue_create("com.indragie.INDANCSClient.DelegateQueue", DISPATCH_QUEUE_SERIAL);
@@ -335,18 +333,12 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 			[self requestNotificationAttributesForUID:notification.notificationUID peripheral:peripheral];
 		}
 	} else if (characteristic == device.DSCharacteristic) {
-		INDANCSResponse *response = self.responseQueue.firstObject;
-		[response appendData:characteristic.value];
-		if (response.complete) {
-			[self.responseQueue removeObjectAtIndex:0];
-			if (response.commandID == INDANCSCommandIDGetNotificationAttributes) {
-				INDANCSNotification *notification = [self readNotificationResponse:response device:device];
-				[self notifyWithNotification:notification forDevice:device];
-			}
-			if (response.extraneousData) {
-				INDANCSResponse *nextResponse = self.responseQueue.firstObject;
-				[nextResponse appendData:response.extraneousData];
-			}
+		INDANCSResponse *response = [device appendDSResponseData:characteristic.value];
+		if (response == nil) return;
+		
+		if (response.commandID == INDANCSCommandIDGetNotificationAttributes) {
+			INDANCSNotification *notification = [self readNotificationResponse:response device:device];
+			[self notifyWithNotification:notification forDevice:device];
 		}
 	}
 }
@@ -475,8 +467,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 		BOOL includeMax = (attr != INDANCSNotificationAttributeIDAppIdentifier && attr != INDANCSNotificationAttributeIDDate);
 		[request appendAttributeID:attr maxLength:includeMax ? maxLen : 0];
 	}
-	INDANCSResponse *response = [device sendRequest:request];
-	[self.responseQueue addObject:response];
+	[device sendRequest:request];
 }
 
 - (void)requestAppAttributesForApplication:(INDANCSApplication *)app peripheral:(CBPeripheral *)peripheral
@@ -490,8 +481,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	for (int i = 0; i < INDANCSGetAppAttributeCount; i++) {
 		[request appendAttributeID:attributesIDs[i] maxLength:0];
 	}
-	INDANCSResponse *response = [device sendRequest:request];
-	[self.responseQueue addObject:response];
+	[device sendRequest:request];
 }
 
 - (INDANCSNotification *)readNotificationResponse:(INDANCSResponse *)response device:(INDANCSDevice *)device
