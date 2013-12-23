@@ -67,7 +67,7 @@
 	INDANCSApplication *existingApplication = self.metadataCache[identifier];
 	if ([application isEqual:existingApplication]) return;
 	
-	NSDictionary *dictionary = [existingApplication dictionaryValue];
+	NSDictionary *dictionary = [application dictionaryValue];
 	NSString *JSONString = nil;
 	
 	if (dictionary != nil) {
@@ -81,7 +81,6 @@
 		}
 	}
 	
-	NSLog(@"wrote cached value: %@", self.metadataStore);
 	self.metadataStore[identifier] = JSONString;
 	if (application == nil) {
 		[self.metadataCache removeObjectForKey:identifier];

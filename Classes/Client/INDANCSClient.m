@@ -442,7 +442,6 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	[notification mergeAttributesFromNotificationAttributeResponse:response];
 	if (notification.application == nil) {
 		notification.application = [self.appStorage applicationForBundleIdentifier:notification.bundleIdentifier];
-		NSLog(@"Got cached app: %@", notification.application);
 	}
 	if (notification.application == nil) {
 		NSString *identifier = notification.bundleIdentifier;
