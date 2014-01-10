@@ -124,27 +124,28 @@ static NSString * const INDANCSMetadataStoreFilename = @"ANCSMetadata.db";
 
 - (void)registerForNotificationsFromDevice:(INDANCSDevice *)device withBlock:(INDANCSNotificationBlock)notificationBlock
 {
-	device.notificationBlock = notificationBlock;
-	CBPeripheralState state = device.peripheral.state;
-	switch (state) {
-		case CBPeripheralStateConnected:
-			[self setNotificationSettingsForDevice:device];
-			break;
-		case CBPeripheralStateDisconnected: {
-			dispatch_async(self.delegateQueue, ^{
+	dispatch_async(self.delegateQueue, ^{
+		device.notificationBlock = notificationBlock;
+		CBPeripheralState state = device.peripheral.state;
+		switch (state) {
+			case CBPeripheralStateConnected:
+				[self setNotificationSettingsForDevice:device];
+				break;
+			case CBPeripheralStateDisconnected:
 				[self.manager connectPeripheral:device.peripheral options:nil];
-			});
-			break;
+				break;
+			default:
+				break;
 		}
-		default:
-			break;
-	}
+	});
 }
 
 - (void)unregisterForNotificationsFromDevice:(INDANCSDevice *)device
 {
-	device.notificationBlock = nil;
-	[self setNotificationSettingsForDevice:device];
+	dispatch_async(self.delegateQueue, ^{
+		device.notificationBlock = nil;
+		[self setNotificationSettingsForDevice:device];
+	});
 }
 
 - (void)setNotificationSettingsForDevice:(INDANCSDevice *)device
