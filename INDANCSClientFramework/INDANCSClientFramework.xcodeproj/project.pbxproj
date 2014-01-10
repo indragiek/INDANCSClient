@@ -45,9 +45,9 @@
 		035790241867DEC90055FB4E /* INDANCSClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 035790221867DEC90055FB4E /* INDANCSClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		035790251867DEC90055FB4E /* INDANCSClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 035790231867DEC90055FB4E /* INDANCSClient.m */; };
 		035790291867DF530055FB4E /* INDANCSDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 035790281867DF530055FB4E /* INDANCSDefines.h */; };
-		035790501867E0570055FB4E /* ObjectiveKVDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 035790451867DFDD0055FB4E /* ObjectiveKVDB.framework */; };
-		035790521867E0640055FB4E /* ObjectiveKVDB.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 035790451867DFDD0055FB4E /* ObjectiveKVDB.framework */; };
 		035790541867E0740055FB4E /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 035790531867E0740055FB4E /* IOBluetooth.framework */; };
+		035962AD186964C80099A38A /* ObjectiveKVDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 035962A8186964AF0099A38A /* ObjectiveKVDB.framework */; };
+		035962AE186964D00099A38A /* ObjectiveKVDB.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 035962A8186964AF0099A38A /* ObjectiveKVDB.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,23 +58,23 @@
 			remoteGlobalIDString = 03578FB91867DDC30055FB4E;
 			remoteInfo = INDANCSClientFramework;
 		};
-		035790441867DFDD0055FB4E /* PBXContainerItemProxy */ = {
+		035962A7186964AF0099A38A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 0357903C1867DFDC0055FB4E /* ObjectiveKVDB.xcodeproj */;
+			containerPortal = 035962A1186964AF0099A38A /* ObjectiveKVDB.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 03ED9658185D99D0009FF2E8;
 			remoteInfo = ObjectiveKVDB;
 		};
-		035790461867DFDD0055FB4E /* PBXContainerItemProxy */ = {
+		035962A9186964AF0099A38A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 0357903C1867DFDC0055FB4E /* ObjectiveKVDB.xcodeproj */;
+			containerPortal = 035962A1186964AF0099A38A /* ObjectiveKVDB.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 03ED966F185D99D0009FF2E8;
 			remoteInfo = ObjectiveKVDBTests;
 		};
-		0357904E1867E0520055FB4E /* PBXContainerItemProxy */ = {
+		035962AB186964C20099A38A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 0357903C1867DFDC0055FB4E /* ObjectiveKVDB.xcodeproj */;
+			containerPortal = 035962A1186964AF0099A38A /* ObjectiveKVDB.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 03ED9657185D99D0009FF2E8;
 			remoteInfo = ObjectiveKVDB;
@@ -88,7 +88,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				035790521867E0640055FB4E /* ObjectiveKVDB.framework in CopyFiles */,
+				035962AE186964D00099A38A /* ObjectiveKVDB.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,8 +140,8 @@
 		035790221867DEC90055FB4E /* INDANCSClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSClient.h; sourceTree = "<group>"; };
 		035790231867DEC90055FB4E /* INDANCSClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSClient.m; sourceTree = "<group>"; };
 		035790281867DF530055FB4E /* INDANCSDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = INDANCSDefines.h; path = ../../Common/INDANCSDefines.h; sourceTree = "<group>"; };
-		0357903C1867DFDC0055FB4E /* ObjectiveKVDB.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectiveKVDB.xcodeproj; path = ../../../ObjectiveKVDB/ObjectiveKVDB/ObjectiveKVDB.xcodeproj; sourceTree = "<group>"; };
 		035790531867E0740055FB4E /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+		035962A1186964AF0099A38A /* ObjectiveKVDB.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectiveKVDB.xcodeproj; path = ../../External/ObjectiveKVDB/ObjectiveKVDB/ObjectiveKVDB.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,8 +149,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				035962AD186964C80099A38A /* ObjectiveKVDB.framework in Frameworks */,
 				035790541867E0740055FB4E /* IOBluetooth.framework in Frameworks */,
-				035790501867E0570055FB4E /* ObjectiveKVDB.framework in Frameworks */,
 				03578FBE1867DDC30055FB4E /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -296,7 +296,7 @@
 		035790261867DF3C0055FB4E /* ObjectiveKVDB */ = {
 			isa = PBXGroup;
 			children = (
-				0357903C1867DFDC0055FB4E /* ObjectiveKVDB.xcodeproj */,
+				035962A1186964AF0099A38A /* ObjectiveKVDB.xcodeproj */,
 			);
 			name = ObjectiveKVDB;
 			sourceTree = "<group>";
@@ -309,11 +309,11 @@
 			name = Common;
 			sourceTree = "<group>";
 		};
-		0357903D1867DFDC0055FB4E /* Products */ = {
+		035962A2186964AF0099A38A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				035790451867DFDD0055FB4E /* ObjectiveKVDB.framework */,
-				035790471867DFDD0055FB4E /* ObjectiveKVDBTests.xctest */,
+				035962A8186964AF0099A38A /* ObjectiveKVDB.framework */,
+				035962AA186964AF0099A38A /* ObjectiveKVDBTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -364,7 +364,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				0357904F1867E0520055FB4E /* PBXTargetDependency */,
+				035962AC186964C20099A38A /* PBXTargetDependency */,
 			);
 			name = INDANCSClient;
 			productName = INDANCSClientFramework;
@@ -415,8 +415,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 0357903D1867DFDC0055FB4E /* Products */;
-					ProjectRef = 0357903C1867DFDC0055FB4E /* ObjectiveKVDB.xcodeproj */;
+					ProductGroup = 035962A2186964AF0099A38A /* Products */;
+					ProjectRef = 035962A1186964AF0099A38A /* ObjectiveKVDB.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -428,18 +428,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		035790451867DFDD0055FB4E /* ObjectiveKVDB.framework */ = {
+		035962A8186964AF0099A38A /* ObjectiveKVDB.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = ObjectiveKVDB.framework;
-			remoteRef = 035790441867DFDD0055FB4E /* PBXContainerItemProxy */;
+			remoteRef = 035962A7186964AF0099A38A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		035790471867DFDD0055FB4E /* ObjectiveKVDBTests.xctest */ = {
+		035962AA186964AF0099A38A /* ObjectiveKVDBTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = ObjectiveKVDBTests.xctest;
-			remoteRef = 035790461867DFDD0055FB4E /* PBXContainerItemProxy */;
+			remoteRef = 035962A9186964AF0099A38A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -498,10 +498,10 @@
 			target = 03578FB91867DDC30055FB4E /* INDANCSClient */;
 			targetProxy = 03578FD51867DDC40055FB4E /* PBXContainerItemProxy */;
 		};
-		0357904F1867E0520055FB4E /* PBXTargetDependency */ = {
+		035962AC186964C20099A38A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ObjectiveKVDB;
-			targetProxy = 0357904E1867E0520055FB4E /* PBXContainerItemProxy */;
+			targetProxy = 035962AB186964C20099A38A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
