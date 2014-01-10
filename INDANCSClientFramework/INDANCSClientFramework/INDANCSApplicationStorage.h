@@ -12,7 +12,7 @@
 @class INDANCSApplication;
 @class INDANCSDevice;
 /**
- *  Stores application metadata and blacklist.
+ *  Stores application metadata.
  */
 @interface INDANCSApplicationStorage : NSObject
 /**

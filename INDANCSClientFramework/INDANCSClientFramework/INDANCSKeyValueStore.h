@@ -10,7 +10,7 @@
 
 /**
  *  Interface for a key value store that is used by the framework to store things
- *  like application metadata and blacklists. 
+ *  like application metadata.
  *
  *  The implementation of the store is decoupled so that you are free to swap in
  *  your choice of persistent or in-memory key value storage. This framework

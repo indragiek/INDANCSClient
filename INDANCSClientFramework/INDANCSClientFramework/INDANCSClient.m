@@ -26,7 +26,6 @@ static NSUInteger const INDANCSGetNotificationAttributeCount = 5;
 static NSUInteger const INDANCSGetAppAttributeCount = 1;
 static NSString * const INDANCSDeviceUserInfoKey = @"device";
 static NSString * const INDANCSMetadataStoreFilename = @"ANCSMetadata.db";
-static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 
 @interface INDANCSClient () <CBCentralManagerDelegate, CBPeripheralDelegate>
 @property (nonatomic, strong, readonly) CBCentralManager *manager;
