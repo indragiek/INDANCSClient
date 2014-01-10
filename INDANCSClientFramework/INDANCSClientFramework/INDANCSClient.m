@@ -107,14 +107,18 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	__weak __typeof(self) weakSelf = self;
 	[self schedulePowerOnBlock:^{
 		__typeof(self) strongSelf = weakSelf;
-		[strongSelf.manager scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey : @YES}];
+		dispatch_async(strongSelf.delegateQueue, ^{
+			[strongSelf.manager scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey : @YES}];
+		});
 	}];
 }
 
 - (void)stopScanning
 {
 	self.discoveryBlock = nil;
-	[self.manager stopScan];
+	dispatch_async(self.delegateQueue, ^{
+		[self.manager stopScan];
+	});
 }
 
 #pragma mark - Registration
@@ -127,9 +131,12 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 		case CBPeripheralStateConnected:
 			[self setNotificationSettingsForDevice:device];
 			break;
-		case CBPeripheralStateDisconnected:
-			[self.manager connectPeripheral:device.peripheral options:nil];
+		case CBPeripheralStateDisconnected: {
+			dispatch_async(self.delegateQueue, ^{
+				[self.manager connectPeripheral:device.peripheral options:nil];
+			});
 			break;
+		}
 		default:
 			break;
 	}
@@ -183,7 +190,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 		device = [[INDANCSDevice alloc] initWithCBPeripheral:peripheral];
 		[self setDevice:device forPeripheral:peripheral];
 	}
-	[self.manager stopScan];
+	[central stopScan];
 	[central connectPeripheral:peripheral options:nil];
 }
 
@@ -194,7 +201,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 #endif
 	[peripheral discoverServices:@[IND_ANCS_SV_UUID, IND_DVCE_SV_UUID]];
 	if (self.discoveryBlock) {
-		[self.manager scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey : @YES}];
+		[central scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey : @YES}];
 	}
 }
 
@@ -215,7 +222,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	
 	BOOL didDisconnect = [self didDisconnectForPeripheral:peripheral];
 	if (self.attemptAutomaticReconnection && !didDisconnect) {
-		[self.manager connectPeripheral:peripheral options:nil];
+		[central connectPeripheral:peripheral options:nil];
 	} else {
 		if (didDisconnect) {
 			[self setDidDisconnect:NO forPeripheral:peripheral];
@@ -380,6 +387,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	}
 }
 
+/* Always called from the CB delegate queue */
 - (void)delegateServiceDiscoveryFailedForPeripheral:(CBPeripheral *)peripheral withError:(NSError *)error
 {
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
@@ -410,21 +418,26 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 
 #pragma mark - Timers
 
-- (void)registrationTimerFired:(NSTimer *)timer
-{
-	INDANCSDevice *device = timer.userInfo[INDANCSDeviceUserInfoKey];
-	[self.manager cancelPeripheralConnection:device.peripheral];
-}
-
 - (void)startRegistrationTimerForDevice:(INDANCSDevice *)device
 {
-	device.registrationTimer = [NSTimer scheduledTimerWithTimeInterval:self.registrationTimeout target:self selector:@selector(registrationTimerFired:) userInfo:@{INDANCSDeviceUserInfoKey : device} repeats:NO];
+	[self invalidateRegistrationTimerForDevice:device];
+	dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.delegateQueue);
+	device.registrationTimer = timer;
+	dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, self.registrationTimeout * NSEC_PER_SEC);
+	dispatch_source_set_timer(device.registrationTimer, time, DISPATCH_TIME_FOREVER, 0);
+	dispatch_source_set_event_handler(timer, ^{
+		[self.manager cancelPeripheralConnection:device.peripheral];
+		[self invalidateRegistrationTimerForDevice:device];
+	});
+	dispatch_resume(timer);
 }
 
 - (void)invalidateRegistrationTimerForDevice:(INDANCSDevice *)device
 {
-	[device.registrationTimer invalidate];
-	device.registrationTimer = nil;
+	if (device.registrationTimer != NULL) {
+		dispatch_source_cancel(device.registrationTimer);
+		device.registrationTimer = NULL;
+	}
 }
 
 #pragma mark - Notifications
@@ -579,6 +592,7 @@ static NSString * const INDANCSBlacklistStoreFilename = @"ANCSBlacklist.db";
 	return [self.disconnects[peripheral.identifier] boolValue];
 }
 
+/* Always called from the CB delegate queue */
 - (void)disconnectFromPeripheral:(CBPeripheral *)peripheral
 {
 	[self setDidDisconnect:YES forPeripheral:peripheral];

@@ -104,7 +104,7 @@
 		03578FC71867DDC30055FB4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		03578FC91867DDC30055FB4E /* INDANCSClientFramework-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "INDANCSClientFramework-Prefix.pch"; sourceTree = "<group>"; };
 		03578FCA1867DDC30055FB4E /* INDANCSClientFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = INDANCSClientFramework.h; sourceTree = "<group>"; };
-		03578FD11867DDC40055FB4E /* INDANCSClientFrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = INDANCSClientFrameworkTests.xctest; path = INDANCSClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		03578FD11867DDC40055FB4E /* INDANCSClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = INDANCSClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		03578FD21867DDC40055FB4E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		03578FDA1867DDC40055FB4E /* INDANCSClientFrameworkTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "INDANCSClientFrameworkTests-Info.plist"; sourceTree = "<group>"; };
 		03578FDC1867DDC40055FB4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -182,7 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				03578FBA1867DDC30055FB4E /* INDANCSClient.framework */,
-				03578FD11867DDC40055FB4E /* INDANCSClientFrameworkTests.xctest */,
+				03578FD11867DDC40055FB4E /* INDANCSClientTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -386,7 +386,7 @@
 			);
 			name = INDANCSClientTests;
 			productName = INDANCSClientFrameworkTests;
-			productReference = 03578FD11867DDC40055FB4E /* INDANCSClientFrameworkTests.xctest */;
+			productReference = 03578FD11867DDC40055FB4E /* INDANCSClientTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */

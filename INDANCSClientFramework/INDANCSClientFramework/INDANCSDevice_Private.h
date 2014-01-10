@@ -69,7 +69,7 @@
 /**
  *  Device-specific state only used by `INDANCSClient`.
  */
-@property (nonatomic, strong) NSTimer *registrationTimer;
+@property (nonatomic) dispatch_source_t registrationTimer;
 @property (nonatomic, copy) id notificationBlock;
 
 #pragma mark - Notifications
