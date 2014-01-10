@@ -21,6 +21,7 @@
 		0397D8631859755E005561AD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0397D8421859755E005561AD /* Cocoa.framework */; };
 		0397D86B1859755E005561AD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0397D8691859755E005561AD /* InfoPlist.strings */; };
 		0397D86D1859755E005561AD /* INDANCSMacTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0397D86C1859755E005561AD /* INDANCSMacTests.m */; };
+		03B7EDC3187FA3800039B7A7 /* INDANCSNotificationTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 03B7EDC2187FA3800039B7A7 /* INDANCSNotificationTableCellView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,8 @@
 		0397D86A1859755E005561AD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0397D86C1859755E005561AD /* INDANCSMacTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = INDANCSMacTests.m; sourceTree = "<group>"; };
 		0397D8B91859759A005561AD /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+		03B7EDC1187FA3800039B7A7 /* INDANCSNotificationTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INDANCSNotificationTableCellView.h; sourceTree = "<group>"; };
+		03B7EDC2187FA3800039B7A7 /* INDANCSNotificationTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INDANCSNotificationTableCellView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,7 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				035790691867E24A0055FB4E /* INDANCSClient.framework */,
-				0357906B1867E24A0055FB4E /* INDANCSClientFrameworkTests.xctest */,
+				0357906B1867E24A0055FB4E /* INDANCSClientTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -172,6 +175,8 @@
 				0397D8551859755E005561AD /* INDAppDelegate.m */,
 				0357907C1867EBED0055FB4E /* INDANCSNotificationTableRowView.h */,
 				0357907D1867EBED0055FB4E /* INDANCSNotificationTableRowView.m */,
+				03B7EDC1187FA3800039B7A7 /* INDANCSNotificationTableCellView.h */,
+				03B7EDC2187FA3800039B7A7 /* INDANCSNotificationTableCellView.m */,
 				0397D8571859755E005561AD /* MainMenu.xib */,
 				0397D85A1859755E005561AD /* Images.xcassets */,
 				0397D8491859755E005561AD /* Supporting Files */,
@@ -297,10 +302,9 @@
 			remoteRef = 035790681867E24A0055FB4E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0357906B1867E24A0055FB4E /* INDANCSClientFrameworkTests.xctest */ = {
+		0357906B1867E24A0055FB4E /* INDANCSClientTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			name = INDANCSClientFrameworkTests.xctest;
 			path = INDANCSClientTests.xctest;
 			remoteRef = 0357906A1867E24A0055FB4E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -337,6 +341,7 @@
 				0357907E1867EBED0055FB4E /* INDANCSNotificationTableRowView.m in Sources */,
 				0397D8561859755E005561AD /* INDAppDelegate.m in Sources */,
 				0397D84F1859755E005561AD /* main.m in Sources */,
+				03B7EDC3187FA3800039B7A7 /* INDANCSNotificationTableCellView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

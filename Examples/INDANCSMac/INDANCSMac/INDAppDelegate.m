@@ -8,6 +8,7 @@
 
 #import "INDAppDelegate.h"
 #import "INDANCSNotificationTableRowView.h"
+#import "INDANCSNotificationTableCellView.h"
 #import <INDANCSClient/INDANCSClientFramework.h>
 
 @interface INDAppDelegate () <INDANCSClientDelegate, NSTableViewDataSource, NSTableViewDelegate, NSUserNotificationCenterDelegate>
@@ -23,44 +24,51 @@
 	self.notifications = [NSMutableArray array];
 	self.client = [[INDANCSClient alloc] init];
 	self.client.delegate = self;
-	
-	NSUserNotificationCenter *nc = NSUserNotificationCenter.defaultUserNotificationCenter;
-	nc.delegate = self;
+	NSUserNotificationCenter.defaultUserNotificationCenter.delegate = self;
 	
 	[self.client scanForDevices:^(INDANCSClient *client, INDANCSDevice *device) {
-		NSLog(@"Found device: %@", device.name);
-		NSUserNotification *notification = [[NSUserNotification alloc] init];
-		notification.title = @"Found iOS Device";
-		notification.informativeText = [NSString stringWithFormat:@"Registered for notifications from %@", device.name];
-		[nc deliverNotification:notification];
-		
+		[self handleNewDevice:device];
 		[client registerForNotificationsFromDevice:device withBlock:^(INDANCSClient *c, INDANCSNotification *n) {
-			switch (n.latestEventID) {
-				case INDANCSEventIDNotificationAdded:
-					[self.notifications insertObject:n atIndex:0];
-					[self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:0] withAnimation:NSTableViewAnimationSlideLeft];
-					break;
-				case INDANCSEventIDNotificationRemoved: {
-					NSUInteger index = [self.notifications indexOfObject:n];
-					if (index != NSNotFound) {
-						[self.notifications removeObjectAtIndex:index];
-						[self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:index] withAnimation:NSTableViewAnimationSlideLeft];
-					}
-					break;
-				}
-				case INDANCSEventIDNotificationModified: {
-					NSUInteger index = [self.notifications indexOfObject:n];
-					if (index != NSNotFound) {
-						[self.notifications replaceObjectAtIndex:index withObject:n];
-						[self.tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-					}
-					break;
-				}
-				default:
-					break;
-			}
+			[self handleNewNotification:n];
 		}];
 	}];
+}
+
+- (void)handleNewDevice:(INDANCSDevice *)device
+{
+	NSLog(@"Found device: %@", device.name);
+	NSUserNotification *notification = [[NSUserNotification alloc] init];
+	notification.title = @"Found iOS Device";
+	notification.informativeText = [NSString stringWithFormat:@"Registered for notifications from %@", device.name];
+	[NSUserNotificationCenter.defaultUserNotificationCenter deliverNotification:notification];
+}
+
+- (void)handleNewNotification:(INDANCSNotification *)n
+{
+	switch (n.latestEventID) {
+		case INDANCSEventIDNotificationAdded:
+			[self.notifications insertObject:n atIndex:0];
+			[self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:0] withAnimation:NSTableViewAnimationSlideLeft];
+			break;
+		case INDANCSEventIDNotificationRemoved: {
+			NSUInteger index = [self.notifications indexOfObject:n];
+			if (index != NSNotFound) {
+				[self.notifications removeObjectAtIndex:index];
+				[self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:index] withAnimation:NSTableViewAnimationSlideLeft];
+			}
+			break;
+		}
+		case INDANCSEventIDNotificationModified: {
+			NSUInteger index = [self.notifications indexOfObject:n];
+			if (index != NSNotFound) {
+				[self.notifications replaceObjectAtIndex:index withObject:n];
+				[self.tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+			}
+			break;
+		}
+		default:
+			break;
+	}
 }
 
 #pragma mark - INDANCSClientDelegate
@@ -68,6 +76,14 @@
 - (void)ANCSClient:(INDANCSClient *)client device:(INDANCSDevice *)device disconnectedWithError:(NSError *)error
 {
 	NSLog(@"%@ disconnected with error: %@", device.name, error);
+	NSMutableIndexSet *removalIndexes = [NSMutableIndexSet indexSet];
+	[self.notifications enumerateObjectsUsingBlock:^(INDANCSNotification *n, NSUInteger idx, BOOL *stop) {
+		if (n.device == device) {
+			[removalIndexes addIndex:idx];
+		}
+	}];
+	[self.notifications removeObjectsAtIndexes:removalIndexes];
+	[self.tableView removeRowsAtIndexes:removalIndexes withAnimation:NSTableViewAnimationSlideLeft];
 }
 
 - (void)ANCSClient:(INDANCSClient *)client device:(INDANCSDevice *)device failedToConnectWithError:(NSError *)error
@@ -97,6 +113,17 @@
 - (NSTableRowView *)tableView:(NSTableView *)tableView rowViewForRow:(NSInteger)row
 {
 	return [[INDANCSNotificationTableRowView alloc] initWithFrame:NSZeroRect];
+}
+
+- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+	static NSString *cellIdentifier = @"ANCSCell";
+	INDANCSNotification *notification = self.notifications[row];
+	INDANCSNotificationTableCellView *cellView = [tableView makeViewWithIdentifier:cellIdentifier owner:self];
+	cellView.textField.stringValue = notification.title ?: @"";
+	cellView.deviceLabel.stringValue = notification.device.name ?: @"";
+	cellView.messageLabel.stringValue = notification.message ?: @"";
+	return cellView;
 }
 
 #pragma mark - NSUserNotificationCenterDelegate

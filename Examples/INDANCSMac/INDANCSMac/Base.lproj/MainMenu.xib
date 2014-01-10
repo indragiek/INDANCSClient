@@ -682,7 +682,7 @@
                                             </textFieldCell>
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <prototypeCellViews>
-                                                <tableCellView id="U0p-4Z-Ien">
+                                                <tableCellView identifier="ANCSCell" id="U0p-4Z-Ien" customClass="INDANCSNotificationTableCellView">
                                                     <rect key="frame" x="1" y="1" width="342" height="108"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
@@ -694,9 +694,6 @@
                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
-                                                            <connections>
-                                                                <binding destination="U0p-4Z-Ien" name="value" keyPath="objectValue.title" id="iOb-nB-pIO"/>
-                                                            </connections>
                                                         </textField>
                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="Kri-GS-rsc">
                                                             <rect key="frame" x="13" y="60" width="317" height="17"/>
@@ -706,9 +703,6 @@
                                                                 <color key="textColor" red="0.42015224358974357" green="0.42015224358974357" blue="0.42015224358974357" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
-                                                            <connections>
-                                                                <binding destination="U0p-4Z-Ien" name="value" keyPath="objectValue.device.name" id="wKV-ZO-uXG"/>
-                                                            </connections>
                                                         </textField>
                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" id="Uy9-Gz-BIJ">
                                                             <rect key="frame" x="14" y="12" width="316" height="40"/>
@@ -718,12 +712,11 @@
                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
-                                                            <connections>
-                                                                <binding destination="U0p-4Z-Ien" name="value" keyPath="objectValue.message" id="5KD-aS-vQO"/>
-                                                            </connections>
                                                         </textField>
                                                     </subviews>
                                                     <connections>
+                                                        <outlet property="deviceLabel" destination="Kri-GS-rsc" id="tPR-vQ-nSs"/>
+                                                        <outlet property="messageLabel" destination="Uy9-Gz-BIJ" id="5XJ-u6-7jI"/>
                                                         <outlet property="textField" destination="6Sg-9h-voz" id="nP8-E0-Mfn"/>
                                                     </connections>
                                                 </tableCellView>
