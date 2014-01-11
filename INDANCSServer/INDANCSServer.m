@@ -47,7 +47,8 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 - (void)startAdvertising
 {
 	self.shouldAdvertise = YES;
-	if (self.manager.state == CBCentralManagerStatePoweredOn && self.manager.isAdvertising) {
+	if (self.manager.state == CBCentralManagerStatePoweredOn && self.manager.isAdvertising == NO) {
+                NSLog(@"Advertising started...");
 		NSDictionary *advertisementData = @{CBAdvertisementDataServiceUUIDsKey : @[IND_ANCS_SV_UUID, IND_DVCE_SV_UUID], CBAdvertisementDataLocalNameKey : UIDevice.currentDevice.name};
 		[self.manager startAdvertising:advertisementData];
 	}
@@ -91,9 +92,6 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 			self.DVCEService = [self newDVCEService];
 			[_manager addService:self.DVCEService];
 		}
-		if (self.shouldAdvertise) {
-			[self startAdvertising];
-		}
 	} else {
 		[self stopAdvertising];
 	}
@@ -101,6 +99,8 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 
 - (void)peripheralManagerDidStartAdvertising:(CBPeripheralManager *)peripheral error:(NSError *)error
 {
+        NSLog(@"Did Start Advertising: %@", peripheral);
+
 	if (_delegateFlags.didStartAdvertising) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[self.delegate ANCSServer:self didStartAdvertisingWithError:error];
@@ -111,6 +111,16 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 - (void)peripheralManager:(CBPeripheralManager *)peripheral willRestoreState:(NSDictionary *)dict
 {
 }
+
+- (void)peripheralManager:(CBPeripheralManager *)peripheral didAddService:(CBService *)service error:(NSError *)error
+{
+    NSLog(@"Did Add Service: %@ (error: %@)", service, error);
+
+    if (self.shouldAdvertise) {
+        [self startAdvertising];
+    }
+}
+
 
 #pragma mark - NAME Service
 
