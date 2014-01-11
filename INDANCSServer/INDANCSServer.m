@@ -11,6 +11,9 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
+// Uncomment to enable debug logging
+// #define ANCS_DEBUG_LOGGING
+
 static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 
 @interface INDANCSServer () <CBPeripheralManagerDelegate>
@@ -47,8 +50,10 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 - (void)startAdvertising
 {
 	self.shouldAdvertise = YES;
-	if (self.manager.state == CBCentralManagerStatePoweredOn && self.manager.isAdvertising == NO) {
-                NSLog(@"Advertising started...");
+	if (self.manager.state == CBCentralManagerStatePoweredOn && !self.manager.isAdvertising) {
+#ifdef ANCS_DEBUG_LOGGING
+		NSLog(@"[%@] Starting advertising", self.manager);
+#endif
 		NSDictionary *advertisementData = @{CBAdvertisementDataServiceUUIDsKey : @[IND_ANCS_SV_UUID, IND_DVCE_SV_UUID], CBAdvertisementDataLocalNameKey : UIDevice.currentDevice.name};
 		[self.manager startAdvertising:advertisementData];
 	}
@@ -88,6 +93,9 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 {
 	self.state = peripheral.state;
 	if (self.state == CBPeripheralManagerStatePoweredOn) {
+#ifdef ANCS_DEBUG_LOGGING
+		NSLog(@"[%@] Powered on", peripheral);
+#endif
 		if (self.DVCEService == nil) {
 			self.DVCEService = [self newDVCEService];
 			[_manager addService:self.DVCEService];
@@ -99,8 +107,9 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 
 - (void)peripheralManagerDidStartAdvertising:(CBPeripheralManager *)peripheral error:(NSError *)error
 {
-        NSLog(@"Did Start Advertising: %@", peripheral);
-
+#ifdef ANCS_DEBUG_LOGGING
+	NSLog(@"[%@] Started advertising with error: %@", peripheral, error);
+#endif
 	if (_delegateFlags.didStartAdvertising) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[self.delegate ANCSServer:self didStartAdvertisingWithError:error];
@@ -114,13 +123,13 @@ static NSString * const INDANCSServerRestorationKey = @"INDANCSServer";
 
 - (void)peripheralManager:(CBPeripheralManager *)peripheral didAddService:(CBService *)service error:(NSError *)error
 {
-    NSLog(@"Did Add Service: %@ (error: %@)", service, error);
-
+#ifdef ANCS_DEBUG_LOGGING
+	NSLog(@"[%@] Did add service: %@ error: %@", peripheral, service, error);
+#endif
     if (self.shouldAdvertise) {
         [self startAdvertising];
     }
 }
-
 
 #pragma mark - NAME Service
 

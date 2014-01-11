@@ -20,7 +20,7 @@
 #import "CBCharacteristic+INDANCSAdditions.h"
 
 // Uncomment to enable debug logging
-// #define DEBUG_LOGGING
+// #define ANCS_DEBUG_LOGGING
 
 static NSUInteger const INDANCSGetNotificationAttributeCount = 5;
 static NSUInteger const INDANCSGetAppAttributeCount = 1;
@@ -154,7 +154,7 @@ static NSString * const INDANCSMetadataStoreFilename = @"ANCSMetadata.db";
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
 {
-#ifdef DEBUG_LOGGING
+#ifdef ANCS_DEBUG_LOGGING
 	NSLog(@"[CBCentralManager] Updated state to: %ld", central.state);
 #endif
 	self.state = central.state;
@@ -168,7 +168,7 @@ static NSString * const INDANCSMetadataStoreFilename = @"ANCSMetadata.db";
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
 {
-#ifdef DEBUG_LOGGING
+#ifdef ANCS_DEBUG_LOGGING
 	NSLog(@"[CBCentralManager] Discovered peripheral: %@\nAdvertisement data:%@\nRSSI: %@", peripheral, advertisementData, RSSI);
 #endif
 	// Already connected, ignore it.
@@ -186,7 +186,7 @@ static NSString * const INDANCSMetadataStoreFilename = @"ANCSMetadata.db";
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
 {
-#ifdef DEBUG_LOGGING
+#ifdef ANCS_DEBUG_LOGGING
 	NSLog(@"[CBCentralManager] Did connect to peripheral: %@", peripheral);
 #endif
 	[peripheral discoverServices:@[IND_ANCS_SV_UUID, IND_DVCE_SV_UUID]];
@@ -197,7 +197,7 @@ static NSString * const INDANCSMetadataStoreFilename = @"ANCSMetadata.db";
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
 {
-#ifdef DEBUG_LOGGING
+#ifdef ANCS_DEBUG_LOGGING
 	NSLog(@"[CBCentralManager] Did disconnect peripheral: %@\nError: %@", peripheral, error);
 #endif
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
@@ -223,7 +223,7 @@ static NSString * const INDANCSMetadataStoreFilename = @"ANCSMetadata.db";
 
 - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
 {
-#ifdef DEBUG_LOGGING
+#ifdef ANCS_DEBUG_LOGGING
 	NSLog(@"[CBCentralManager] Did fail to connect to peripheral: %@\nError: %@", peripheral, error);
 #endif
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
@@ -239,7 +239,7 @@ static NSString * const INDANCSMetadataStoreFilename = @"ANCSMetadata.db";
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
 {
-#ifdef DEBUG_LOGGING
+#ifdef ANCS_DEBUG_LOGGING
 	NSLog(@"[%@] Did discover services: %@\nError: %@", peripheral, peripheral.services, error);
 #endif
 	if (error) {
@@ -271,7 +271,7 @@ static NSString * const INDANCSMetadataStoreFilename = @"ANCSMetadata.db";
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
 {
-#ifdef DEBUG_LOGGING
+#ifdef ANCS_DEBUG_LOGGING
 	NSLog(@"[%@] Did discover characteristics: %@\nService: %@\nError: %@", peripheral, service.characteristics, service, error);
 #endif
 	if (error) {
@@ -309,7 +309,7 @@ static NSString * const INDANCSMetadataStoreFilename = @"ANCSMetadata.db";
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
-#ifdef DEBUG_LOGGING
+#ifdef ANCS_DEBUG_LOGGING
 	NSLog(@"[%@] Did update value: %@ for characteristic: %@\nError: %@", peripheral, characteristic.value, characteristic, error);
 #endif
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
@@ -347,7 +347,7 @@ static NSString * const INDANCSMetadataStoreFilename = @"ANCSMetadata.db";
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
 	if (error == nil) return;
-#ifdef DEBUG_LOGGING
+#ifdef ANCS_DEBUG_LOGGING
 	NSLog(@"[%@] Received error: %@ when writing to characteristic: %@", peripheral, error, characteristic);
 #endif
 	INDANCSDevice *device = [self deviceForPeripheral:peripheral];
