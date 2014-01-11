@@ -49,6 +49,7 @@
 		case INDANCSEventIDNotificationAdded:
 			[self.notifications insertObject:n atIndex:0];
 			[self.tableView insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:0] withAnimation:NSTableViewAnimationSlideLeft];
+                        [self postUserNotificationWithANCSNotification:n];
 			break;
 		case INDANCSEventIDNotificationRemoved: {
 			NSUInteger index = [self.notifications indexOfObject:n];
@@ -63,6 +64,7 @@
 			if (index != NSNotFound) {
 				[self.notifications replaceObjectAtIndex:index withObject:n];
 				[self.tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                                [self postUserNotificationWithANCSNotification:n];
 			}
 			break;
 		}
@@ -70,6 +72,20 @@
 			break;
 	}
 }
+
+- (void)postUserNotificationWithANCSNotification:(INDANCSNotification *)n
+{
+	NSUserNotification *notification = [[NSUserNotification alloc] init];
+	notification.title = [NSString stringWithFormat:@"%@: %@", n.device.name, n.title];
+        if (n.subtitle) {
+                notification.informativeText = [NSString stringWithFormat:@"%@\n%@", n.subtitle, n.message];
+        }
+        else {
+                notification.informativeText = n.message;
+        }
+	[NSUserNotificationCenter.defaultUserNotificationCenter deliverNotification:notification];
+}
+
 
 #pragma mark - INDANCSClientDelegate
 
